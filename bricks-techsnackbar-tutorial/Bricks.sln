@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bricks.Desktop", "src\Bricks.Desktop\Bricks.Desktop.csproj", "{BE9011B6-9D9D-419D-AD3A-E6651902F75D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE9011B6-9D9D-419D-AD3A-E6651902F75D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE9011B6-9D9D-419D-AD3A-E6651902F75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE9011B6-9D9D-419D-AD3A-E6651902F75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE9011B6-9D9D-419D-AD3A-E6651902F75D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BB82C335-FA26-4F78-B7AC-EA06B2533436}
+	EndGlobalSection
+EndGlobal
