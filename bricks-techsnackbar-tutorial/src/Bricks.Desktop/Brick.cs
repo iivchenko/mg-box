@@ -32,7 +32,6 @@ namespace Bricks.Desktop
 
             Width = _sprite.Width;
             Height = _sprite.Height;
-            Visible = true;
             Score = score;
         }
 
@@ -44,25 +43,20 @@ namespace Bricks.Desktop
 
         public float Height { get; }
 
-        public bool Visible { get; set; }
-
         public int Score { get; }
 
         public void Draw()
         {
-            if (Visible)
-            {
-                _spriteBatch.Draw(
-                    _sprite,
-                    _position,
-                    null,
-                    _color,
-                    0,
-                    _rotation,
-                    1.0f,
-                    SpriteEffects.None,
-                    0);
-            }
+            _spriteBatch.Draw(
+                _sprite,
+                _position,
+                null,
+                _color,
+                0,
+                _rotation,
+                1.0f,
+                SpriteEffects.None,
+                0);
         }
     }
 }

@@ -82,7 +82,7 @@ namespace Bricks.Desktop
 
         public void Launch(float x, float y, float xVelocity, float yVelocity)
         {
-            if (Visible == true)
+            if (Visible)
             {
                 return;
             }
@@ -98,7 +98,7 @@ namespace Bricks.Desktop
 
         public bool Move(IList<Brick> wall, Paddle paddle)
         {
-            if (Visible == false)
+            if (!Visible)
             {
                 return false;
             }
