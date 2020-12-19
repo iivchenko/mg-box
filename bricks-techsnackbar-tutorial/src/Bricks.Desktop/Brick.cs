@@ -5,35 +5,54 @@ namespace Bricks.Desktop
 {
     public sealed class Brick
     {
-        public float X { get; set; } //x position of brick on screen
-        public float Y { get; set; } //y position of brick on screen
-        public float Width { get; set; } //width of brick
-        public float Height { get; set; } //height of brick
-        public bool Visible { get; set; } //does brick still exist?
-        private Color _color;
+        private readonly Vector2 _rotation = new Vector2(0, 0);
+        private readonly Texture2D _sprite;
+        private readonly Color _color;
 
-        private readonly Texture2D _imgBrick;
         private readonly SpriteBatch _spriteBatch;
 
-        public Brick(float x, float y, Color color, SpriteBatch spriteBatch, GameContent gameContent)
-        {
-            X = x;
-            Y = y;
+        private Vector2 _position;
 
-            _imgBrick = gameContent.ImgBrick;
+        public Brick(
+            Vector2 position, 
+            Color color, 
+            SpriteBatch spriteBatch, 
+            Texture2D sprite)
+        {
+            _position = position;
+
+            _sprite = sprite;
             _color = color;
+
             _spriteBatch = spriteBatch;
 
-            Width = _imgBrick.Width;
-            Height = _imgBrick.Height;
+            Width = _sprite.Width;
+            Height = _sprite.Height;
             Visible = true;
         }
+
+        public Vector2 Position => _position;
+
+        public float Width { get; }
+
+        public float Height { get; }
+
+        public bool Visible { get; set; }
 
         public void Draw()
         {
             if (Visible)
             {
-                _spriteBatch.Draw(_imgBrick, new Vector2(X, Y), null, _color, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0);
+                _spriteBatch.Draw(
+                    _sprite,
+                    _position,
+                    null,
+                    _color,
+                    0,
+                    _rotation,
+                    1.0f,
+                    SpriteEffects.None,
+                    0);
             }
         }
     }

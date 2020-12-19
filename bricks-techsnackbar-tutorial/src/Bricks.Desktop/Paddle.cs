@@ -14,15 +14,17 @@ namespace Bricks.Desktop
         private readonly Texture2D _sprite;
         private readonly SpriteBatch _spriteBatch;
 
-        public Paddle(float x, float y, float screenWidth, SpriteBatch spriteBatch, GameContent gameContent)
+        public Paddle(float x, float y, float screenWidth, SpriteBatch spriteBatch, Texture2D sprite)
         {
             X = x;
             Y = y;
-            _sprite = gameContent.ImgPaddle;
+            ScreenWidth = screenWidth;
+
+            _sprite = sprite;
+            _spriteBatch = spriteBatch;
+
             Width = _sprite.Width;
             Height = _sprite.Height;
-            _spriteBatch = spriteBatch;
-            ScreenWidth = screenWidth;
         }
 
         public void Draw()

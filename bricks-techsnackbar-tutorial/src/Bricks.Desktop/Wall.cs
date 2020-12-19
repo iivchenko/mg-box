@@ -5,18 +5,20 @@ namespace Bricks.Desktop
 {
     public sealed class Wall
     {
+        private readonly Texture2D _brick;
+
         //We'll have 7 rows, each with its own color
         //there will be 10 bricks per row
         //there will be 3 blank rows at top
         //each brick is 50 x 16
         public Brick[,] BrickWall { get; set; }
 
-        public Wall(float x, float y, SpriteBatch spriteBatch, GameContent gameContent)
+        public Wall(float x, float y, SpriteBatch spriteBatch, Texture2D brick)
         {
+            _brick = brick;
+
             BrickWall = new Brick[7, 10];
-            float brickX = x;
-            float brickY = y;
-            Color color = Color.White;
+            var color = Color.White;
             for (int i = 0; i < 7; i++)
             {
                 switch (i)
@@ -43,24 +45,21 @@ namespace Bricks.Desktop
                         color = Color.Violet;
                         break;
                 }
-                brickY = y + i * (gameContent.ImgBrick.Height);
+                var brickY = y + i * _brick.Height;
 
                 for (int j = 0; j < 10; j++)
                 {
-                    brickX = x + j * (gameContent.ImgBrick.Width);
-                    Brick brick = new Brick(brickX, brickY, color, spriteBatch, gameContent);
-                    BrickWall[i, j] = brick;
+                    var brickX = x + j * _brick.Width;
+                    BrickWall[i, j] = new Brick(new Vector2(brickX, brickY), color, spriteBatch, _brick);
                 }
             }
         }
+
         public void Draw()
         {
-            for (int i = 0; i < 7; i++)
+            foreach(var brick in BrickWall)
             {
-                for (int j = 0; j < 10; j++)
-                {
-                    BrickWall[i, j].Draw();
-                }
+                brick.Draw();
             }
         }
     }

@@ -5,8 +5,14 @@ using System;
 
 namespace Bricks.Desktop
 {
-    class Ball
+    public sealed class Ball
     {
+        private readonly Texture2D _sprite;
+        private readonly SoundEffect _startSfx;
+        private readonly SoundEffect _wallBounceSfx;
+        private readonly SoundEffect _paddleBounceSfx;
+        private readonly SoundEffect _brickBounceSfx;
+
         public float X { get; set; }
         public float Y { get; set; }
         public float XVelocity { get; set; }
@@ -21,22 +27,33 @@ namespace Bricks.Desktop
         public int Score { get; set; }
         public int bricksCleared { get; set; } //number of bricks cleared this level
 
-        private Texture2D imgBall { get; set; }
-        private SpriteBatch spriteBatch;  //allows us to write on backbuffer when we need to draw self
-        private GameContent gameContent;
+        private readonly SpriteBatch _spriteBatch;  //allows us to write on backbuffer when we need to draw self
 
-        public Ball(float screenWidth, float screenHeight, SpriteBatch spriteBatch, GameContent gameContent)
+        public Ball(
+            float screenWidth, 
+            float screenHeight, 
+            SpriteBatch spriteBatch, 
+            Texture2D sprite,
+            SoundEffect startSfx,
+            SoundEffect wallBounceSfx,
+            SoundEffect paddleBounceSfx,
+            SoundEffect brickBounceSfx)
         {
             X = 0;
             Y = 0;
             XVelocity = 0;
             YVelocity = 0;
             Rotation = 0;
-            imgBall = gameContent.ImgBall;
-            Width = imgBall.Width;
-            Height = imgBall.Height;
-            this.spriteBatch = spriteBatch;
-            this.gameContent = gameContent;
+            _sprite = sprite;
+            _startSfx = startSfx;
+            _wallBounceSfx = wallBounceSfx;
+            _paddleBounceSfx = paddleBounceSfx;
+            _brickBounceSfx = brickBounceSfx;
+
+            Width = _sprite.Width;
+            Height = _sprite.Height;
+
+            _spriteBatch = spriteBatch;
             ScreenWidth = screenWidth;
             ScreenHeight = screenHeight; 
             Visible = false;
@@ -47,30 +64,28 @@ namespace Bricks.Desktop
 
         public void Draw()
         {
-
-            if (Visible == false)
+            if (Visible)
             {
-                return;
-            }
-            if (UseRotation)
-            {
-                Rotation += .1f;
-                if (Rotation > 3 * Math.PI)
+                if (UseRotation)
                 {
-                    Rotation = 0;
+                    Rotation += .1f;
+                    if (Rotation > 3 * Math.PI)
+                    {
+                        Rotation = 0;
+                    }
                 }
+                _spriteBatch.Draw(_sprite, new Vector2(X, Y), null, Color.White, Rotation, new Vector2(Width / 2, Height / 2), 1.0f, SpriteEffects.None, 0);
             }
-            spriteBatch.Draw(imgBall, new Vector2(X, Y), null, Color.White, Rotation, new Vector2(Width / 2, Height / 2), 1.0f, SpriteEffects.None, 0);
         }
 
         public void Launch(float x, float y, float xVelocity, float yVelocity)
         {
             if (Visible == true)
             {
-                return;  //ball already exists, ignore
+                return;
             }
 
-            PlaySound(gameContent.StartSound);
+            PlaySound(_startSfx);
 
             Visible = true;
             X = x;
@@ -93,25 +108,25 @@ namespace Bricks.Desktop
             {
                 X = 1;
                 XVelocity = XVelocity * -1;
-                PlaySound(gameContent.WallBounceSound);
+                PlaySound(_wallBounceSfx);
             }
             if (X > ScreenWidth - Width + 5)
             {
                 X = ScreenWidth - Width + 5;
                 XVelocity = XVelocity * -1;
-                PlaySound(gameContent.WallBounceSound);
+                PlaySound(_wallBounceSfx);
             }
             if (Y < 1)
             {
                 Y = 1;
                 YVelocity = YVelocity * -1;
-                PlaySound(gameContent.WallBounceSound);
+                PlaySound(_wallBounceSfx);
             }
             if (Y > ScreenHeight)
             {
                 Visible = false;
                 Y = 0;
-                PlaySound(gameContent.WallBounceSound);
+                PlaySound(_wallBounceSfx);
                 return false;
             }
             //check for paddle hit
@@ -121,7 +136,7 @@ namespace Bricks.Desktop
             Rectangle ballRect = new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
             if (HitTest(paddleRect, ballRect))
             {
-                PlaySound(gameContent.PaddleBounceSound);
+                PlaySound(_paddleBounceSfx);
                 int offset = Convert.ToInt32((paddle.Width - (paddle.X + paddle.Width - X + Width / 2)));
                 offset = offset / 5;
                 if (offset < 0)
@@ -181,10 +196,10 @@ namespace Bricks.Desktop
                         Brick brick = wall.BrickWall[i, j];
                         if (brick.Visible)
                         {
-                            Rectangle brickRect = new Rectangle((int)brick.X, (int)brick.Y, (int)brick.Width, (int)brick.Height);
+                            Rectangle brickRect = new Rectangle((int)brick.Position.X, (int)brick.Position.Y, (int)brick.Width, (int)brick.Height);
                             if (HitTest(ballRect, brickRect))
                             {
-                                PlaySound(gameContent.BrickSound);
+                                PlaySound(_brickBounceSfx);
                                 brick.Visible = false;
                                 Score = Score + 7 - i;
                                 YVelocity = YVelocity * -1;

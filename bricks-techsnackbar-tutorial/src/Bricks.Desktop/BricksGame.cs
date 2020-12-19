@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,7 +9,6 @@ namespace Bricks.Desktop
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private GameContent _gameContent;
         private GameBorder _gameBorder;
         private Ball _ball;
         private Ball _staticBall; //used to draw image next to remaining ball count at top of screen
@@ -22,6 +22,20 @@ namespace Bricks.Desktop
         private bool readyToServeBall = true;
         private int ballsRemaining = 3;
 
+        // Content
+        private Texture2D _piexel;
+        private Texture2D _brickSprite;
+        private Texture2D _paddleSprite;
+        private Texture2D _ballSprite;
+
+        private SoundEffect _startSound;
+        private SoundEffect _brickSound;
+        private SoundEffect _paddleBounceSound;
+        private SoundEffect _wallBounceSound;
+        private SoundEffect _missSound; // TODO: USE IT!
+
+        private SpriteFont _labelFont;
+
         public BricksGame()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -31,30 +45,9 @@ namespace Bricks.Desktop
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
-        }
 
-        private void ServeBall()
-        {
-            if (ballsRemaining < 1)
-            {
-                ballsRemaining = 3;
-                _ball.Score = 0;
-                _wall = new Wall(1, 50, _spriteBatch, _gameContent);
-            }
-            readyToServeBall = false;
-            float ballX = _paddle.X + (_paddle.Width) / 2;
-            float ballY = _paddle.Y - _ball.Height;
-            _ball.Launch(ballX, ballY, -3, -3);
-        }
-
-        protected override void LoadContent()
-        {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            _gameContent = new GameContent(Content);
 
             _screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             _screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -72,19 +65,70 @@ namespace Bricks.Desktop
             _graphics.ApplyChanges();
 
             //create game objects
-            int paddleX = (_screenWidth - _gameContent.ImgPaddle.Width) / 2;
+            int paddleX = (_screenWidth - _paddleSprite.Width) / 2;
             //we'll center the paddle on the screen to start
             int paddleY = _screenHeight - 100;  //paddle will be 100 pixels from the bottom of the screen
-            _paddle = new Paddle(paddleX, paddleY, _screenWidth, _spriteBatch, _gameContent);  // create the game paddle
-            _wall = new Wall(1, 50, _spriteBatch, _gameContent);
-            _gameBorder = new GameBorder(_screenWidth, _screenHeight, _spriteBatch, _gameContent);
-            _ball = new Ball(_screenWidth, _screenHeight, _spriteBatch, _gameContent);
+            _paddle = new Paddle(paddleX, paddleY, _screenWidth, _spriteBatch, _paddleSprite);  // create the game paddle
+            _wall = new Wall(1, 50, _spriteBatch, _brickSprite);
+            _gameBorder = new GameBorder(_screenWidth, _screenHeight, _spriteBatch, _piexel);
 
-            _staticBall = new Ball(_screenWidth, _screenHeight, _spriteBatch, _gameContent);
-            _staticBall.X = 25;
-            _staticBall.Y = 25;
-            _staticBall.Visible = true;
-            _staticBall.UseRotation = false;
+            _ball =
+                new Ball(
+                    _screenWidth,
+                    _screenHeight,
+                    _spriteBatch,
+                    _ballSprite,
+                    _startSound,
+                    _wallBounceSound,
+                    _paddleBounceSound,
+                    _brickSound);
+
+            _staticBall =
+                new Ball(
+                    _screenWidth,
+                    _screenHeight,
+                    _spriteBatch,
+                    _ballSprite,
+                    null,
+                    null,
+                    null,
+                    null)
+                {
+                    X = 25,
+                    Y = 25,
+                    Visible = true,
+                    UseRotation = false
+                };
+        }
+
+        protected override void LoadContent()
+        {
+            _piexel = Content.Load<Texture2D>("Images/Pixel");
+            _brickSprite = Content.Load<Texture2D>("Images/Brick");
+            _paddleSprite = Content.Load<Texture2D>("Images/Paddle");
+            _ballSprite = Content.Load<Texture2D>("Images/Ball");
+
+            _startSound = Content.Load<SoundEffect>("Sounds/Start");
+            _brickSound = Content.Load<SoundEffect>("Sounds/Brick");
+            _paddleBounceSound = Content.Load<SoundEffect>("Sounds/PaddleBounce");
+            _wallBounceSound = Content.Load<SoundEffect>("Sounds/WallBounce");
+            _missSound = Content.Load<SoundEffect>("Sounds/Miss");
+
+            _labelFont = Content.Load<SpriteFont>("Fonts/Arial20");
+        }
+
+        private void ServeBall()
+        {
+            if (ballsRemaining < 1)
+            {
+                ballsRemaining = 3;
+                _ball.Score = 0;
+                _wall = new Wall(1, 50, _spriteBatch, _brickSprite);
+            }
+            readyToServeBall = false;
+            float ballX = _paddle.X + (_paddle.Width) / 2;
+            float ballY = _paddle.Y - _ball.Height;
+            _ball.Launch(ballX, ballY, -3, -3);
         }
 
         protected override void Update(GameTime gameTime)
@@ -162,13 +206,13 @@ namespace Bricks.Desktop
             _staticBall.Draw();
 
             string scoreMsg = "Score: " + _ball.Score.ToString("00000");
-            Vector2 space = _gameContent.LabelFont.MeasureString(scoreMsg);
-            _spriteBatch.DrawString(_gameContent.LabelFont, scoreMsg, new Vector2((_screenWidth - space.X) / 2, _screenHeight - 40), Color.White);
+            Vector2 space = _labelFont.MeasureString(scoreMsg);
+            _spriteBatch.DrawString(_labelFont, scoreMsg, new Vector2((_screenWidth - space.X) / 2, _screenHeight - 40), Color.White);
             if (_ball.bricksCleared >= 70)
             {
                 _ball.Visible = false;
                 _ball.bricksCleared = 0;
-                _wall = new Wall(1, 50, _spriteBatch, _gameContent);
+                _wall = new Wall(1, 50, _spriteBatch, _brickSprite);
                 readyToServeBall = true;
             }
             if (readyToServeBall)
@@ -176,17 +220,17 @@ namespace Bricks.Desktop
                 if (ballsRemaining > 0)
                 {
                     string startMsg = "Press <Space> or Click Mouse to Start";
-                    Vector2 startSpace = _gameContent.LabelFont.MeasureString(startMsg);
-                    _spriteBatch.DrawString(_gameContent.LabelFont, startMsg, new Vector2((_screenWidth - startSpace.X) / 2, _screenHeight / 2), Color.White);
+                    Vector2 startSpace = _labelFont.MeasureString(startMsg);
+                    _spriteBatch.DrawString(_labelFont, startMsg, new Vector2((_screenWidth - startSpace.X) / 2, _screenHeight / 2), Color.White);
                 }
                 else
                 {
                     string endMsg = "Game Over";
-                    Vector2 endSpace = _gameContent.LabelFont.MeasureString(endMsg);
-                    _spriteBatch.DrawString(_gameContent.LabelFont, endMsg, new Vector2((_screenWidth - endSpace.X) / 2, _screenHeight / 2), Color.White);
+                    Vector2 endSpace = _labelFont.MeasureString(endMsg);
+                    _spriteBatch.DrawString(_labelFont, endMsg, new Vector2((_screenWidth - endSpace.X) / 2, _screenHeight / 2), Color.White);
                 }
             }
-            _spriteBatch.DrawString(_gameContent.LabelFont, ballsRemaining.ToString(), new Vector2(40, 10), Color.White);
+            _spriteBatch.DrawString(_labelFont, ballsRemaining.ToString(), new Vector2(40, 10), Color.White);
 
             _spriteBatch.End();
             base.Draw(gameTime);
