@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Bricks.Desktop
 {
@@ -16,7 +17,7 @@ namespace Bricks.Desktop
         private Ball _ball;
         private Ball _staticBall;
         private Paddle _paddle;
-        private Brick[,] _wall;
+        private List<Brick> _wall;
 
         private int _screenWidth = 0;
         private int _screenHeight = 0;
@@ -59,10 +60,11 @@ namespace Bricks.Desktop
             _graphics.ApplyChanges();
 
             _paddle = new Paddle(
-                (_screenWidth - _paddleSprite.Width) / 2,
-                _screenHeight - 100, 
-                _screenWidth, 
-                _spriteBatch, 
+                new Vector2(
+                    (_screenWidth - _paddleSprite.Width) / 2,
+                    _screenHeight - 100),
+                _screenWidth,
+                _spriteBatch,
                 _paddleSprite);
 
             _wall = CreateWall(1, 50, _brickSprite, _spriteBatch);
@@ -123,8 +125,8 @@ namespace Bricks.Desktop
             }
 
             readyToServeBall = false;
-            float ballX = _paddle.X + (_paddle.Width) / 2;
-            float ballY = _paddle.Y - _ball.Height;
+            float ballX = _paddle.Position.X + (_paddle.Width) / 2;
+            float ballY = _paddle.Position.Y - _ball.Height;
             _ball.Launch(ballX, ballY, -3, -3);
         }
 
@@ -184,7 +186,7 @@ namespace Bricks.Desktop
             _spriteBatch.Begin();
 
             _paddle.Draw();
-            foreach(var brick in _wall) brick.Draw();
+            foreach (var brick in _wall) brick.Draw();
 
             _gameBorder.Draw();
 
@@ -236,7 +238,7 @@ namespace Bricks.Desktop
             base.Draw(gameTime);
         }
 
-        private static Brick[,] CreateWall(float x, float y, Texture2D brick, SpriteBatch spriteBatch)
+        private static List<Brick> CreateWall(float x, float y, Texture2D brick, SpriteBatch spriteBatch)
         {
             var wall = new Brick[7, 10];
 
@@ -259,11 +261,16 @@ namespace Bricks.Desktop
                 for (int j = 0; j < 10; j++)
                 {
                     var brickX = x + j * brick.Width;
-                    wall[i, j] = new Brick(new Vector2(brickX, brickY), color, spriteBatch, brick);
+                    wall[i, j] = new Brick(
+                        new Vector2(brickX, brickY), 
+                        color, 
+                        spriteBatch, 
+                        brick,
+                        7 - i);
                 }
             }
 
-            return wall;
+            return wall.OfType<Brick>().ToList();
         }
     }
 }

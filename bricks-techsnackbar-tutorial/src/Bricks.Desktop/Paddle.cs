@@ -5,70 +5,102 @@ namespace Bricks.Desktop
 {
     public sealed class Paddle
     {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Width { get; set; }
-        public float Height { get; set; }
-        public float ScreenWidth { get; set; }
-
         private readonly Texture2D _sprite;
         private readonly SpriteBatch _spriteBatch;
+        private readonly Vector2 _origin;
+        private readonly float _screenWidth;
 
-        public Paddle(float x, float y, float screenWidth, SpriteBatch spriteBatch, Texture2D sprite)
+        private Vector2 _position;
+        private Rectangle _body;
+
+        public Paddle(Vector2 position, float screenWidth, SpriteBatch spriteBatch, Texture2D sprite)
         {
-            X = x;
-            Y = y;
-            ScreenWidth = screenWidth;
-
+            _position = position;
+            _screenWidth = screenWidth;
             _sprite = sprite;
             _spriteBatch = spriteBatch;
 
+            _origin = Vector2.Zero;
+
             Width = _sprite.Width;
             Height = _sprite.Height;
+
+            UpdateBody();
         }
+
+        public Vector2 Position => _position;
+
+        public Rectangle Body => _body;
+
+        public float Width { get; set; }
+
+        public float Height { get; set; }
 
         public void Draw()
         {
-            _spriteBatch.Draw(_sprite, new Vector2(X, Y), null, Color.White, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0);
+            _spriteBatch.Draw(
+                _sprite, 
+                _position, 
+                null, 
+                Color.White, 
+                0,
+                _origin, 
+                1.0f, 
+                SpriteEffects.None, 
+                0);
         }
 
         public void MoveLeft()
         {
-            X = X - 5;
-            if (X < 1)
+            _position.X -= 5;
+
+            if (_position.X < 1)
             {
-                X = 1;
+                _position.X = 1;
             }
+
+            UpdateBody();
         }
+
         public void MoveRight()
         {
-            X = X + 5;
-            if ((X + Width) > ScreenWidth)
+            _position.X += 5;
+
+            if ((_position.X + Width) > _screenWidth)
             {
-                X = ScreenWidth - Width;
+                _position.X = _screenWidth - Width;
             }
+
+            UpdateBody();
         }
 
         public void MoveTo(float x)
         {
             if (x >= 0)
             {
-                if (x < ScreenWidth - Width)
+                if (x < _screenWidth - Width)
                 {
-                    X = x;
+                    _position.X = x;
                 }
                 else
                 {
-                    X = ScreenWidth - Width;
+                    _position.X = _screenWidth - Width;
                 }
             }
             else
             {
                 if (x < 0)
                 {
-                    X = 0;
+                    _position.X = 0;
                 }
             }
+
+            UpdateBody();
+        }
+
+        private void UpdateBody()
+        {
+            _body = new Rectangle((int)_position.X, (int)_position.Y, (int)Width, (int)Height);
         }
     }
 }

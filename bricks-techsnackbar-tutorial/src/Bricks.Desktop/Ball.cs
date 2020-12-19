@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Bricks.Desktop
 {
@@ -94,7 +96,7 @@ namespace Bricks.Desktop
             YVelocity = yVelocity;
         }
 
-        public bool Move(Brick[,] wall, Paddle paddle)
+        public bool Move(IList<Brick> wall, Paddle paddle)
         {
             if (Visible == false)
             {
@@ -134,12 +136,11 @@ namespace Bricks.Desktop
             //check for paddle hit
             //paddle is 70 pixels. we'll logically divide it into segments that will determine the angle of the bounce
 
-            Rectangle paddleRect = new Rectangle((int)paddle.X, (int)paddle.Y, (int)paddle.Width, (int)paddle.Height);
             Rectangle ballRect = new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
-            if (HitTest(paddleRect, ballRect))
+            if (ballRect.Intersects(paddle.Body))
             {
                 PlaySound(_paddleBounceSfx);
-                int offset = Convert.ToInt32((paddle.Width - (paddle.X + paddle.Width - X + Width / 2)));
+                int offset = Convert.ToInt32((paddle.Width - (paddle.Position.X + paddle.Width - X + Width / 2)));
                 offset = offset / 5;
                 if (offset < 0)
                 {
@@ -161,33 +162,19 @@ namespace Bricks.Desktop
                     _ => 6,
                 };
                 YVelocity *= -1;
-                Y = paddle.Y - Height + 1;
+                Y = paddle.Position.Y - Height + 1;
                 return true;
             }
-            bool hitBrick = false;
-            for (int i = 0; i < 7; i++)
+
+            var brick = wall.FirstOrDefault(x => x.Body.Intersects(ballRect));
+
+            if (brick != null)
             {
-                if (hitBrick == false)
-                {
-                    for (int j = 0; j < 10; j++)
-                    {
-                        Brick brick = wall[i, j];
-                        if (brick.Visible)
-                        {
-                            Rectangle brickRect = new Rectangle((int)brick.Position.X, (int)brick.Position.Y, (int)brick.Width, (int)brick.Height);
-                            if (HitTest(ballRect, brickRect))
-                            {
-                                PlaySound(_brickBounceSfx);
-                                brick.Visible = false;
-                                Score = Score + 7 - i;
-                                YVelocity = YVelocity * -1;
-                                bricksCleared++;
-                                hitBrick = true;
-                                break;
-                            }
-                        }
-                    }
-                }
+                wall.Remove(brick);
+                PlaySound(_brickBounceSfx);
+                Score += brick.Score;
+                YVelocity *= -1;
+                bricksCleared++;
             }
 
             return true;
@@ -199,11 +186,6 @@ namespace Bricks.Desktop
             const float pitch = 0.0f;
             const float pan = 0.0f;
             sound.Play(volume, pitch, pan);
-        }
-
-        private static bool HitTest(Rectangle r1, Rectangle r2)
-        {
-            return r1.Intersects(r2);
         }
     }
 }

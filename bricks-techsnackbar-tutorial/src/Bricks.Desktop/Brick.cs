@@ -6,6 +6,7 @@ namespace Bricks.Desktop
     public sealed class Brick
     {
         private readonly Vector2 _rotation = new Vector2(0, 0);
+        private readonly Rectangle _body;
         private readonly Texture2D _sprite;
         private readonly Color _color;
 
@@ -17,7 +18,8 @@ namespace Bricks.Desktop
             Vector2 position, 
             Color color, 
             SpriteBatch spriteBatch, 
-            Texture2D sprite)
+            Texture2D sprite,
+            int score)
         {
             _position = position;
 
@@ -26,18 +28,25 @@ namespace Bricks.Desktop
 
             _spriteBatch = spriteBatch;
 
+            _body = new Rectangle((int)_position.X, (int)_position.Y, _sprite.Width, _sprite.Height);
+
             Width = _sprite.Width;
             Height = _sprite.Height;
             Visible = true;
+            Score = score;
         }
 
         public Vector2 Position => _position;
+
+        public Rectangle Body => _body;
 
         public float Width { get; }
 
         public float Height { get; }
 
         public bool Visible { get; set; }
+
+        public int Score { get; }
 
         public void Draw()
         {
