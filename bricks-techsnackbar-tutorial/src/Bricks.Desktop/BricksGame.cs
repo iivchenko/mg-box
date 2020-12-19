@@ -2,19 +2,22 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Bricks.Desktop
 {
     public class BricksGame : Game
     {
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
+
         private SpriteBatch _spriteBatch;
+
         private GameBorder _gameBorder;
         private Ball _ball;
-        private Ball _staticBall; //used to draw image next to remaining ball count at top of screen
-
+        private Ball _staticBall;
         private Paddle _paddle;
-        private Wall _wall;
+        private Brick[,] _wall;
+
         private int _screenWidth = 0;
         private int _screenHeight = 0;
         private MouseState _oldMouseState;
@@ -39,37 +42,30 @@ namespace Bricks.Desktop
         public BricksGame()
         {
             _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
+            Content.RootDirectory = "Content";
+
             base.Initialize();
+
+            IsMouseVisible = true;
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            _screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //set game to 502x700 or screen max if smaller
-            if (_screenWidth >= 502)
-            {
-                _screenWidth = 502;
-            }
-            if (_screenHeight >= 700)
-            {
-                _screenHeight = 700;
-            }
-            _graphics.PreferredBackBufferWidth = _screenWidth;
-            _graphics.PreferredBackBufferHeight = _screenHeight;
+            _graphics.PreferredBackBufferWidth = _screenWidth = 502;
+            _graphics.PreferredBackBufferHeight = _screenHeight = 700;
             _graphics.ApplyChanges();
 
-            //create game objects
-            int paddleX = (_screenWidth - _paddleSprite.Width) / 2;
-            //we'll center the paddle on the screen to start
-            int paddleY = _screenHeight - 100;  //paddle will be 100 pixels from the bottom of the screen
-            _paddle = new Paddle(paddleX, paddleY, _screenWidth, _spriteBatch, _paddleSprite);  // create the game paddle
-            _wall = new Wall(1, 50, _spriteBatch, _brickSprite);
+            _paddle = new Paddle(
+                (_screenWidth - _paddleSprite.Width) / 2,
+                _screenHeight - 100, 
+                _screenWidth, 
+                _spriteBatch, 
+                _paddleSprite);
+
+            _wall = CreateWall(1, 50, _brickSprite, _spriteBatch);
             _gameBorder = new GameBorder(_screenWidth, _screenHeight, _spriteBatch, _piexel);
 
             _ball =
@@ -123,8 +119,9 @@ namespace Bricks.Desktop
             {
                 ballsRemaining = 3;
                 _ball.Score = 0;
-                _wall = new Wall(1, 50, _spriteBatch, _brickSprite);
+                _wall = CreateWall(1, 50, _brickSprite, _spriteBatch);
             }
+
             readyToServeBall = false;
             float ballX = _paddle.X + (_paddle.Width) / 2;
             float ballY = _paddle.Y - _ball.Height;
@@ -185,8 +182,10 @@ namespace Bricks.Desktop
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
+
             _paddle.Draw();
-            _wall.Draw();
+            foreach(var brick in _wall) brick.Draw();
+
             _gameBorder.Draw();
 
             if (_ball.Visible)
@@ -212,7 +211,7 @@ namespace Bricks.Desktop
             {
                 _ball.Visible = false;
                 _ball.bricksCleared = 0;
-                _wall = new Wall(1, 50, _spriteBatch, _brickSprite);
+                _wall = CreateWall(1, 50, _brickSprite, _spriteBatch);
                 readyToServeBall = true;
             }
             if (readyToServeBall)
@@ -233,7 +232,38 @@ namespace Bricks.Desktop
             _spriteBatch.DrawString(_labelFont, ballsRemaining.ToString(), new Vector2(40, 10), Color.White);
 
             _spriteBatch.End();
+
             base.Draw(gameTime);
+        }
+
+        private static Brick[,] CreateWall(float x, float y, Texture2D brick, SpriteBatch spriteBatch)
+        {
+            var wall = new Brick[7, 10];
+
+            for (int i = 0; i < 7; i++)
+            {
+                var color = i switch
+                {
+                    0 => Color.Red,
+                    1 => Color.Orange,
+                    2 => Color.Yellow,
+                    3 => Color.Green,
+                    4 => Color.Blue,
+                    5 => Color.Indigo,
+                    6 => Color.Violet,
+                    _ => Color.White
+                };
+
+                var brickY = y + i * brick.Height;
+
+                for (int j = 0; j < 10; j++)
+                {
+                    var brickX = x + j * brick.Width;
+                    wall[i, j] = new Brick(new Vector2(brickX, brickY), color, spriteBatch, brick);
+                }
+            }
+
+            return wall;
         }
     }
 }

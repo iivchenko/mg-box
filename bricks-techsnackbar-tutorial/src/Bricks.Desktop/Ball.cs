@@ -94,32 +94,33 @@ namespace Bricks.Desktop
             YVelocity = yVelocity;
         }
 
-        public bool Move(Wall wall, Paddle paddle)
+        public bool Move(Brick[,] wall, Paddle paddle)
         {
             if (Visible == false)
             {
                 return false;
             }
-            X = X + XVelocity;
-            Y = Y + YVelocity;
+
+            X += XVelocity;
+            Y += YVelocity;
 
             //check for wall hits
             if (X < 1)
             {
                 X = 1;
-                XVelocity = XVelocity * -1;
+                XVelocity *= -1;
                 PlaySound(_wallBounceSfx);
             }
             if (X > ScreenWidth - Width + 5)
             {
                 X = ScreenWidth - Width + 5;
-                XVelocity = XVelocity * -1;
+                XVelocity *= -1;
                 PlaySound(_wallBounceSfx);
             }
             if (Y < 1)
             {
                 Y = 1;
-                YVelocity = YVelocity * -1;
+                YVelocity *= -1;
                 PlaySound(_wallBounceSfx);
             }
             if (Y > ScreenHeight)
@@ -129,6 +130,7 @@ namespace Bricks.Desktop
                 PlaySound(_wallBounceSfx);
                 return false;
             }
+
             //check for paddle hit
             //paddle is 70 pixels. we'll logically divide it into segments that will determine the angle of the bounce
 
@@ -143,46 +145,22 @@ namespace Bricks.Desktop
                 {
                     offset = 0;
                 }
-                switch (offset)
+                XVelocity = offset switch
                 {
-                    case 0:
-                        XVelocity = -6;
-                        break;
-                    case 1:
-                        XVelocity = -5;
-                        break;
-                    case 2:
-                        XVelocity = -4;
-                        break;
-                    case 3:
-                        XVelocity = -3;
-                        break;
-                    case 4:
-                        XVelocity = -2;
-                        break;
-                    case 5:
-                        XVelocity = -1;
-                        break;
-                    case 6:
-                        XVelocity = 1;
-                        break;
-                    case 7:
-                        XVelocity = 2;
-                        break;
-                    case 8:
-                        XVelocity = 3;
-                        break;
-                    case 9:
-                        XVelocity = 4;
-                        break;
-                    case 10:
-                        XVelocity = 5;
-                        break;
-                    default:
-                        XVelocity = 6;
-                        break;
-                }
-                YVelocity = YVelocity * -1;
+                    0 => -6,
+                    1 => -5,
+                    2 => -4,
+                    3 => -3,
+                    4 => -2,
+                    5 => -1,
+                    6 => 1,
+                    7 => 2,
+                    8 => 3,
+                    9 => 4,
+                    10 => 5,
+                    _ => 6,
+                };
+                YVelocity *= -1;
                 Y = paddle.Y - Height + 1;
                 return true;
             }
@@ -193,7 +171,7 @@ namespace Bricks.Desktop
                 {
                     for (int j = 0; j < 10; j++)
                     {
-                        Brick brick = wall.BrickWall[i, j];
+                        Brick brick = wall[i, j];
                         if (brick.Visible)
                         {
                             Rectangle brickRect = new Rectangle((int)brick.Position.X, (int)brick.Position.Y, (int)brick.Width, (int)brick.Height);
@@ -211,27 +189,21 @@ namespace Bricks.Desktop
                     }
                 }
             }
+
             return true;
         }
 
-        public static void PlaySound(SoundEffect sound)
+        private static void PlaySound(SoundEffect sound)
         {
-            float volume = 1;
-            float pitch = 0.0f;
-            float pan = 0.0f;
+            const float volume = 1;
+            const float pitch = 0.0f;
+            const float pan = 0.0f;
             sound.Play(volume, pitch, pan);
         }
 
-        public static bool HitTest(Rectangle r1, Rectangle r2)
+        private static bool HitTest(Rectangle r1, Rectangle r2)
         {
-            if (Rectangle.Intersect(r1, r2) != Rectangle.Empty)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return r1.Intersects(r2);
         }
     }
 }
