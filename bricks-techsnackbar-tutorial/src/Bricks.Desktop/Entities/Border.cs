@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Bricks.Desktop.Entities
 {
-    public sealed class GameBorder : IEntity
+    public sealed class Border : IEntity
     {
         private readonly Texture2D _pixel;
 
@@ -16,7 +16,7 @@ namespace Bricks.Desktop.Entities
 
         private SpriteBatch _spriteBatch;
 
-        public GameBorder(float screenWidth, float screenHeight, SpriteBatch spriteBatch, Texture2D pixel)
+        public Border(float screenWidth, float screenHeight, SpriteBatch spriteBatch, Texture2D pixel)
         {
             Width = screenWidth;
             Height = screenHeight;

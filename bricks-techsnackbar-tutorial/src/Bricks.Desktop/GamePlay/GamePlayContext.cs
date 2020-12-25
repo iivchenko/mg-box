@@ -30,7 +30,7 @@ namespace Bricks.Desktop.GamePlay
         public SpriteFont LabelFont { get; set; }
 
         // Game Entities
-        public GameBorder GameBorder { get; set; }
+        public Border GameBorder { get; set; }
         public Ball Ball { get; set; }
         public Ball StaticBall { get; set; }
         public Paddle Paddle { get; set; }

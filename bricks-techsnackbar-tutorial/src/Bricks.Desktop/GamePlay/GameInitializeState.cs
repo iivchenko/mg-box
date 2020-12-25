@@ -32,7 +32,7 @@ namespace Bricks.Desktop.GamePlay
             Context.PaddleSprite);
 
             Context.Wall = WallFactory.CreateWall(1, 50, Context.BrickSprite, Context.SpriteBatch);
-            Context.GameBorder = new GameBorder(Context.ScreenWidth, Context.ScreenHeight, Context.SpriteBatch, Context.Piexel);
+            Context.GameBorder = new Border(Context.ScreenWidth, Context.ScreenHeight, Context.SpriteBatch, Context.Piexel);
 
             Context.Ball =
                 new Ball(
