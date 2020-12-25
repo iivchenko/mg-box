@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectangleCollision.Desktop"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerPixelCollision.Desktop", "per-pixel-collision-sample\PerPixelCollision.Desktop\PerPixelCollision.Desktop.csproj", "{75295B8C-13FC-4E6E-AEA2-6E03A8EF14BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransformedCollision.Desktop", "transformed-collision-sample\TransformedCollision.Desktop\TransformedCollision.Desktop.csproj", "{5101AA04-A90D-42DA-BF14-10116994FE7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransformedCollisionTest.Desktop", "transformed-collision-sample\TransformedCollisionTest.Desktop\TransformedCollisionTest.Desktop.csproj", "{42101E60-CC9F-494A-806B-3AC3DB5B3FCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{75295B8C-13FC-4E6E-AEA2-6E03A8EF14BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75295B8C-13FC-4E6E-AEA2-6E03A8EF14BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75295B8C-13FC-4E6E-AEA2-6E03A8EF14BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5101AA04-A90D-42DA-BF14-10116994FE7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5101AA04-A90D-42DA-BF14-10116994FE7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5101AA04-A90D-42DA-BF14-10116994FE7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5101AA04-A90D-42DA-BF14-10116994FE7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42101E60-CC9F-494A-806B-3AC3DB5B3FCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42101E60-CC9F-494A-806B-3AC3DB5B3FCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42101E60-CC9F-494A-806B-3AC3DB5B3FCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42101E60-CC9F-494A-806B-3AC3DB5B3FCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
