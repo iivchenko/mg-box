@@ -7,18 +7,11 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-#region Using Statements
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
-#endregion
-
-
 
 namespace RectangleCollision
 {
@@ -93,8 +86,8 @@ namespace RectangleCollision
         protected override void LoadContent()
         {
             // Load textures
-            blockTexture = Content.Load<Texture2D>("Block");
-            personTexture = Content.Load<Texture2D>("Person");
+            blockTexture = Content.Load<Texture2D>("Sprites/Block");
+            personTexture = Content.Load<Texture2D>("Sprites/Person");
 
             // Create a sprite batch to draw those textures
             spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
