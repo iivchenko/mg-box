@@ -1,6 +1,8 @@
 ﻿using Bricks.Desktop.Engine.StateManagement;
+using Bricks.Desktop.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
 
 namespace Bricks.Desktop.GamePlay
 {
@@ -24,7 +26,7 @@ namespace Bricks.Desktop.GamePlay
 
         public override void Update(GameTime gameTime)
         {
-            if (Context.Ball.bricksCleared >= 70)
+            if (!Context.Entities.Any(x => x is Brick))
             {
                 OnStateUpdate(new GameInitializeState(Context));
                 return;

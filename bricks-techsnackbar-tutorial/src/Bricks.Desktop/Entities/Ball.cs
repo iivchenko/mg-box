@@ -30,7 +30,6 @@ namespace Bricks.Desktop.Entities
         public float ScreenHeight { get; set; } //height of game screen
         public bool Visible { get; set; }  //is ball visible on screen
         public int Score { get; set; }
-        public int bricksCleared { get; set; } //number of bricks cleared this level
 
         public Ball(
             Vector2 position,
@@ -62,7 +61,6 @@ namespace Bricks.Desktop.Entities
             ScreenHeight = screenHeight; 
             Visible = false;
             Score = 0;
-            bricksCleared = 0;
         }
 
         public Vector2 Position => _position;
@@ -162,7 +160,6 @@ namespace Bricks.Desktop.Entities
                 PlaySound(_brickBounceSfx);
                 Score += brick.Score;
                 YVelocity *= -1;
-                bricksCleared++;
             }
 
             return true;
