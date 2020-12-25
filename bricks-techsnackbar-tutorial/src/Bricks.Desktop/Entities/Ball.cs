@@ -11,7 +11,6 @@ namespace Bricks.Desktop.Entities
     public sealed class Ball : IEntity
     {
         private readonly Texture2D _sprite;
-        private readonly SoundEffect _startSfx;
         private readonly SoundEffect _wallBounceSfx;
         private readonly SoundEffect _paddleBounceSfx;
         private readonly SoundEffect _brickBounceSfx;
@@ -19,10 +18,9 @@ namespace Bricks.Desktop.Entities
         private readonly SpriteBatch _spriteBatch;
 
         private Vector2 _position;
-        private float _rotation;
+        private Vector2 _velocity;
 
-        public float XVelocity { get; set; }
-        public float YVelocity { get; set; }
+        private float _rotation;
         public float Height { get; set; }
         public float Width { get; set; }
 
@@ -36,18 +34,13 @@ namespace Bricks.Desktop.Entities
             float screenHeight,
             SpriteBatch spriteBatch,
             Texture2D sprite,
-            SoundEffect startSfx,
             SoundEffect wallBounceSfx,
             SoundEffect paddleBounceSfx,
             SoundEffect brickBounceSfx)
         {
             _position = position;
-
-            XVelocity = 0;
-            YVelocity = 0;
             _rotation = 0;
             _sprite = sprite;
-            _startSfx = startSfx;
             _wallBounceSfx = wallBounceSfx;
             _paddleBounceSfx = paddleBounceSfx;
             _brickBounceSfx = brickBounceSfx;
@@ -59,42 +52,43 @@ namespace Bricks.Desktop.Entities
             ScreenWidth = screenWidth;
             ScreenHeight = screenHeight;
             Score = 0;
+
+            _velocity = Vector2.Zero;
         }
 
-        public Vector2 Position => _position;
-
-        public void Launch(float x, float y, float xVelocity, float yVelocity)
+        public Vector2 Position
         {
-            PlaySound(_startSfx);
+            get => _position;
+            set => _position = value;
+        }
 
-            _position.X = x;
-            _position.Y = y;
-            XVelocity = xVelocity;
-            YVelocity = yVelocity;
+        public Vector2 Velocity
+        {
+            get => _velocity;
+            set => _velocity = value;
         }
 
         public bool Move(IList<Brick> wall, IList<IEntity> entities, Paddle paddle)
         {
-            _position.X += XVelocity;
-            _position.Y += YVelocity;
+            _position += Velocity;
 
             //check for wall hits
             if (_position.X < 1)
             {
                 _position.X = 1;
-                XVelocity *= -1;
+                _velocity.X *= -1;
                 PlaySound(_wallBounceSfx);
             }
             if (_position.X > ScreenWidth - Width + 5)
             {
                 _position.X = ScreenWidth - Width + 5;
-                XVelocity *= -1;
+                _velocity.X *= -1;
                 PlaySound(_wallBounceSfx);
             }
             if (_position.Y < 1)
             {
                 _position.Y = 1;
-                YVelocity *= -1;
+                _velocity.Y *= -1;
                 PlaySound(_wallBounceSfx);
             }
             if (_position.Y > ScreenHeight)
@@ -117,7 +111,7 @@ namespace Bricks.Desktop.Entities
                 {
                     offset = 0;
                 }
-                XVelocity = offset switch
+                _velocity.X = offset switch
                 {
                     0 => -6,
                     1 => -5,
@@ -132,7 +126,7 @@ namespace Bricks.Desktop.Entities
                     10 => 5,
                     _ => 6,
                 };
-                YVelocity *= -1;
+                _velocity.Y *= -1;
                 _position.Y = paddle.Position.Y - Height + 1;
                 return true;
             }
@@ -145,7 +139,7 @@ namespace Bricks.Desktop.Entities
                 entities.Remove(brick);
                 PlaySound(_brickBounceSfx);
                 Score += brick.Score;
-                YVelocity *= -1;
+                _velocity.Y *= -1;
             }
 
             return true;

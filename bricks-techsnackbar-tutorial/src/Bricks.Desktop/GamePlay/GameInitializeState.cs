@@ -40,7 +40,6 @@ namespace Bricks.Desktop.GamePlay
                     Context.ScreenHeight,
                     Context.SpriteBatch,
                     Context.BallSprite,
-                    Context.StartSound,
                     Context.WallBounceSound,
                     Context.PaddleBounceSound,
                     Context.BrickSound);
