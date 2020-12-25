@@ -72,32 +72,6 @@ namespace Bricks.Desktop.Entities
         {
             _position += Velocity;
 
-            //check for wall hits
-            if (_position.X < 1)
-            {
-                _position.X = 1;
-                _velocity.X *= -1;
-                PlaySound(_wallBounceSfx);
-            }
-            if (_position.X > ScreenWidth - Width + 5)
-            {
-                _position.X = ScreenWidth - Width + 5;
-                _velocity.X *= -1;
-                PlaySound(_wallBounceSfx);
-            }
-            if (_position.Y < 1)
-            {
-                _position.Y = 1;
-                _velocity.Y *= -1;
-                PlaySound(_wallBounceSfx);
-            }
-            if (_position.Y > ScreenHeight)
-            {
-                _position.Y = 0;
-                PlaySound(_wallBounceSfx);
-                return false;
-            }
-
             //check for paddle hit
             //paddle is 70 pixels. we'll logically divide it into segments that will determine the angle of the bounce
 

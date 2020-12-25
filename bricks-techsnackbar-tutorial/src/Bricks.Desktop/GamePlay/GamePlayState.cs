@@ -32,9 +32,30 @@ namespace Bricks.Desktop.GamePlay
                 return;
             }
 
-            bool inPlay = Context.Ball.Move(Context.Wall, Context.Entities, Context.Paddle);
-            if (!inPlay)
+            Context.Ball.Move(Context.Wall, Context.Entities, Context.Paddle);
+
+            if (Context.Ball.Position.X < 1)
             {
+                Context.Ball.Position = new Vector2(1, Context.Ball.Position.Y);
+                Context.Ball.Velocity = new Vector2(Context.Ball.Velocity.X * -1, Context.Ball.Velocity.Y);
+                Context.WallBounceSound.Play();
+            }
+            else if (Context.Ball.Position.X > Context.ScreenWidth - Context.Ball.Width + 5)
+            {
+                Context.Ball.Position = new Vector2(Context.ScreenWidth - Context.Ball.Width + 5, Context.Ball.Position.Y);
+                Context.Ball.Velocity = new Vector2(Context.Ball.Velocity.X * -1, Context.Ball.Velocity.Y);
+                Context.WallBounceSound.Play();
+            }
+            else if (Context.Ball.Position.Y < 1)
+            {
+                Context.Ball.Position = new Vector2(Context.Ball.Position.Y, 1);
+                Context.Ball.Velocity = new Vector2(Context.Ball.Velocity.X, Context.Ball.Velocity.Y * -1);
+                Context.WallBounceSound.Play();
+            }
+            else if (Context.Ball.Position.Y > Context.ScreenHeight)
+            {
+                Context.MissSound.Play();
+
                 Context.BallsRemaining--;
                 Context.Hud.BallsRemaining--;
                 var state = Context.BallsRemaining < 1
@@ -42,6 +63,7 @@ namespace Bricks.Desktop.GamePlay
                     : new GameServeBallState(Context) as IState<GamePlayContext>;
 
                 OnStateUpdate(state);
+                return;
             }
 
             var newKeyboardState = Keyboard.GetState();
