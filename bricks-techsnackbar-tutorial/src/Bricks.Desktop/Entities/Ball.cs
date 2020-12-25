@@ -15,7 +15,7 @@ namespace Bricks.Desktop.Entities
         private readonly SoundEffect _wallBounceSfx;
         private readonly SoundEffect _paddleBounceSfx;
         private readonly SoundEffect _brickBounceSfx;
-        
+
         private readonly SpriteBatch _spriteBatch;
 
         private Vector2 _position;
@@ -25,17 +25,16 @@ namespace Bricks.Desktop.Entities
         public float YVelocity { get; set; }
         public float Height { get; set; }
         public float Width { get; set; }
-       
+
         public float ScreenWidth { get; set; } //width of game screen
         public float ScreenHeight { get; set; } //height of game screen
-        public bool Visible { get; set; }  //is ball visible on screen
         public int Score { get; set; }
 
         public Ball(
             Vector2 position,
-            float screenWidth, 
-            float screenHeight, 
-            SpriteBatch spriteBatch, 
+            float screenWidth,
+            float screenHeight,
+            SpriteBatch spriteBatch,
             Texture2D sprite,
             SoundEffect startSfx,
             SoundEffect wallBounceSfx,
@@ -58,8 +57,7 @@ namespace Bricks.Desktop.Entities
 
             _spriteBatch = spriteBatch;
             ScreenWidth = screenWidth;
-            ScreenHeight = screenHeight; 
-            Visible = false;
+            ScreenHeight = screenHeight;
             Score = 0;
         }
 
@@ -67,14 +65,8 @@ namespace Bricks.Desktop.Entities
 
         public void Launch(float x, float y, float xVelocity, float yVelocity)
         {
-            if (Visible)
-            {
-                return;
-            }
-
             PlaySound(_startSfx);
 
-            Visible = true;
             _position.X = x;
             _position.Y = y;
             XVelocity = xVelocity;
@@ -83,11 +75,6 @@ namespace Bricks.Desktop.Entities
 
         public bool Move(IList<Brick> wall, IList<IEntity> entities, Paddle paddle)
         {
-            if (!Visible)
-            {
-                return false;
-            }
-
             _position.X += XVelocity;
             _position.Y += YVelocity;
 
@@ -112,7 +99,6 @@ namespace Bricks.Desktop.Entities
             }
             if (_position.Y > ScreenHeight)
             {
-                Visible = false;
                 _position.Y = 0;
                 PlaySound(_wallBounceSfx);
                 return false;
@@ -180,16 +166,14 @@ namespace Bricks.Desktop.Entities
 
         public void Draw(GameTime gameTime)
         {
-            if (Visible)
-            { 
-                _rotation += .1f;
-                if (_rotation > 3 * Math.PI)
-                {
-                    _rotation = 0;
-                }
+            _rotation += .1f;
 
-                _spriteBatch.Draw(_sprite, Position, null, Color.White, _rotation, new Vector2(Width / 2, Height / 2), 1.0f, SpriteEffects.None, 0);
+            if (_rotation > 3 * Math.PI)
+            {
+                _rotation = 0;
             }
+
+            _spriteBatch.Draw(_sprite, Position, null, Color.White, _rotation, new Vector2(Width / 2, Height / 2), 1.0f, SpriteEffects.None, 0);
         }
     }
 }
