@@ -54,16 +54,35 @@ namespace Bricks.Desktop.GamePlay
                 if (newMouseState.X >= 0 || newMouseState.X < Context.ScreenWidth)
                 {
                     Context.Paddle.MoveTo(newMouseState.X);
+
+                    if (Context.Paddle.Position.X < 1)
+                    {
+                        Context.Paddle.Position = new Vector2(1, Context.Paddle.Position.Y);
+                    }
+                    else if ((Context.Paddle.Position.X + Context.Paddle.Width) > Context.ScreenWidth)
+                    {
+                        Context.Paddle.Position = new Vector2(Context.ScreenWidth - Context.Paddle.Width, Context.Paddle.Position.Y);
+                    }
                 }
             }
 
             if (newKeyboardState.IsKeyDown(Keys.Left))
             {
                 Context.Paddle.MoveLeft();
+
+                if (Context.Paddle.Position.X < 1)
+                {
+                    Context.Paddle.Position = new Vector2(1, Context.Paddle.Position.Y);
+                }
             }
             if (newKeyboardState.IsKeyDown(Keys.Right))
             {
                 Context.Paddle.MoveRight();
+
+                if ((Context.Paddle.Position.X + Context.Paddle.Width) > Context.ScreenWidth)
+                {
+                    Context.Paddle.Position = new Vector2(Context.ScreenWidth - Context.Paddle.Width, Context.Paddle.Position.Y);
+                }
             }
 
             Context.OldMouseState = newMouseState;

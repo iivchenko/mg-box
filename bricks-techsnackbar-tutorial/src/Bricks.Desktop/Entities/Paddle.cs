@@ -9,15 +9,12 @@ namespace Bricks.Desktop.Entities
         private readonly Texture2D _sprite;
         private readonly SpriteBatch _spriteBatch;
         private readonly Vector2 _origin;
-        private readonly float _screenWidth;
 
         private Vector2 _position;
-        private Rectangle _body;
 
-        public Paddle(Vector2 position, float screenWidth, SpriteBatch spriteBatch, Texture2D sprite)
+        public Paddle(Vector2 position, SpriteBatch spriteBatch, Texture2D sprite)
         {
             _position = position;
-            _screenWidth = screenWidth;
             _sprite = sprite;
             _spriteBatch = spriteBatch;
 
@@ -25,17 +22,29 @@ namespace Bricks.Desktop.Entities
 
             Width = _sprite.Width;
             Height = _sprite.Height;
-
-            UpdateBody();
         }
 
-        public Vector2 Position => _position;
+        public Vector2 Position
+        {
+            get
+            {
+                return _position;
+            }
+            set
+            {
+                _position = value;
+            }
+        }
 
-        public Rectangle Body => _body;
+        public Rectangle Body => new Rectangle((int)_position.X, (int)_position.Y, (int)Width, (int)Height);
 
-        public float Width { get; set; }
+        public float Width { get; }
 
-        public float Height { get; set; }
+        public float Height { get; }
+
+        public void Update(GameTime gameTime)
+        {
+        }
 
         public void Draw(GameTime gameTime)
         {
@@ -54,58 +63,16 @@ namespace Bricks.Desktop.Entities
         public void MoveLeft()
         {
             _position.X -= 5;
-
-            if (_position.X < 1)
-            {
-                _position.X = 1;
-            }
-
-            UpdateBody();
         }
 
         public void MoveRight()
         {
             _position.X += 5;
-
-            if ((_position.X + Width) > _screenWidth)
-            {
-                _position.X = _screenWidth - Width;
-            }
-
-            UpdateBody();
         }
 
         public void MoveTo(float x)
         {
-            if (x >= 0)
-            {
-                if (x < _screenWidth - Width)
-                {
-                    _position.X = x;
-                }
-                else
-                {
-                    _position.X = _screenWidth - Width;
-                }
-            }
-            else
-            {
-                if (x < 0)
-                {
-                    _position.X = 0;
-                }
-            }
-
-            UpdateBody();
-        }
-
-        public void Update(GameTime gameTime)
-        {
-        }
-
-        private void UpdateBody()
-        {
-            _body = new Rectangle((int)_position.X, (int)_position.Y, (int)Width, (int)Height);
-        }
+            _position.X = x;
+        }       
     }
 }

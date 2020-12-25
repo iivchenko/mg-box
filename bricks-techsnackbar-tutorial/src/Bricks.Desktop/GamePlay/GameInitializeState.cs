@@ -27,7 +27,6 @@ namespace Bricks.Desktop.GamePlay
             new Vector2(
                 (Context.ScreenWidth - Context.PaddleSprite.Width) / 2,
                 Context.ScreenHeight - 100),
-            Context.ScreenWidth,
             Context.SpriteBatch,
             Context.PaddleSprite);
 
