@@ -7,8 +7,9 @@ namespace Bricks.Desktop
         [STAThread]
         static void Main()
         {
-            using (var game = new BricksGame())
-                game.Run();
+            using var game = new BricksGame();
+
+            game.Run();
         }
     }
 }

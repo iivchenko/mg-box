@@ -1,13 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Bricks.Desktop.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bricks.Desktop
+namespace Bricks.Desktop.Entities
 {
-    public sealed class Ball
+    public sealed class Ball : IEntity
     {
         private readonly Texture2D _sprite;
         private readonly SoundEffect _startSfx;
@@ -15,8 +16,8 @@ namespace Bricks.Desktop
         private readonly SoundEffect _paddleBounceSfx;
         private readonly SoundEffect _brickBounceSfx;
 
-        public float X { get; set; }
-        public float Y { get; set; }
+        private Vector2 _position;
+
         public float XVelocity { get; set; }
         public float YVelocity { get; set; }
         public float Height { get; set; }
@@ -29,9 +30,12 @@ namespace Bricks.Desktop
         public int Score { get; set; }
         public int bricksCleared { get; set; } //number of bricks cleared this level
 
+        public Vector2 Position => _position;
+
         private readonly SpriteBatch _spriteBatch;  //allows us to write on backbuffer when we need to draw self
 
         public Ball(
+            Vector2 position,
             float screenWidth, 
             float screenHeight, 
             SpriteBatch spriteBatch, 
@@ -41,8 +45,8 @@ namespace Bricks.Desktop
             SoundEffect paddleBounceSfx,
             SoundEffect brickBounceSfx)
         {
-            X = 0;
-            Y = 0;
+            _position = position;
+
             XVelocity = 0;
             YVelocity = 0;
             Rotation = 0;
@@ -64,22 +68,6 @@ namespace Bricks.Desktop
             UseRotation = true;
         }
 
-        public void Draw()
-        {
-            if (Visible)
-            {
-                if (UseRotation)
-                {
-                    Rotation += .1f;
-                    if (Rotation > 3 * Math.PI)
-                    {
-                        Rotation = 0;
-                    }
-                }
-                _spriteBatch.Draw(_sprite, new Vector2(X, Y), null, Color.White, Rotation, new Vector2(Width / 2, Height / 2), 1.0f, SpriteEffects.None, 0);
-            }
-        }
-
         public void Launch(float x, float y, float xVelocity, float yVelocity)
         {
             if (Visible)
@@ -90,45 +78,45 @@ namespace Bricks.Desktop
             PlaySound(_startSfx);
 
             Visible = true;
-            X = x;
-            Y = y;
+            _position.X = x;
+            _position.Y = y;
             XVelocity = xVelocity;
             YVelocity = yVelocity;
         }
 
-        public bool Move(IList<Brick> wall, Paddle paddle)
+        public bool Move(IList<Brick> wall, IList<IEntity> entities, Paddle paddle)
         {
             if (!Visible)
             {
                 return false;
             }
 
-            X += XVelocity;
-            Y += YVelocity;
+            _position.X += XVelocity;
+            _position.Y += YVelocity;
 
             //check for wall hits
-            if (X < 1)
+            if (_position.X < 1)
             {
-                X = 1;
+                _position.X = 1;
                 XVelocity *= -1;
                 PlaySound(_wallBounceSfx);
             }
-            if (X > ScreenWidth - Width + 5)
+            if (_position.X > ScreenWidth - Width + 5)
             {
-                X = ScreenWidth - Width + 5;
+                _position.X = ScreenWidth - Width + 5;
                 XVelocity *= -1;
                 PlaySound(_wallBounceSfx);
             }
-            if (Y < 1)
+            if (_position.Y < 1)
             {
-                Y = 1;
+                _position.Y = 1;
                 YVelocity *= -1;
                 PlaySound(_wallBounceSfx);
             }
-            if (Y > ScreenHeight)
+            if (_position.Y > ScreenHeight)
             {
                 Visible = false;
-                Y = 0;
+                _position.Y = 0;
                 PlaySound(_wallBounceSfx);
                 return false;
             }
@@ -136,11 +124,11 @@ namespace Bricks.Desktop
             //check for paddle hit
             //paddle is 70 pixels. we'll logically divide it into segments that will determine the angle of the bounce
 
-            Rectangle ballRect = new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
+            Rectangle ballRect = new Rectangle((int)_position.X, (int)_position.Y, (int)Width, (int)Height);
             if (ballRect.Intersects(paddle.Body))
             {
                 PlaySound(_paddleBounceSfx);
-                int offset = Convert.ToInt32((paddle.Width - (paddle.Position.X + paddle.Width - X + Width / 2)));
+                int offset = Convert.ToInt32((paddle.Width - (paddle.Position.X + paddle.Width - _position.X + Width / 2)));
                 offset = offset / 5;
                 if (offset < 0)
                 {
@@ -162,7 +150,7 @@ namespace Bricks.Desktop
                     _ => 6,
                 };
                 YVelocity *= -1;
-                Y = paddle.Position.Y - Height + 1;
+                _position.Y = paddle.Position.Y - Height + 1;
                 return true;
             }
 
@@ -171,6 +159,7 @@ namespace Bricks.Desktop
             if (brick != null)
             {
                 wall.Remove(brick);
+                entities.Remove(brick);
                 PlaySound(_brickBounceSfx);
                 Score += brick.Score;
                 YVelocity *= -1;
@@ -186,6 +175,27 @@ namespace Bricks.Desktop
             const float pitch = 0.0f;
             const float pan = 0.0f;
             sound.Play(volume, pitch, pan);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            if (Visible)
+            {
+                if (UseRotation)
+                {
+                    Rotation += .1f;
+                    if (Rotation > 3 * Math.PI)
+                    {
+                        Rotation = 0;
+                    }
+                }
+                _spriteBatch.Draw(_sprite, Position, null, Color.White, Rotation, new Vector2(Width / 2, Height / 2), 1.0f, SpriteEffects.None, 0);
+            }
         }
     }
 }

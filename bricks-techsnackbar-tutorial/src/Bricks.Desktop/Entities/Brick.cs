@@ -1,9 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Bricks.Desktop.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bricks.Desktop
+namespace Bricks.Desktop.Entities
 {
-    public sealed class Brick
+    public sealed class Brick : IEntity
     {
         private readonly Vector2 _rotation = new Vector2(0, 0);
         private readonly Rectangle _body;
@@ -15,9 +16,9 @@ namespace Bricks.Desktop
         private Vector2 _position;
 
         public Brick(
-            Vector2 position, 
-            Color color, 
-            SpriteBatch spriteBatch, 
+            Vector2 position,
+            Color color,
+            SpriteBatch spriteBatch,
             Texture2D sprite,
             int score)
         {
@@ -45,18 +46,23 @@ namespace Bricks.Desktop
 
         public int Score { get; }
 
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
             _spriteBatch.Draw(
-                _sprite,
-                _position,
-                null,
-                _color,
-                0,
-                _rotation,
-                1.0f,
-                SpriteEffects.None,
-                0);
+               _sprite,
+               _position,
+               null,
+               _color,
+               0,
+               _rotation,
+               1.0f,
+               SpriteEffects.None,
+               0);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

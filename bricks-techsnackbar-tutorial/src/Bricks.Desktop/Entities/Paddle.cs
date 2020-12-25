@@ -1,9 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Bricks.Desktop.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bricks.Desktop
+namespace Bricks.Desktop.Entities
 {
-    public sealed class Paddle
+    public sealed class Paddle : IEntity
     {
         private readonly Texture2D _sprite;
         private readonly SpriteBatch _spriteBatch;
@@ -36,18 +37,18 @@ namespace Bricks.Desktop
 
         public float Height { get; set; }
 
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
             _spriteBatch.Draw(
-                _sprite, 
-                _position, 
-                null, 
-                Color.White, 
-                0,
-                _origin, 
-                1.0f, 
-                SpriteEffects.None, 
-                0);
+               _sprite,
+               _position,
+               null,
+               Color.White,
+               0,
+               _origin,
+               1.0f,
+               SpriteEffects.None,
+               0);
         }
 
         public void MoveLeft()
@@ -96,6 +97,10 @@ namespace Bricks.Desktop
             }
 
             UpdateBody();
+        }
+
+        public void Update(GameTime gameTime)
+        {
         }
 
         private void UpdateBody()
