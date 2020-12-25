@@ -45,33 +45,30 @@ namespace Bricks.Desktop.GamePlay
                     Context.PaddleBounceSound,
                     Context.BrickSound);
 
-            Context.StaticBall =
-                new Ball(
-                    new Vector2(25, 25),
-                    Context.ScreenWidth,
-                    Context.ScreenHeight,
-                    Context.SpriteBatch,
-                    Context.BallSprite,
-                    null,
-                    null,
-                    null,
-                    null)
-                {
-                    Visible = true,
-                    UseRotation = false
-                };
-
             Context.Entities = new List<IEntity>
                 {
                     Context.Paddle,
                     Context.Ball,
-                    Context.StaticBall,
                     Context.GameBorder
                 };
 
             Context.Entities.AddRange(Context.Wall);
 
             Context.BallsRemaining = 3;
+
+            Context.Hud = new Hud(
+                Context.LabelFont, 
+                Context.ScreenHeight, 
+                Context.ScreenWidth, 
+                Context.Ball, 
+                Context.BallSprite,
+                Context.SpriteBatch)
+            {
+                BallsRemaining = Context.BallsRemaining = 3
+            };
+
+            Context.Entities.Add(Context.Hud);
+            
 
             OnStateUpdate(new GameServeBallState(Context));
         }

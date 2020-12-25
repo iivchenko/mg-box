@@ -32,9 +32,9 @@ namespace Bricks.Desktop.GamePlay
         // Game Entities
         public Border GameBorder { get; set; }
         public Ball Ball { get; set; }
-        public Ball StaticBall { get; set; }
         public Paddle Paddle { get; set; }
         public List<Brick> Wall { get; set; }
+        public Hud Hud { get; set; }
 
         public List<IEntity> Entities { get; set; }
 

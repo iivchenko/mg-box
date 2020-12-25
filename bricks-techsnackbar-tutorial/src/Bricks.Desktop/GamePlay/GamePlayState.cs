@@ -19,11 +19,6 @@ namespace Bricks.Desktop.GamePlay
 
             foreach (var entity in Context.Entities) entity.Draw(gameTime);
 
-            string scoreMsg = "Score: " + Context.Ball.Score.ToString("00000");
-            Vector2 space = Context.LabelFont.MeasureString(scoreMsg);
-            Context.SpriteBatch.DrawString(Context.LabelFont, scoreMsg, new Vector2((Context.ScreenWidth - space.X) / 2, Context.ScreenHeight - 40), Color.White);
-            Context.SpriteBatch.DrawString(Context.LabelFont, Context.BallsRemaining.ToString(), new Vector2(40, 10), Color.White);
-
             Context.SpriteBatch.End();
         }
 
@@ -39,6 +34,7 @@ namespace Bricks.Desktop.GamePlay
             if (!inPlay)
             {
                 Context.BallsRemaining--;
+                Context.Hud.BallsRemaining--;
                 var state = Context.BallsRemaining < 1
                     ? new GameOverState(Context) as IState<GamePlayContext>
                     : new GameServeBallState(Context) as IState<GamePlayContext>;

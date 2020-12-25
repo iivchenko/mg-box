@@ -15,24 +15,22 @@ namespace Bricks.Desktop.Entities
         private readonly SoundEffect _wallBounceSfx;
         private readonly SoundEffect _paddleBounceSfx;
         private readonly SoundEffect _brickBounceSfx;
+        
+        private readonly SpriteBatch _spriteBatch;
 
         private Vector2 _position;
+        private float _rotation;
 
         public float XVelocity { get; set; }
         public float YVelocity { get; set; }
         public float Height { get; set; }
         public float Width { get; set; }
-        public float Rotation { get; set; }
-        public bool UseRotation { get; set; }
+       
         public float ScreenWidth { get; set; } //width of game screen
         public float ScreenHeight { get; set; } //height of game screen
         public bool Visible { get; set; }  //is ball visible on screen
         public int Score { get; set; }
         public int bricksCleared { get; set; } //number of bricks cleared this level
-
-        public Vector2 Position => _position;
-
-        private readonly SpriteBatch _spriteBatch;  //allows us to write on backbuffer when we need to draw self
 
         public Ball(
             Vector2 position,
@@ -49,7 +47,7 @@ namespace Bricks.Desktop.Entities
 
             XVelocity = 0;
             YVelocity = 0;
-            Rotation = 0;
+            _rotation = 0;
             _sprite = sprite;
             _startSfx = startSfx;
             _wallBounceSfx = wallBounceSfx;
@@ -65,8 +63,9 @@ namespace Bricks.Desktop.Entities
             Visible = false;
             Score = 0;
             bricksCleared = 0;
-            UseRotation = true;
         }
+
+        public Vector2 Position => _position;
 
         public void Launch(float x, float y, float xVelocity, float yVelocity)
         {
@@ -185,16 +184,14 @@ namespace Bricks.Desktop.Entities
         public void Draw(GameTime gameTime)
         {
             if (Visible)
-            {
-                if (UseRotation)
+            { 
+                _rotation += .1f;
+                if (_rotation > 3 * Math.PI)
                 {
-                    Rotation += .1f;
-                    if (Rotation > 3 * Math.PI)
-                    {
-                        Rotation = 0;
-                    }
+                    _rotation = 0;
                 }
-                _spriteBatch.Draw(_sprite, Position, null, Color.White, Rotation, new Vector2(Width / 2, Height / 2), 1.0f, SpriteEffects.None, 0);
+
+                _spriteBatch.Draw(_sprite, Position, null, Color.White, _rotation, new Vector2(Width / 2, Height / 2), 1.0f, SpriteEffects.None, 0);
             }
         }
     }
