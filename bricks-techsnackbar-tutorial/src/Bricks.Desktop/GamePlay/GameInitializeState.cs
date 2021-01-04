@@ -23,26 +23,27 @@ namespace Bricks.Desktop.GamePlay
         {
             LoadContent();
 
+            Context.World = new World();
+
             Context.Paddle = new Paddle(
             new Vector2(
                 (Context.ScreenWidth - Context.PaddleSprite.Width) / 2,
                 Context.ScreenHeight - 100),
             Context.SpriteBatch,
-            Context.PaddleSprite);
+            Context.PaddleSprite,
+            Context.World);
 
-            Context.Wall = WallFactory.CreateWall(1, 50, Context.BrickSprite, Context.SpriteBatch);
+            Context.Wall = WallFactory.CreateWall(1, 50, Context.BrickSprite, Context.SpriteBatch, Context.World);
             Context.GameBorder = new Border(Context.ScreenWidth, Context.ScreenHeight, Context.SpriteBatch, Context.Piexel);
 
             Context.Ball =
                 new Ball(
                     Vector2.Zero,
-                    Context.ScreenWidth,
-                    Context.ScreenHeight,
                     Context.SpriteBatch,
                     Context.BallSprite,
-                    Context.WallBounceSound,
                     Context.PaddleBounceSound,
-                    Context.BrickSound);
+                    Context.BrickSound,
+                    Context.World);
 
             Context.Entities = new List<IEntity>
                 {

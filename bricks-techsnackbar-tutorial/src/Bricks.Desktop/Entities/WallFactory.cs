@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Bricks.Desktop.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ namespace Bricks.Desktop.Entities
 {
     public static class WallFactory
     {
-        public static List<Brick> CreateWall(float x, float y, Texture2D brick, SpriteBatch spriteBatch)
+        public static List<Brick> CreateWall(float x, float y, Texture2D brick, SpriteBatch spriteBatch, IWorld world)
         {
             var wall = new Brick[7, 10];
 
@@ -35,7 +36,8 @@ namespace Bricks.Desktop.Entities
                         color,
                         spriteBatch,
                         brick,
-                        7 - i);
+                        7 - i,
+                        world);
                 }
             }
 

@@ -11,6 +11,17 @@ namespace Bricks.Desktop.GamePlay
         public GamePlayState(GamePlayContext context)
             : base(context)
         {
+            foreach (var brick in Context.Wall)
+            {
+                brick.Scored +=
+                    (b, score) =>
+                    {
+                        Context.Hud.UpdateScore(score);
+                        Context.Wall.Remove(brick);
+                        Context.Entities.Remove(brick);
+                        Context.World.Remove(brick);
+                    };
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -31,8 +42,6 @@ namespace Bricks.Desktop.GamePlay
                 OnStateUpdate(new GameInitializeState(Context));
                 return;
             }
-
-            Context.Ball.Move(Context.Wall, Context.Entities, Context.Paddle);
 
             if (Context.Ball.Position.X < 1)
             {
@@ -104,6 +113,8 @@ namespace Bricks.Desktop.GamePlay
                     Context.Paddle.Position = new Vector2(Context.ScreenWidth - Context.Paddle.Width, Context.Paddle.Position.Y);
                 }
             }
+
+            foreach (var entity in Context.Entities.ToList()) entity.Update(gameTime);
 
             Context.OldMouseState = newMouseState;
             Context.OldKeyboardState = newKeyboardState;

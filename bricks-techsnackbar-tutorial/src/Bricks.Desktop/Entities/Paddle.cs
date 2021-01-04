@@ -4,17 +4,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Bricks.Desktop.Entities
 {
-    public sealed class Paddle : IEntity
+    public sealed class Paddle : Entity
     {
         private readonly Texture2D _sprite;
         private readonly SpriteBatch _spriteBatch;
         private readonly Vector2 _origin;
 
-        private Vector2 _position;
-
-        public Paddle(Vector2 position, SpriteBatch spriteBatch, Texture2D sprite)
+        public Paddle(Vector2 position, SpriteBatch spriteBatch, Texture2D sprite, IWorld world)
+            : base (world)
         {
-            _position = position;
+            Position = position;
+
             _sprite = sprite;
             _spriteBatch = spriteBatch;
 
@@ -24,33 +24,23 @@ namespace Bricks.Desktop.Entities
             Height = _sprite.Height;
         }
 
-        public Vector2 Position
-        {
-            get
-            {
-                return _position;
-            }
-            set
-            {
-                _position = value;
-            }
-        }
-
-        public Rectangle Body => new Rectangle((int)_position.X, (int)_position.Y, (int)Width, (int)Height);
-
         public float Width { get; }
 
         public float Height { get; }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
+            Body = new Rectangle((int)Position.X, (int)Position.Y, (int)Width, (int)Height);
+
+            // TODO: Implement controller for the paddle. Implement collision with border
+            //Move(gameTime);
         }
 
-        public void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
             _spriteBatch.Draw(
                _sprite,
-               _position,
+               Position,
                null,
                Color.White,
                0,
@@ -62,17 +52,21 @@ namespace Bricks.Desktop.Entities
 
         public void MoveLeft()
         {
-            _position.X -= 5;
+            Position = new Vector2(Position.X - 5, Position.Y);
         }
 
         public void MoveRight()
         {
-            _position.X += 5;
+            Position = new Vector2(Position.X + 5, Position.Y);
         }
 
         public void MoveTo(float x)
         {
-            _position.X = x;
-        }       
+            Position = new Vector2(x, Position.Y);
+        }
+
+        internal override void CollidedBy(Entity entity)
+        {
+        }
     }
 }

@@ -27,7 +27,8 @@ namespace Bricks.Desktop.Entities
 
         public void Update(GameTime gameTime)
         {
-            throw new System.NotImplementedException();
+            // TODO: Implement workder as a set of static bodies
+            // TODO: Implement missing zone as trigger
         }
 
         public void Draw(GameTime gameTime)

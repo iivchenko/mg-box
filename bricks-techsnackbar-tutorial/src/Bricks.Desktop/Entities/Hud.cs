@@ -14,6 +14,8 @@ namespace Bricks.Desktop.Entities
         private int _screenHeight;
         private int _screenWidth;
 
+        private int _score;
+
         public Hud(
             SpriteFont font,
             int screenHeight,
@@ -28,6 +30,8 @@ namespace Bricks.Desktop.Entities
             _ball = ball;
             _ballSprite = ballSprite;
             _spriteBatch = spriteBatch;
+
+            _score = 0;
         }
 
         public int BallsRemaining { get; set; }
@@ -38,7 +42,7 @@ namespace Bricks.Desktop.Entities
         {
             _spriteBatch.Draw(_ballSprite, new Vector2(15, 15), Color.White);
 
-            string scoreMsg = "Score: " + _ball.Score.ToString("00000");
+            string scoreMsg = "Score: " + _score.ToString("00000");
 
             var space = _font.MeasureString(scoreMsg);
             _spriteBatch.DrawString(_font, scoreMsg, new Vector2((_screenWidth - space.X) / 2, _screenHeight - 40), Color.White);
@@ -47,6 +51,11 @@ namespace Bricks.Desktop.Entities
 
         public void Update(GameTime gameTime)
         {
+        }
+
+        public void UpdateScore(int score)
+        {
+            _score += score;
         }
     }
 }
