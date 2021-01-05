@@ -3,13 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectangleCollision.Desktop", "rectangle-collision-sample\RectangleCollision.Desktop\RectangleCollision.Desktop.csproj", "{E8D2C279-44EB-4D1D-B764-BFBF7158169A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RectangleCollision.Desktop", "rectangle-collision-sample\RectangleCollision.Desktop\RectangleCollision.Desktop.csproj", "{E8D2C279-44EB-4D1D-B764-BFBF7158169A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerPixelCollision.Desktop", "per-pixel-collision-sample\PerPixelCollision.Desktop\PerPixelCollision.Desktop.csproj", "{75295B8C-13FC-4E6E-AEA2-6E03A8EF14BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerPixelCollision.Desktop", "per-pixel-collision-sample\PerPixelCollision.Desktop\PerPixelCollision.Desktop.csproj", "{75295B8C-13FC-4E6E-AEA2-6E03A8EF14BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransformedCollision.Desktop", "transformed-collision-sample\TransformedCollision.Desktop\TransformedCollision.Desktop.csproj", "{5101AA04-A90D-42DA-BF14-10116994FE7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransformedCollision.Desktop", "transformed-collision-sample\TransformedCollision.Desktop\TransformedCollision.Desktop.csproj", "{5101AA04-A90D-42DA-BF14-10116994FE7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransformedCollisionTest.Desktop", "transformed-collision-sample\TransformedCollisionTest.Desktop\TransformedCollisionTest.Desktop.csproj", "{42101E60-CC9F-494A-806B-3AC3DB5B3FCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransformedCollisionTest.Desktop", "transformed-collision-sample\TransformedCollisionTest.Desktop\TransformedCollisionTest.Desktop.csproj", "{42101E60-CC9F-494A-806B-3AC3DB5B3FCA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Intro To Game Loop", "Intro To Game Loop", "{8A7F0FD8-6D33-460E-96E2-0256DCC8B935}"
+	ProjectSection(SolutionItems) = preProject
+		intro-to-game-loop\IntroToGameLoop_Article_4_0.docx = intro-to-game-loop\IntroToGameLoop_Article_4_0.docx
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
