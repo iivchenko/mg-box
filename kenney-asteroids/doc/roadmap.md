@@ -5,11 +5,11 @@
 	* Implement Entity
 	* Implement Controller
 	* Implement Events (Created, Destroyed, .etc)
-* Implement out of view/screen logic
-* Implement asteroid
-  * Implement World physics
-* Implement projectile
-* Implement Wave Manager/System ??
+  * Implement out of view/screen logic
+  * Implement asteroid
+    * Implement World physics
+  * Implement projectile
+  * Implement Wave Manager/System ??
 
 * Polish v0.2
   * Implement HUD
