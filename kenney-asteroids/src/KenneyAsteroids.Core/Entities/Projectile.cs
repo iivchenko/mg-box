@@ -1,4 +1,4 @@
-﻿using KenneyAsteroids.Engine;
+﻿using KenneyAsteroids.Engine.Worlds;
 
 namespace KenneyAsteroids.Core.Entities
 {

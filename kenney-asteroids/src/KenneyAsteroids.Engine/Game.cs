@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace KenneyAsteroids.Engine
 {
-    public class Game : Microsoft.Xna.Framework.Game
+    public sealed class Game : Microsoft.Xna.Framework.Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
