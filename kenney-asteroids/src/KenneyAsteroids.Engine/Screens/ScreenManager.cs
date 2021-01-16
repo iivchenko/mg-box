@@ -61,11 +61,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// A default font shared by all the screens. This saves
         /// each screen having to bother loading their own local copy.
         /// </summary>
-        public SpriteFont Font
-        {
-            get { return font; }
-        }
-
+        public SpriteFont Font => font;
 
         /// <summary>
         /// If true, the manager prints out a list of all the screens
@@ -82,7 +78,6 @@ namespace KenneyAsteroids.Engine.Screens
         #endregion
 
         #region Initialization
-
 
         /// <summary>
         /// Constructs a new screen manager component.
@@ -116,8 +111,8 @@ namespace KenneyAsteroids.Engine.Screens
             ContentManager content = Game.Content;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("menufont");
-            blankTexture = content.Load<Texture2D>("blank");
+            font = content.Load<SpriteFont>("Fonts/Default");
+            blankTexture = content.Load<Texture2D>("Sprites/Blank");
 
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in screens)

@@ -1,50 +1,31 @@
-﻿using Microsoft.Xna.Framework;
+﻿using KenneyAsteroids.Engine.Screens;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace KenneyAsteroids.Engine
 {
     public sealed class Game : Microsoft.Xna.Framework.Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private readonly GraphicsDeviceManager _graphics;
+        private readonly ScreenManager _screenManager;
 
-        public Game()
+        public Game(GameScreen initialScreen)
         {
             _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            _screenManager = new ScreenManager(this);
+
+            _screenManager.AddScreen(initialScreen, null);
+
+            Components.Add(_screenManager);
+
+            ScreenColor = Color.CornflowerBlue;
         }
 
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
-
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
-        }
-
-        protected override void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
-
-            base.Update(gameTime);
-        }
+        public Color ScreenColor { get; set; }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
+            GraphicsDevice.Clear(ScreenColor);
 
             base.Draw(gameTime);
         }

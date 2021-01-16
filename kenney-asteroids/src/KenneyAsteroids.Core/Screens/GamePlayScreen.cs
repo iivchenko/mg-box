@@ -1,6 +1,8 @@
-﻿namespace KenneyAsteroids.Core.Screens
+﻿using KenneyAsteroids.Engine.Screens;
+
+namespace KenneyAsteroids.Core.Screens
 {
-    public sealed class GamePlayScreen
+    public sealed class GamePlayScreen : GameScreen
     {
     }
 }
