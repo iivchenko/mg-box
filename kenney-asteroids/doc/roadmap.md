@@ -36,3 +36,5 @@
 
 * Unsorted
   * Add screen shot of the game to the readme page
+  * Unit editor??
+  * Local multiplayer for max 4 players
