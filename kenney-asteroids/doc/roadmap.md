@@ -10,6 +10,7 @@
     * Implement World physics
   * Implement projectile
   * Implement Wave Manager/System ??
+  * Provide versioning
 
 * Polish v0.2
   * Implement HUD
