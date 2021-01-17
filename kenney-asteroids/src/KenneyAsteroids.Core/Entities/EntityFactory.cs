@@ -19,8 +19,24 @@ namespace KenneyAsteroids.Core.Entities
         {
             const float MaxSpeed = 400.0f;
             const float Acceleration = 10.0f;
+            
+            // TODO: Create xnb processor for Sprite
+            var sourceRec = new Rectangle(223, 0, 100, 83);
+            var sprite = new Sprite(_spriteSheet, sourceRec);
 
-            return new Ship(new Sprite(_spriteSheet, new Rectangle(223, 0, 100, 83)), _spriteBatch, MaxSpeed, Acceleration)
+            return new Ship(sprite, _spriteBatch, MaxSpeed, Acceleration)
+            {
+                Position = position
+            };
+        }
+
+        public Asteroid CreateAsteroid(Vector2 position, Vector2 velocity, float rotationSpeed)
+        {
+            // TODO: Create xnb processor for Sprite
+            var sourceRec = new Rectangle(0, 521, 119, 96);
+            var sprite = new Sprite(_spriteSheet, sourceRec);
+            
+            return new Asteroid(sprite, _spriteBatch, velocity, rotationSpeed)
             {
                 Position = position
             };

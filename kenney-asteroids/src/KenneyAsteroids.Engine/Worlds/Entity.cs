@@ -2,6 +2,9 @@
 
 namespace KenneyAsteroids.Engine.Worlds
 {
+    /* TODO: Refine Entiy in the future
+     * Provide Rotation property
+     */
     public abstract class Entity
     {
         public Vector2 Position { get; set; }

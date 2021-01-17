@@ -4,6 +4,13 @@ using System;
 
 namespace KenneyAsteroids.Desktop
 {
+    /* TODO: Global tasks
+     * Introduce content file conventions: 
+     *   Textures -> filename.texture
+     *   Spirtes -> filename.sprite
+     *   Audion -> filename.audio
+     *   Music -> filename.music
+    */
     public static class Program
     {
         [STAThread]
