@@ -27,6 +27,7 @@
 * First release v1.0
 
 * Port to Android v1.1
+  * Extract 'Content' project
   * Implement onscreen game pad
   * Implement simple enemy ship AI
   * Implement ufo
@@ -34,6 +35,7 @@
 	
 * Port to WEB v1.2
   * Make game playeable from the readme.md
+  * Folow [official demo](https://www.monogame.net/webdemo/)
 
 * Unsorted
   * Add screen shot of the game to the readme page

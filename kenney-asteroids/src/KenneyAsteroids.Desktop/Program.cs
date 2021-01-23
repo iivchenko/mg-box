@@ -5,6 +5,9 @@ using System;
 namespace KenneyAsteroids.Desktop
 {
     /* TODO: Global tasks
+     * 
+     * Implement pipeline processor for Kenney's Sprite Sheets 
+     *  - http://rbwhitaker.wikidot.com/content-pipeline-extension-7
      * Introduce content file conventions: 
      *   Textures -> filename.texture
      *   Spirtes -> filename.sprite

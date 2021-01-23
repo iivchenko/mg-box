@@ -61,7 +61,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// A default font shared by all the screens. This saves
         /// each screen having to bother loading their own local copy.
         /// </summary>
-        public SpriteFont Font => font;
+        public SpriteFont Font => font; // TODO: Remove it complitelly afte all screens are used
 
         /// <summary>
         /// If true, the manager prints out a list of all the screens
@@ -111,8 +111,8 @@ namespace KenneyAsteroids.Engine.Screens
             ContentManager content = Game.Content;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("Fonts/Default");
-            blankTexture = content.Load<Texture2D>("Sprites/Blank");
+            font = content.Load<SpriteFont>("Fonts/Default");  // TODO: Remove it complitelly afte all screens are used
+            blankTexture = content.Load<Texture2D>("Sprites/Blank"); // TOD: Replace with programatic one pixel black texture
 
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in screens)
