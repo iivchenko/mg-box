@@ -10,6 +10,7 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\..\KenneyAsteroids.PipelineExtension\bin\Release\netstandard2.1\KenneyAsteroids.PipelineExtension.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -19,18 +20,6 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Default.spritefont
-
-#begin Sprites/AsteroidsSpriteSheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/AsteroidsSpriteSheet.png
 
 #begin Sprites/Blank.png
 /importer:TextureImporter
@@ -43,4 +32,21 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Blank.png
+
+#begin SpriteSheets/Asteroids.sheet.xml
+/importer:SpriteSheetImporter
+/processor:SpriteSheetProcessor
+/build:SpriteSheets/Asteroids.sheet.xml
+
+#begin SpriteSheets/Asteroids.sprite.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Asteroids.sprite.png
 

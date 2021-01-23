@@ -1,5 +1,6 @@
 ﻿using KenneyAsteroids.Core.Entities;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Worlds;
 using Microsoft.Xna.Framework;
@@ -15,7 +16,7 @@ namespace KenneyAsteroids.Core.Screens
         private readonly Random _random;
 
         private Viewport _viewport;
-        private Texture2D _spriteSheet;
+        private SpriteSheet _spriteSheet;
         private EntityFactory _factory;
 
         /* TODO: Merge _updatables and _entities
@@ -35,7 +36,7 @@ namespace KenneyAsteroids.Core.Screens
             base.LoadContent();
 
             _viewport = ScreenManager.Game.GraphicsDevice.Viewport;
-            _spriteSheet = ScreenManager.Game.Content.Load<Texture2D>("Sprites/AsteroidsSpriteSheet");
+            _spriteSheet = ScreenManager.Game.Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
             _factory = new EntityFactory(_spriteSheet, ScreenManager.SpriteBatch);
 
             var timer = new Timer(TimeSpan.FromSeconds(5), SpawnAsteroid, true);

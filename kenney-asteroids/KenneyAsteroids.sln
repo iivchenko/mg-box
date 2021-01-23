@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KenneyAsteroids.Engine", "src\KenneyAsteroids.Engine\KenneyAsteroids.Engine.csproj", "{4B02DFA3-6643-4878-B9E5-F54996805333}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenneyAsteroids.Engine", "src\KenneyAsteroids.Engine\KenneyAsteroids.Engine.csproj", "{4B02DFA3-6643-4878-B9E5-F54996805333}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KenneyAsteroids.Core", "src\KenneyAsteroids.Core\KenneyAsteroids.Core.csproj", "{C2BB655F-42C0-4119-80D5-2DCF7B63A046}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenneyAsteroids.Core", "src\KenneyAsteroids.Core\KenneyAsteroids.Core.csproj", "{C2BB655F-42C0-4119-80D5-2DCF7B63A046}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KenneyAsteroids.Desktop", "src\KenneyAsteroids.Desktop\KenneyAsteroids.Desktop.csproj", "{217C6F0F-D2F6-4577-9E36-535E23AF60BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenneyAsteroids.Desktop", "src\KenneyAsteroids.Desktop\KenneyAsteroids.Desktop.csproj", "{217C6F0F-D2F6-4577-9E36-535E23AF60BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenneyAsteroids.PipelineExtension", "src\KenneyAsteroids.PipelineExtension\KenneyAsteroids.PipelineExtension.csproj", "{C0929254-D788-49FC-8E91-544948ACDC55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{217C6F0F-D2F6-4577-9E36-535E23AF60BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{217C6F0F-D2F6-4577-9E36-535E23AF60BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{217C6F0F-D2F6-4577-9E36-535E23AF60BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0929254-D788-49FC-8E91-544948ACDC55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0929254-D788-49FC-8E91-544948ACDC55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0929254-D788-49FC-8E91-544948ACDC55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0929254-D788-49FC-8E91-544948ACDC55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

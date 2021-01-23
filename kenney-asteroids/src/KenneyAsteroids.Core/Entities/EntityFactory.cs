@@ -6,10 +6,10 @@ namespace KenneyAsteroids.Core.Entities
 {
     public sealed class EntityFactory
     {
-        private readonly Texture2D _spriteSheet;
+        private readonly SpriteSheet _spriteSheet;
         private readonly SpriteBatch _spriteBatch;
         
-        public EntityFactory(Texture2D spriteSheet, SpriteBatch spriteBatch)
+        public EntityFactory(SpriteSheet spriteSheet, SpriteBatch spriteBatch)
         {
             _spriteSheet = spriteSheet;
             _spriteBatch = spriteBatch;
@@ -19,11 +19,8 @@ namespace KenneyAsteroids.Core.Entities
         {
             const float MaxSpeed = 400.0f;
             const float Acceleration = 10.0f;
-            
-            // TODO: Create xnb processor for Sprite
-            var sourceRec = new Rectangle(223, 0, 100, 83);
-            var sprite = new Sprite(_spriteSheet, sourceRec);
 
+            var sprite = _spriteSheet["playerShip1_blue"];
             return new Ship(sprite, _spriteBatch, MaxSpeed, Acceleration)
             {
                 Position = position
@@ -32,9 +29,7 @@ namespace KenneyAsteroids.Core.Entities
 
         public Asteroid CreateAsteroid(Vector2 position, Vector2 velocity, float rotationSpeed)
         {
-            // TODO: Create xnb processor for Sprite
-            var sourceRec = new Rectangle(0, 521, 119, 96);
-            var sprite = new Sprite(_spriteSheet, sourceRec);
+            var sprite = _spriteSheet["meteorBrown_big2"];
             
             return new Asteroid(sprite, _spriteBatch, velocity, rotationSpeed)
             {

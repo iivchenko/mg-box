@@ -30,5 +30,6 @@
   <ItemGroup>
     <ProjectReference Include="..\KenneyAsteroids.Core\KenneyAsteroids.Core.csproj" />
     <ProjectReference Include="..\KenneyAsteroids.Engine\KenneyAsteroids.Engine.csproj" />
+    <ProjectReference Include="..\KenneyAsteroids.PipelineExtension\KenneyAsteroids.PipelineExtension.csproj" />
   </ItemGroup>
 </Project>
