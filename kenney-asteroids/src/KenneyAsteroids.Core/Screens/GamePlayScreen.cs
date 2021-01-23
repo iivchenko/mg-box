@@ -1,5 +1,6 @@
 ﻿using KenneyAsteroids.Core.Entities;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Worlds;
@@ -19,6 +20,8 @@ namespace KenneyAsteroids.Core.Screens
         private SpriteSheet _spriteSheet;
         private EntityFactory _factory;
 
+        private ICollisionSystem _collisions;
+
         /* TODO: Merge _updatables and _entities
          * Think on using one interface like IEntity or IGameObject
         */
@@ -29,6 +32,26 @@ namespace KenneyAsteroids.Core.Screens
         public GamePlayScreen()
         {
             _random = new Random();
+
+            var rules = new List<IRule>
+            {
+                new LazyRule<Ship, Asteroid>
+                (
+                    (_, __) => true,
+                    (ship, _) =>
+                    {
+                        var modification = new Modification
+                        {
+                            Entity = ship,
+                            Type = ModificationType.Remove
+                        };
+
+                        _modifications.Add(modification);
+                    }
+                )
+            };
+
+            _collisions = new CollisionSystem(rules);
         }
 
         public override void LoadContent()
@@ -61,8 +84,10 @@ namespace KenneyAsteroids.Core.Screens
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
             _updatables.Iter(x => x.Update(gameTime));
-            _entities.Update(gameTime);
+            _entities.SelectUpdatable().Iter(x => x.Update(gameTime));
+            _collisions.ApplyCollisions(_entities.SelectBodies());
             _entities.Where(IsOutOfScreen).Iter(Teleport);
+
             _modifications.Iter(x =>
             {
                 switch (x.Type)
@@ -86,7 +111,7 @@ namespace KenneyAsteroids.Core.Screens
 
             ScreenManager.SpriteBatch.Begin();
 
-            _entities.Draw(gameTime);
+            _entities.SelectDrawable().Iter(x => x.Draw(gameTime));
 
             ScreenManager.SpriteBatch.End();
         }
@@ -94,7 +119,7 @@ namespace KenneyAsteroids.Core.Screens
         private bool IsOutOfScreen(Entity entity)
         {
             return
-                entity.Position.X + entity.Width / 2.0 < 0 || 
+                entity.Position.X + entity.Width / 2.0 < 0 ||
                 entity.Position.X - entity.Width / 2.0 > _viewport.Width ||
                 entity.Position.Y + entity.Height / 2.0 < 0 ||
                 entity.Position.Y - entity.Height / 2.0 > _viewport.Height;
@@ -138,7 +163,7 @@ namespace KenneyAsteroids.Core.Screens
             var dx = 0;
             var dy = 0;
 
-            switch(_random.Next(0, 4))
+            switch (_random.Next(0, 4))
             {
                 case 0: // Up -> Down
                     x = _random.Next(0, _viewport.Width);
@@ -173,7 +198,7 @@ namespace KenneyAsteroids.Core.Screens
             var direction = new Vector2(dx, dy) - position;
             direction.Normalize();
 
-            var velocity =  direction * new Vector2(_random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed), _random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed));
+            var velocity = direction * new Vector2(_random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed), _random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed));
             var rotationSpeed = MathHelper.ToRadians(_random.Next(BigAsteroidMinRotationSpeed, BigAsteroidMaxRotationSpeed)) * _random.NextDouble() > 0.5 ? 1 : -1;
 
             var asteroid = _factory.CreateAsteroid(position, velocity, rotationSpeed);

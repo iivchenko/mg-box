@@ -1,4 +1,5 @@
 ﻿using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Worlds;
 using Microsoft.Xna.Framework;
@@ -6,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class Asteroid : Entity, IUpdatable, Engine.IDrawable
+    public sealed class Asteroid : Entity, IUpdatable, Engine.IDrawable, IBody
     {
         private readonly Sprite _sprite;
         private readonly SpriteBatch _batch;

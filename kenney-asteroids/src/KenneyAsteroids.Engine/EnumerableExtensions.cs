@@ -1,5 +1,5 @@
-﻿using KenneyAsteroids.Engine.Worlds;
-using Microsoft.Xna.Framework;
+﻿using KenneyAsteroids.Engine.Collisions;
+using KenneyAsteroids.Engine.Worlds;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,22 +16,22 @@ namespace KenneyAsteroids.Engine
             }
         }
 
-        public static void Update<TEntity>(this IEnumerable<TEntity> entities, GameTime gameTime)
+        public static IEnumerable<IUpdatable> SelectUpdatable<TEntity>(this IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
-            foreach(var entity in entities.Where(x => x is IUpdatable).Cast<IUpdatable>())
-            {
-                entity.Update(gameTime);
-            }
+            return entities.Where(x => x is IUpdatable).Cast<IUpdatable>();
         }
 
-        public static void Draw<TEntity>(this IEnumerable<TEntity> entities, GameTime gameTime)
+        public static IEnumerable<IBody> SelectBodies<TEntity>(this IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
-            foreach (var entity in entities.Where(x => x is IDrawable).Cast<IDrawable>())
-            {
-                entity.Draw(gameTime);
-            }
+            return entities.Where(x => x is IBody).Cast<IBody>();
+        }
+
+        public static IEnumerable<IDrawable> SelectDrawable<TEntity>(this IEnumerable<TEntity> entities)
+            where TEntity : Entity
+        {
+            return entities.Where(x => x is IDrawable).Cast<IDrawable>();
         }
     }
 }
