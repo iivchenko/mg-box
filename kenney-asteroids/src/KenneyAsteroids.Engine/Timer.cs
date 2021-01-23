@@ -3,7 +3,7 @@ using System;
 
 namespace KenneyAsteroids.Engine
 {
-    public sealed class Timer : IUpdatable
+    public sealed class Timer : IEntity, IUpdatable
     {
         private enum TimerState
         {

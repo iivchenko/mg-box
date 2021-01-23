@@ -3,7 +3,6 @@ using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
-using KenneyAsteroids.Engine.Worlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -14,19 +13,15 @@ namespace KenneyAsteroids.Core.Screens
 {
     public sealed class GamePlayScreen : GameScreen
     {
+        private readonly ICollisionSystem _collisions;
         private readonly Random _random;
 
         private Viewport _viewport;
         private SpriteSheet _spriteSheet;
         private EntityFactory _factory;
 
-        private ICollisionSystem _collisions;
-
-        /* TODO: Merge _updatables and _entities
-         * Think on using one interface like IEntity or IGameObject
-        */
-        private IList<IUpdatable> _updatables;
-        private IList<Entity> _entities;
+        // TODO: think on mergins this two collections
+        private IList<IEntity> _entities;
         private IList<Modification> _modifications;
 
         public GamePlayScreen()
@@ -64,13 +59,9 @@ namespace KenneyAsteroids.Core.Screens
 
             var timer = new Timer(TimeSpan.FromSeconds(5), SpawnAsteroid, true);
 
-            _updatables = new List<IUpdatable>
+            _entities = new List<IEntity>
             {
-                timer
-            };
-
-            _entities = new List<Entity>
-            {
+                timer,
                 _factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f))
             };
 
@@ -83,10 +74,9 @@ namespace KenneyAsteroids.Core.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            _updatables.Iter(x => x.Update(gameTime));
             _entities.SelectUpdatable().Iter(x => x.Update(gameTime));
             _collisions.ApplyCollisions(_entities.SelectBodies());
-            _entities.Where(IsOutOfScreen).Iter(Teleport);
+            _entities.SelectBodies().Where(IsOutOfScreen).Iter(Teleport);
 
             _modifications.Iter(x =>
             {
@@ -116,7 +106,7 @@ namespace KenneyAsteroids.Core.Screens
             ScreenManager.SpriteBatch.End();
         }
 
-        private bool IsOutOfScreen(Entity entity)
+        private bool IsOutOfScreen(IBody entity)
         {
             return
                 entity.Position.X + entity.Width / 2.0 < 0 ||
@@ -125,7 +115,7 @@ namespace KenneyAsteroids.Core.Screens
                 entity.Position.Y - entity.Height / 2.0 > _viewport.Height;
         }
 
-        private void Teleport(Entity entity)
+        private void Teleport(IBody entity)
         {
             var x = entity.Position.X;
             var y = entity.Position.Y;
@@ -221,7 +211,7 @@ namespace KenneyAsteroids.Core.Screens
 
     public sealed class Modification
     {
-        public Entity Entity { get; set; }
+        public IEntity<Guid> Entity { get; set; }
 
         public ModificationType Type { get; set; }
     }

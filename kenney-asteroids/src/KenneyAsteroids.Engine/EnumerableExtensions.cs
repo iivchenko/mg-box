@@ -1,5 +1,4 @@
 ﻿using KenneyAsteroids.Engine.Collisions;
-using KenneyAsteroids.Engine.Worlds;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,19 +16,19 @@ namespace KenneyAsteroids.Engine
         }
 
         public static IEnumerable<IUpdatable> SelectUpdatable<TEntity>(this IEnumerable<TEntity> entities)
-            where TEntity : Entity
+            where TEntity : IEntity
         {
             return entities.Where(x => x is IUpdatable).Cast<IUpdatable>();
         }
 
         public static IEnumerable<IBody> SelectBodies<TEntity>(this IEnumerable<TEntity> entities)
-            where TEntity : Entity
+            where TEntity : IEntity
         {
             return entities.Where(x => x is IBody).Cast<IBody>();
         }
 
         public static IEnumerable<IDrawable> SelectDrawable<TEntity>(this IEnumerable<TEntity> entities)
-            where TEntity : Entity
+            where TEntity : IEntity
         {
             return entities.Where(x => x is IDrawable).Cast<IDrawable>();
         }

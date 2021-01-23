@@ -1,7 +1,6 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Worlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,7 +8,7 @@ using System;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class Ship : Entity, IUpdatable, Engine.IDrawable, IBody
+    public sealed class Ship : IEntity<Guid>, IUpdatable, Engine.IDrawable, IBody
     {
         private readonly Sprite _sprite;
         private readonly SpriteBatch _batch;
@@ -35,11 +34,18 @@ namespace KenneyAsteroids.Core.Entities
             _scale = Vector2.One;
             _rotation = 0.0f;
 
+            Id = Guid.NewGuid();
             Origin = new Vector2(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
             Position = Vector2.Zero;
             Width = _sprite.Width;
             Height = _sprite.Height;
         }
+        
+        public Guid Id { get; }
+        public Vector2 Position { get; set; }
+        public Vector2 Origin { get; set; }
+        public float Width { get; set; }
+        public float Height { get; set; }
 
         void IUpdatable.Update(GameTime gameTime)
         {
