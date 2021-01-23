@@ -19,10 +19,7 @@ namespace KenneyAsteroids.Core.Screens
         private Viewport _viewport;
         private SpriteSheet _spriteSheet;
         private EntityFactory _factory;
-
-        // TODO: think on mergins this two collections
-        private IList<IEntity> _entities;
-        private IList<Modification> _modifications;
+        private EntityCollection _entities;
 
         public GamePlayScreen()
         {
@@ -33,16 +30,7 @@ namespace KenneyAsteroids.Core.Screens
                 new LazyRule<Ship, Asteroid>
                 (
                     (_, __) => true,
-                    (ship, _) =>
-                    {
-                        var modification = new Modification
-                        {
-                            Entity = ship,
-                            Type = ModificationType.Remove
-                        };
-
-                        _modifications.Add(modification);
-                    }
+                    (ship, _) => _entities.Remove(ship)
                 )
             };
 
@@ -59,13 +47,11 @@ namespace KenneyAsteroids.Core.Screens
 
             var timer = new Timer(TimeSpan.FromSeconds(5), SpawnAsteroid, true);
 
-            _entities = new List<IEntity>
+            _entities = new EntityCollection
             {
                 timer,
                 _factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f))
             };
-
-            _modifications = new List<Modification>();
 
             timer.Start();
         }
@@ -78,21 +64,7 @@ namespace KenneyAsteroids.Core.Screens
             _collisions.ApplyCollisions(_entities.SelectBodies());
             _entities.SelectBodies().Where(IsOutOfScreen).Iter(Teleport);
 
-            _modifications.Iter(x =>
-            {
-                switch (x.Type)
-                {
-                    case ModificationType.Add:
-                        _entities.Add(x.Entity);
-                        break;
-
-                    case ModificationType.Remove:
-                        _entities.Remove(x.Entity);
-                        break;
-                }
-            });
-
-            _modifications.Clear();
+            _entities.Commit();
         }
 
         public override void Draw(GameTime gameTime)
@@ -193,26 +165,7 @@ namespace KenneyAsteroids.Core.Screens
 
             var asteroid = _factory.CreateAsteroid(position, velocity, rotationSpeed);
 
-            var modification = new Modification
-            {
-                Entity = asteroid,
-                Type = ModificationType.Add
-            };
-
-            _modifications.Add(modification);
+            _entities.Add(asteroid);
         }
-    }
-
-    public enum ModificationType
-    {
-        Add,
-        Remove
-    }
-
-    public sealed class Modification
-    {
-        public IEntity<Guid> Entity { get; set; }
-
-        public ModificationType Type { get; set; }
     }
 }
