@@ -46,11 +46,14 @@ namespace KenneyAsteroids.Core.Screens
             _factory = new EntityFactory(_spriteSheet, ScreenManager.SpriteBatch);
 
             var timer = new Timer(TimeSpan.FromSeconds(5), SpawnAsteroid, true);
+            var ship = _factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
+            var controller = new ShipPlayerKeyboardController(ship);
 
             _entities = new EntityCollection
             {
                 timer,
-                _factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f))
+                controller,
+                ship
             };
 
             timer.Start();

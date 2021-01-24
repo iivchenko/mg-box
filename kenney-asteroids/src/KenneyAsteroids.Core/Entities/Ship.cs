@@ -3,7 +3,6 @@ using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace KenneyAsteroids.Core.Entities
@@ -14,25 +13,30 @@ namespace KenneyAsteroids.Core.Entities
         private readonly SpriteBatch _batch;
         private readonly Vector2 _scale;
         private readonly float _maxSpeed;
-        private readonly float _acceleration;
+        private readonly float _maxAcceleration;
+        private readonly float _maxRotation;
 
         private Vector2 _velocity;
         private float _rotation;
+        private ShipAction _action;
 
         public Ship(
             Sprite sprite, 
             SpriteBatch batch,
             float maxSpeed,
-            float acceleration)
+            float maxAcceleration,
+            float maxRotation)
         {
             _sprite = sprite;
             _batch = batch;
             _maxSpeed = maxSpeed;
-            _acceleration = acceleration;
+            _maxAcceleration = maxAcceleration;
+            _maxRotation = maxRotation;
 
             _velocity = Vector2.Zero;
             _scale = Vector2.One;
             _rotation = 0.0f;
+            _action = ShipAction.None;
 
             Id = Guid.NewGuid();
             Origin = new Vector2(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
@@ -47,13 +51,30 @@ namespace KenneyAsteroids.Core.Entities
         public float Width { get; set; }
         public float Height { get; set; }
 
+        public void Apply(ShipAction action)
+        {
+            _action = action;
+        }
+
         void IUpdatable.Update(GameTime gameTime)
         {
-            var direction = ReadDirection();
-            var velocity = _velocity + direction * _acceleration;
+            if (_action.HasFlag(ShipAction.Left))
+            {
+                _rotation -= _maxRotation * gameTime.ToDelta();
+            }
 
-            _velocity = velocity.Length() > _maxSpeed ? _velocity : velocity;
-            _rotation = MathF.Atan2(_velocity.X, -_velocity.Y);
+            if (_action.HasFlag(ShipAction.Right))
+            {
+                _rotation += _maxRotation * gameTime.ToDelta();
+            }
+
+            if (_action.HasFlag(ShipAction.Accelerate))
+            {
+                var direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
+                var velocity = _velocity + direction * _maxAcceleration;
+
+                _velocity = velocity.Length() > _maxSpeed ? _velocity : velocity;
+            }
 
             Position += _velocity * gameTime.ToDelta();
         }
@@ -66,45 +87,18 @@ namespace KenneyAsteroids.Core.Entities
                     Position,
                     Origin,
                     _scale,
-                    _rotation,
+                    _rotation + MathHelper.ToRadians(90), // TODO: Hack! move to the sprite additional rotation
                     Color.White,
                     SpriteEffects.None);
         }
+    }
 
-        private Vector2 ReadDirection()
-        {
-            // TODO: Move input logic out of the ship
-            /* TODO: Redesign key controls:
-             * A - accelerate
-             * W - deccelerate
-             * S - turn counter clock wise
-             * D - turn clock wise
-            */
-            var keyboard = Keyboard.GetState();
-            var x = 0;
-            var y = 0;
-
-            if (keyboard.IsKeyDown(Keys.W))
-            {
-                y += -1;
-            }
-
-            if (keyboard.IsKeyDown(Keys.A))
-            {
-                x += -1;
-            }
-
-            if (keyboard.IsKeyDown(Keys.S))
-            {
-                y += 1;
-            }
-
-            if (keyboard.IsKeyDown(Keys.D))
-            {
-                x += 1;
-            }
-
-            return new Vector2(x, y);
-        }
+    [Flags]
+    public enum ShipAction
+    {
+        None = 0,
+        Accelerate = 1,
+        Left = 2,
+        Right = 4
     }
 }

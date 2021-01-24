@@ -19,9 +19,10 @@ namespace KenneyAsteroids.Core.Entities
         {
             const float MaxSpeed = 400.0f;
             const float Acceleration = 10.0f;
+            const float MaxRotation = 180.0f;
 
             var sprite = _spriteSheet["playerShip1_blue"];
-            return new Ship(sprite, _spriteBatch, MaxSpeed, Acceleration)
+            return new Ship(sprite, _spriteBatch, MaxSpeed, Acceleration, MathHelper.ToRadians(MaxRotation))
             {
                 Position = position
             };
