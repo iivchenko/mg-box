@@ -303,7 +303,7 @@ namespace KenneyAsteroids.Engine.Screens
             if (((direction < 0) && (transitionPosition <= 0)) ||
                 ((direction > 0) && (transitionPosition >= 1)))
             {
-                transitionPosition = MathHelper.Clamp(transitionPosition, 0, 1);
+                transitionPosition = Math.Clamp(transitionPosition, 0, 1);
                 return false;
             }
 
