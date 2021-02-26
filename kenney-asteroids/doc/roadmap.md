@@ -41,3 +41,6 @@
   * Add screen shot of the game to the readme page
   * Unit editor??
   * Local multiplayer for max 4 players
+  * DEBUG. Show body physics boundaries
+  * Introduce pixel collision
+  * Abastract game CORE from MonoGame so ENGINE has direct access to MonoGame
