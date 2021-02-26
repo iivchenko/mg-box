@@ -33,6 +33,11 @@ namespace KenneyAsteroids.Core.Entities
                 action |= ShipAction.Right;
             }
 
+            if (keyboard.IsKeyDown(Keys.Space))
+            {
+                action |= ShipAction.Fire;
+            }
+
             _ship.Apply(action);
         }
     }

@@ -4,6 +4,6 @@ namespace KenneyAsteroids.Engine
 {
     public interface IDrawable
     {
-        void Draw(GameTime gameTime);
+        void Draw(GameTime time);
     }
 }

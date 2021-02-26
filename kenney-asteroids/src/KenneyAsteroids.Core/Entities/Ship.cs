@@ -11,6 +11,7 @@ namespace KenneyAsteroids.Core.Entities
     {
         private readonly Sprite _sprite;
         private readonly SpriteBatch _batch;
+        private readonly Weapon _weapon;
         private readonly Vector2 _scale;
         private readonly float _maxSpeed;
         private readonly float _maxAcceleration;
@@ -23,12 +24,14 @@ namespace KenneyAsteroids.Core.Entities
         public Ship(
             Sprite sprite, 
             SpriteBatch batch,
+            Weapon weapon,
             float maxSpeed,
             float maxAcceleration,
             float maxRotation)
         {
             _sprite = sprite;
             _batch = batch;
+            _weapon = weapon;
             _maxSpeed = maxSpeed;
             _maxAcceleration = maxAcceleration;
             _maxRotation = maxRotation;
@@ -56,30 +59,32 @@ namespace KenneyAsteroids.Core.Entities
             _action = action;
         }
 
-        void IUpdatable.Update(GameTime gameTime)
+        void IUpdatable.Update(GameTime time)
         {
-            if (_action.HasFlag(ShipAction.Left))
-            {
-                _rotation -= _maxRotation * gameTime.ToDelta();
-            }
+            _weapon.Update(time);
+
+            if (_action.HasFlag(ShipAction.Left)) 
+                _rotation -= _maxRotation * time.ToDelta();
 
             if (_action.HasFlag(ShipAction.Right))
-            {
-                _rotation += _maxRotation * gameTime.ToDelta();
-            }
+                _rotation += _maxRotation * time.ToDelta();
 
             if (_action.HasFlag(ShipAction.Accelerate))
             {
-                var direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
-                var velocity = _velocity + direction * _maxAcceleration;
+                var velocity = _velocity + _rotation.ToDirection() * _maxAcceleration;
 
                 _velocity = velocity.Length() > _maxSpeed ? _velocity : velocity;
             }
 
-            Position += _velocity * gameTime.ToDelta();
+            Position += _velocity * time.ToDelta();
+
+            if (_action.HasFlag(ShipAction.Fire))
+                _weapon.Fire(Position, _rotation);
+
+            _action = ShipAction.None;
         }
 
-        void Engine.IDrawable.Draw(GameTime gameTime)
+        void Engine.IDrawable.Draw(GameTime time)
         {
             _batch
                 .Draw(
@@ -87,7 +92,7 @@ namespace KenneyAsteroids.Core.Entities
                     Position,
                     Origin,
                     _scale,
-                    _rotation + MathHelper.ToRadians(90), // TODO: Hack! move to the sprite additional rotation
+                    _rotation,
                     Color.White,
                     SpriteEffects.None);
         }
@@ -96,9 +101,10 @@ namespace KenneyAsteroids.Core.Entities
     [Flags]
     public enum ShipAction
     {
-        None = 0,
-        Accelerate = 1,
-        Left = 2,
-        Right = 4
+        None = 0b0000,
+        Accelerate = 0b0001,
+        Left = 0b0010,
+        Right = 0b0100,
+        Fire = 0b1000
     }
 }
