@@ -51,13 +51,15 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             _viewport = ScreenManager.Game.GraphicsDevice.Viewport;
             _spriteSheet = ScreenManager.Game.Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
+            var font = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/Default");
             _factory = new EntityFactory(_spriteSheet, ScreenManager.SpriteBatch, _bus);
             _enemySpawner = new EnemySpawner(_viewport, _factory, _bus);
 
             var ship = _factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
             var controller = new ShipPlayerKeyboardController(ship);
+            var version = new Version(font, _viewport, ScreenManager.SpriteBatch);
 
-            _entities.Add(controller, ship);
+            _entities.Add(controller, ship, version);
         }
 
         public override void Update(GameTime time, bool otherScreenHasFocus, bool coveredByOtherScreen)
