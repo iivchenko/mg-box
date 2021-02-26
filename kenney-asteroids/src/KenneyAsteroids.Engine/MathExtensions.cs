@@ -28,5 +28,14 @@ namespace KenneyAsteroids.Engine
         {
             return MathF.Atan2(direction.X, -direction.Y);
         }
+
+        public static Vector2 ToNormalized(this Vector2 vector)
+        {
+            var clone = new Vector2(vector.X, vector.Y);
+
+            clone.Normalize();
+
+            return clone;
+        }
     }
 }
