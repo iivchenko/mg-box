@@ -7,7 +7,7 @@ namespace KenneyAsteroids.Core.Entities
     // TODO: Move from game play to manin menu
     public sealed class Version : IEntity, Engine.IDrawable
     {
-        public readonly string V = "0.1";
+        public readonly string V = "v0.1";
 
         private readonly Vector2 _position;
         private readonly SpriteFont _font;
