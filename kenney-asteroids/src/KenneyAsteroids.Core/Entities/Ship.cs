@@ -73,7 +73,7 @@ namespace KenneyAsteroids.Core.Entities
             {
                 var velocity = _velocity + _rotation.ToDirection() * _maxAcceleration;
 
-                _velocity = velocity.Length() > _maxSpeed ? _velocity : velocity;
+                _velocity = velocity.Length() > _maxSpeed ? velocity.ToNormalized() * _maxSpeed : velocity;
             }
 
             Position += _velocity * time.ToDelta();
