@@ -58,8 +58,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             var ship = _factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
             var controller = new ShipPlayerKeyboardController(ship);
             var version = new Version(font, _viewport, ScreenManager.SpriteBatch);
+            var frames = new FrameRate(font, _viewport, ScreenManager.SpriteBatch);
 
-            _entities.Add(controller, ship, version);
+            _entities.Add(controller, ship, version, frames);
         }
 
         public override void Update(GameTime time, bool otherScreenHasFocus, bool coveredByOtherScreen)
