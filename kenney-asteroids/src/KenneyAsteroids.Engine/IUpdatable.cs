@@ -4,6 +4,6 @@ namespace KenneyAsteroids.Engine
 {
     public interface IUpdatable
     {
-        void Update(GameTime gameTime);
+        void Update(GameTime time);
     }
 }

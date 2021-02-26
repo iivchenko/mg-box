@@ -1,4 +1,4 @@
-﻿using KenneyAsteroids.Core.Screens;
+﻿using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
 using System;
 
@@ -13,6 +13,7 @@ namespace KenneyAsteroids.Desktop
      *   Spirtes -> filename.sprite
      *   Audion -> filename.audio
      *   Music -> filename.music
+     * Abstract MonoGame: Remove dependencier from the CORE, leave depedencie in the Engine
     */
     public static class Program
     {

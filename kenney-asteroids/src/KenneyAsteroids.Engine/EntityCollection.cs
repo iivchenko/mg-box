@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenneyAsteroids.Engine
 {
@@ -33,26 +34,18 @@ namespace KenneyAsteroids.Engine
             _modifications.Clear();
         }
 
-        public void Add(IEntity entity)
+        public void Add(params IEntity[] entities)
         {
-            var modification = new Modification
-            {
-                Type = ModificationType.Add,
-                Entity = entity
-            };
-
-            _modifications.Add(modification);
+            entities
+                .Select(x => new Modification { Type = ModificationType.Add, Entity = x })
+                .Iter(_modifications.Add);
         }
 
-        public void Remove(IEntity entity)
+        public void Remove(params IEntity[] entities)
         {
-            var modification = new Modification
-            {
-                Type = ModificationType.Remove,
-                Entity = entity
-            };
-
-            _modifications.Add(modification);
+            entities
+                .Select(x => new Modification { Type = ModificationType.Remove, Entity = x })
+                .Iter(_modifications.Add);
         }
 
         public IEnumerator<IEntity> GetEnumerator()
