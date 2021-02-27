@@ -7,9 +7,10 @@ Classical implementation or the [Asteroids Game](https://en.wikipedia.org/wiki/A
 **Game Screen Shot Placeholder**
 
 ## Releases
+* [v0.1.0](doc/release-notes/v0.1.0.md)
 
 ## Tech Stack
 * .net
 * MonoGame
 
-[Roadmap](/doc/roadmap.md)
+[Roadmap](doc/roadmap.md)
