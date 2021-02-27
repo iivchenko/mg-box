@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:    
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.200
+    - name: Build
+      run: dotnet build .\kenney-asteroids --configuration Release
+    - name: Publish
+      run: dotnet publish .\kenney-asteroids\src\KenneyAsteroids.Desktop\KenneyAsteroids.Desktop.csproj --runtime win-x64 --self-contained true -o .\publish\
+    - name: Artifacts
+      uses: actions/upload-artifact@v1
+      with:
+       name: kenney-asteroids
+       path: publish
