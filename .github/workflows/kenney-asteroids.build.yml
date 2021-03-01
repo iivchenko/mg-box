@@ -22,10 +22,10 @@ jobs:
       run: dotnet build .\kenney-asteroids\src\KenneyAsteroids.PipelineExtension\KenneyAsteroids.PipelineExtension.csproj --configuration Release
     - name: Build Game
       run: dotnet build .\kenney-asteroids --configuration Release
-    - name: Publish
-      run: dotnet publish .\kenney-asteroids\src\KenneyAsteroids.Desktop\KenneyAsteroids.Desktop.csproj --runtime win-x64 --self-contained true -o .\publish\
+    - name: Publish WinX64
+      run: dotnet publish .\kenney-asteroids\src\KenneyAsteroids.Desktop\KenneyAsteroids.Desktop.csproj --configuration Release --runtime win-x64 --self-contained true -o .\publish\kenney-asteroids\win-x64
     - name: Artifacts
       uses: actions/upload-artifact@v1
       with:
-       name: kenney-asteroids
-       path: publish
+       name: kenney-asteroids-win-x64
+       path: publish\kenney-asteroids\win-x64
