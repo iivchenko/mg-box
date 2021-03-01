@@ -5,16 +5,16 @@ using Microsoft.Xna.Framework.Graphics;
 namespace KenneyAsteroids.Core.Entities
 {
     // TODO: Move from game play to manin menu
-    public sealed class Version : IEntity, Engine.IDrawable
+    public sealed class VersionEntity : IEntity, Engine.IDrawable
     {
-        public readonly string V = "v0.1";
+        public readonly string V = Version.Current;
 
         private readonly Vector2 _position;
         private readonly SpriteFont _font;
         private readonly Viewport _viewport;
         private readonly SpriteBatch _spriteBatch;
 
-        public Version(
+        public VersionEntity(
             SpriteFont font,
             Viewport viewport,
             SpriteBatch spriteBatch)
