@@ -14,6 +14,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Read version
+      id: version
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: .\kenney-asteroids\.version
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
@@ -27,5 +32,5 @@ jobs:
     - name: Artifacts
       uses: actions/upload-artifact@v1
       with:
-       name: kenney-asteroids-win-x64
+       name: ${{ format('kenney-asteroids-win-x64-v{0}.{1}', steps.version.outputs.content, github.run_number) }}
        path: publish\kenney-asteroids\win-x64
