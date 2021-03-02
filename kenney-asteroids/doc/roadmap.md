@@ -1,28 +1,28 @@
 # Roadmap :
-* MVP v0.1
-  * Implement ship
-    * Implement World
-	* Implement Entity
-	* Implement Controller
-	* Implement Events (Created, Destroyed, .etc)
-  * Implement out of view/screen logic
-  * Implement asteroid
-    * Implement World physics
-  * Implement projectile
-  * Implement Wave Manager/System ??
-  * Provide versioning
-
-* Polish v0.2
+* MVP v0.2
   * Implement HUD
-	* Lifes
-	* Implement Scores system
-	* Scores
-  * Add project to CI and make available to download game
-  * Add game pad support
+	  * Lifes
+	  * Put framerate
+	  * Remove version
   * Implement MainMenuScreen
+    * Put version
   * Implement PauseScreen
-  * Implement LeaderBoardsScreen
+  * Defeat screen
   * Implement SettingsScreen
+    * Toggle on/off framerate during gameplay
+  * Add project to CI and make available to download game
+  * Improve game play:
+    * Improve enemy spawner
+  * Add game pad support
+  * Sound
+    * Add sfx
+    * Add music
+    * Google if it is allowed to put **music that I bought to the repo**  
+
+* vx.x
+  * Implement Scoring system
+    * Implement LeaderBoardsScreen
+    * Add scores track to the HUD
 
 * First release v1.0
 
@@ -32,6 +32,7 @@
   * Implement simple enemy ship AI
   * Implement ufo
   * Add bonus drops from enemies
+  * LeaderBoardsScreen add on screen board to enter the name
 	
 * Port to WEB v1.2
   * Make game playeable from the readme.md
@@ -44,3 +45,4 @@
   * DEBUG. Show body physics boundaries
   * Introduce pixel collision
   * Abastract game CORE from MonoGame so ENGINE has direct access to MonoGame
+  * Make big asteroids to fall apart into smaller one if shoot
