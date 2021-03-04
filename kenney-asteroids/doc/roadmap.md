@@ -10,7 +10,7 @@
   * Defeat screen
   * Implement SettingsScreen
     * Toggle on/off framerate during gameplay
-  * Add project to CI and make available to download game
+    * Screen resolution
   * Improve game play:
     * Improve enemy spawner
   * Add game pad support
@@ -42,7 +42,5 @@
   * Add screen shot of the game to the readme page
   * Unit editor??
   * Local multiplayer for max 4 players
-  * DEBUG. Show body physics boundaries
-  * Introduce pixel collision
-  * Abastract game CORE from MonoGame so ENGINE has direct access to MonoGame
   * Make big asteroids to fall apart into smaller one if shoot
+  
