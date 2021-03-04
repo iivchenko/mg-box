@@ -28,13 +28,12 @@ namespace KenneyAsteroids.Engine
 #if DEBUG
             _graphics.PreferredBackBufferWidth = (int)(GraphicsDevice.DisplayMode.Width * (2.0 / 3.0));
             _graphics.PreferredBackBufferHeight = (int)(GraphicsDevice.DisplayMode.Height * (2.0 / 3.0));
-            _graphics.ApplyChanges();
 #elif RELEASE
             _graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
             _graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             _graphics.IsFullScreen = true;
-            _graphics.ApplyChanges();
 #endif
+            _graphics.ApplyChanges();
 
             base.Initialize();
         }
