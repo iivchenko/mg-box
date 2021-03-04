@@ -4,6 +4,7 @@ using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
+using KenneyAsteroids.Engine.Storage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private readonly EventSystem _bus;
         private readonly EntityCollection _entities;
         private readonly ICollisionSystem _collisions;
+        private readonly IRepository<GameSettings> _settingsRepository;
 
         private Viewport _viewport;
         private EntityFactory _factory;
@@ -43,6 +45,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _bus = new EventSystem();
 
             _bus.Register(new EntityCreatedEventHandler(_entities));
+            _settingsRepository = new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json")); // TODO: Move to DI-container
         }
 
         public override void LoadContent()
@@ -57,10 +60,15 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             var ship = _factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
             var controller = new ShipPlayerKeyboardController(ship);
-            var version = new VersionEntity(font, _viewport, ScreenManager.SpriteBatch);
-            var frames = new FrameRate(font, _viewport, ScreenManager.SpriteBatch);
 
-            _entities.Add(controller, ship, version, frames);
+            _entities.Add(controller, ship);
+
+            var settings = _settingsRepository.Read();
+
+            if (settings.ToggleFramerate.Toggle)
+            {
+                _entities.Add(new FrameRate(font, _viewport, ScreenManager.SpriteBatch));
+            }
         }
 
         public override void Update(GameTime time, bool otherScreenHasFocus, bool coveredByOtherScreen)
