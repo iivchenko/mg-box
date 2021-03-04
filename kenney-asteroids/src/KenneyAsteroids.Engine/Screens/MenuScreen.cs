@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,6 @@ namespace KenneyAsteroids.Engine.Screens
 
         #region Properties
 
-
         /// <summary>
         /// Gets the list of menu entries, so derived classes can add
         /// or change the menu contents.
@@ -40,7 +40,8 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MenuScreen(string menuTitle)
+        public MenuScreen(string menuTitle, IServiceProvider container)
+            : base (container)
         {
             this.menuTitle = menuTitle;
 

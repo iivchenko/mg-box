@@ -5,8 +5,10 @@ using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,7 +26,8 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private SpriteSheet _spriteSheet;
         private EnemySpawner _enemySpawner;
 
-        public GamePlayScreen()
+        public GamePlayScreen(IServiceProvider container)
+            : base(container)
         {
             var rules = new List<IRule>
             {
@@ -45,7 +48,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _bus = new EventSystem();
 
             _bus.Register(new EntityCreatedEventHandler(_entities));
-            _settingsRepository = new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json")); // TODO: Move to DI-container
+            _settingsRepository = Container.GetService<IRepository<GameSettings>>();
         }
 
         public override void LoadContent()

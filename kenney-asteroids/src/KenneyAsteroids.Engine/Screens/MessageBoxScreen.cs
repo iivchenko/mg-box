@@ -32,8 +32,8 @@ namespace KenneyAsteroids.Engine.Screens
         /// Constructor automatically includes the standard "A=ok, B=cancel"
         /// usage text prompt.
         /// </summary>
-        public MessageBoxScreen(string message)
-            : this(message, true)
+        public MessageBoxScreen(string message, IServiceProvider container)
+            : this(message, true, container)
         { }
 
 
@@ -41,7 +41,8 @@ namespace KenneyAsteroids.Engine.Screens
         /// Constructor lets the caller specify whether to include the standard
         /// "A=ok, B=cancel" usage text prompt.
         /// </summary>
-        public MessageBoxScreen(string message, bool includeUsageText)
+        public MessageBoxScreen(string message, bool includeUsageText, IServiceProvider container)
+            : base(container)
         {
             const string usageText = "\nA button, Space, Enter = ok" +
                                      "\nB button, Esc = cancel";
@@ -67,7 +68,7 @@ namespace KenneyAsteroids.Engine.Screens
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            gradientTexture = content.Load<Texture2D>("gradient"); // TODO: BUG! I don't have 'gradient' content
+            gradientTexture = content.Load<Texture2D>("Sprites/Gradient");
         }
 
 

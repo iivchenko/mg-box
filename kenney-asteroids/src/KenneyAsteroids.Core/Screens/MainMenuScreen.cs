@@ -1,6 +1,7 @@
 ﻿using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace KenneyAsteroids.Core.Screens
 {
@@ -12,8 +13,8 @@ namespace KenneyAsteroids.Core.Screens
         /// <summary>
         /// Constructor fills in the menu contents.
         /// </summary>
-        public MainMenuScreen()
-            : base("Main Menu")
+        public MainMenuScreen(IServiceProvider container)
+            : base("Main Menu", container)
         {
             // Create our menu entries.
             MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
@@ -56,16 +57,15 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GamePlayScreen());
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, Container, new GamePlayScreen(Container));
         }
-
 
         /// <summary>
         /// Event handler for when the Options menu entry is selected.
         /// </summary>
         void SettingsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.AddScreen(new SettingsScreen(), e.PlayerIndex);
+            ScreenManager.AddScreen(new SettingsScreen(Container), e.PlayerIndex);
         }
 
 
@@ -76,7 +76,7 @@ namespace KenneyAsteroids.Core.Screens
         {
             const string message = "Are you sure you want to exit this sample?";
 
-            MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message);
+            MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message, Container);
 
             confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;
 

@@ -1,5 +1,7 @@
 ﻿using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Storage;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace KenneyAsteroids.Core.Screens
 {
@@ -30,10 +32,10 @@ namespace KenneyAsteroids.Core.Screens
         private readonly MenuEntry _toggleFramerate;
         private readonly MenuEntry _back;
 
-        public SettingsScreen()
-            : base("Settings")
+        public SettingsScreen(IServiceProvider container)
+            : base("Settings", container)
         {
-            _settingsRepository = new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json")); // TODO: Move to DI-container
+            _settingsRepository = Container.GetService<IRepository<GameSettings>>();
 
             var settings = _settingsRepository.Read();
 
@@ -55,6 +57,6 @@ namespace KenneyAsteroids.Core.Screens
             MenuEntries.Add(_back);
         }
 
-        private static string Toggle(bool toggle) => toggle ? "on" : "off";
+        private static string Toggle(bool toggle) => toggle ? "On" : "Off";
     }
 }

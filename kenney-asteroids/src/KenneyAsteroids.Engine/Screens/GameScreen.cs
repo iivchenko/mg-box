@@ -12,6 +12,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -37,8 +38,11 @@ namespace KenneyAsteroids.Engine.Screens
     /// </summary>
     public abstract class GameScreen
     {
+        private readonly IServiceScope _scope;
+
         #region Properties
 
+        public IServiceProvider Container { get; }
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -212,6 +216,11 @@ namespace KenneyAsteroids.Engine.Screens
 
         #region Initialization
 
+        protected GameScreen (IServiceProvider container)
+        {
+            _scope = container.CreateScope();
+            Container = _scope.ServiceProvider;
+        }
 
         /// <summary>
         /// Load graphics content for the screen.
@@ -222,8 +231,10 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Unload content for the screen.
         /// </summary>
-        public virtual void UnloadContent() { }
-
+        public virtual void UnloadContent() 
+        {
+            _scope.Dispose();
+        }
 
         #endregion
 

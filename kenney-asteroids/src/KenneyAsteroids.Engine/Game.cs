@@ -1,6 +1,7 @@
 ﻿using KenneyAsteroids.Engine.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace KenneyAsteroids.Engine
 {
@@ -8,23 +9,39 @@ namespace KenneyAsteroids.Engine
     {
         private readonly GraphicsDeviceManager _graphics;
         private readonly ScreenManager _screenManager;
+        private readonly IServiceProvider _container;
+        
+        private readonly GameConfiguration _configuration;
 
-        public Game(GameScreen initialScreen)
+        private readonly Type _initialScreen;
+
+        public Game(IServiceProvider container, GameConfiguration configuration, Type initialScreen)
         {
+            _container = container ?? throw new ArgumentNullException(nameof(container));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _initialScreen = initialScreen ?? throw new ArgumentNullException(nameof(initialScreen));
+
             _graphics = new GraphicsDeviceManager(this);
             _screenManager = new ScreenManager(this);
-
-            _screenManager.AddScreen(initialScreen, null);
 
             Components.Add(_screenManager);
 
             ScreenColor = Color.CornflowerBlue;
         }
 
-        public Color ScreenColor { get; set; }
+        public Color ScreenColor { get; set; } // TODO: Remove
 
         protected override void Initialize()
         {
+            Content.RootDirectory = _configuration.ContentPath;
+            IsMouseVisible = _configuration.IsMouseVisible;
+            ScreenColor = _configuration.ScreenColor;
+
+            // TODO: Move Screens to the container and remove reflectrion
+            var screen = (GameScreen)Activator.CreateInstance(_initialScreen, _container);
+
+            _screenManager.AddScreen(screen, null);
+
 #if DEBUG
             _graphics.PreferredBackBufferWidth = (int)(GraphicsDevice.DisplayMode.Width * (2.0 / 3.0));
             _graphics.PreferredBackBufferHeight = (int)(GraphicsDevice.DisplayMode.Height * (2.0 / 3.0));

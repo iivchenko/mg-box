@@ -1,5 +1,7 @@
 ﻿using KenneyAsteroids.Core.Screens;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace KenneyAsteroids.Desktop
@@ -27,14 +29,25 @@ namespace KenneyAsteroids.Desktop
         [STAThread]
         public static void Main()
         {
-            using (var game = new Game(new MainMenuScreen()))
-            {
-                game.IsMouseVisible = true;
-                game.Content.RootDirectory = "Content";
-                game.ScreenColor = Microsoft.Xna.Framework.Color.Black;
-
-                game.Run();
-            }
+            GameBuilder
+                .CreateBuilder()
+                .WithServices(container =>
+                    {
+                        container
+                            // TODO: Move file name to configuraiton
+                            // TODO: Add extension methods to wrap repository with cahing one
+                            .AddScoped<IRepository<GameSettings>>(_ => new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json"))); 
+                    })
+                .WithConfiguration(config =>
+                    {
+                        config.FullScreen = false;
+                        config.IsMouseVisible = true;
+                        config.ContentPath = "Content";
+                        config.ScreenColor = Microsoft.Xna.Framework.Color.Black;
+                    })
+                .WithInitialScreen<MainMenuScreen>()
+                .Build()
+                .RunSafe();
         }
     }
 }

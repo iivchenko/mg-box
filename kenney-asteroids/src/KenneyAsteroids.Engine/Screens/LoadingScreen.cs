@@ -36,8 +36,12 @@ namespace KenneyAsteroids.Engine.Screens
         /// The constructor is private: loading screens should
         /// be activated via the static Load method instead.
         /// </summary>
-        private LoadingScreen(ScreenManager screenManager, bool loadingIsSlow,
-                              GameScreen[] screensToLoad)
+        private LoadingScreen(
+            ScreenManager screenManager, 
+            bool loadingIsSlow,
+            GameScreen[] screensToLoad,
+            IServiceProvider container)
+            : base(container)
         {
             this.loadingIsSlow = loadingIsSlow;
             this.screensToLoad = screensToLoad;
@@ -51,6 +55,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public static void Load(ScreenManager screenManager, bool loadingIsSlow,
                                 PlayerIndex? controllingPlayer,
+                                IServiceProvider container,
                                 params GameScreen[] screensToLoad)
         {
             // Tell all the current screens to transition off.
@@ -58,9 +63,7 @@ namespace KenneyAsteroids.Engine.Screens
                 screen.ExitScreen();
 
             // Create and activate the loading screen.
-            LoadingScreen loadingScreen = new LoadingScreen(screenManager,
-                                                            loadingIsSlow,
-                                                            screensToLoad);
+            LoadingScreen loadingScreen = new LoadingScreen(screenManager, loadingIsSlow, screensToLoad, container);
 
             screenManager.AddScreen(loadingScreen, controllingPlayer);
         }
