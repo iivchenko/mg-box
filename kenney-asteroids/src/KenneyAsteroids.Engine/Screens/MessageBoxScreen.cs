@@ -68,9 +68,8 @@ namespace KenneyAsteroids.Engine.Screens
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            gradientTexture = content.Load<Texture2D>("Sprites/Gradient");
+            gradientTexture = content.Load<Texture2D>("Sprites/gradient.sprite");
         }
-
 
         #endregion
 

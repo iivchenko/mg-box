@@ -14,14 +14,14 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Fonts/Default.spritefont
+#begin Fonts/simxel.font.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Fonts/Default.spritefont
+/build:Fonts/simxel.font.spritefont
 
-#begin Sprites/Blank.png
+#begin Sprites/blank.sprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -31,9 +31,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Blank.png
+/build:Sprites/blank.sprite.png
 
-#begin Sprites/Gradient.png
+#begin Sprites/gradient.sprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -43,14 +43,14 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Gradient.png
+/build:Sprites/gradient.sprite.png
 
-#begin SpriteSheets/Asteroids.sheet.xml
+#begin SpriteSheets/asteroids.sheet.xml
 /importer:SpriteSheetImporter
 /processor:SpriteSheetProcessor
-/build:SpriteSheets/Asteroids.sheet.xml
+/build:SpriteSheets/asteroids.sheet.xml
 
-#begin SpriteSheets/Asteroids.sprite.png
+#begin SpriteSheets/asteroids.sprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -60,5 +60,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Asteroids.sprite.png
+/build:SpriteSheets/asteroids.sprite.png
 

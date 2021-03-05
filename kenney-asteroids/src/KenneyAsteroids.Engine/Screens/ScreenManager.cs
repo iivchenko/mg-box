@@ -110,8 +110,8 @@ namespace KenneyAsteroids.Engine.Screens
             ContentManager content = Game.Content;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("Fonts/Default");  // TODO: Remove it complitelly afte all screens are used
-            blankTexture = content.Load<Texture2D>("Sprites/Blank"); // TOD: Replace with programatic one pixel black texture
+            font = content.Load<SpriteFont>("Fonts/simxel.font");  // TODO: Remove it complitelly afte all screens are used
+            blankTexture = content.Load<Texture2D>("Sprites/blank.sprite"); // TODO: Replace with programatic one pixel black texture
 
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in screens)
