@@ -1,4 +1,5 @@
 ﻿using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Eventing.Eventing;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
@@ -15,9 +16,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
     public sealed class EntityCreatedEventHandler : IEventHandler<EntityCreatedEvent>
     {
-        private readonly EntityCollection _entities;
+        private readonly IEntitySystem _entities;
 
-        public EntityCreatedEventHandler(EntityCollection entities)
+        public EntityCreatedEventHandler(IEntitySystem entities)
         {
             _entities = entities;
         }

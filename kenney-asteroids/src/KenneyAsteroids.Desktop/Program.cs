@@ -1,5 +1,8 @@
 ﻿using KenneyAsteroids.Core.Screens;
+using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Entities;
+using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -7,22 +10,18 @@ using System;
 namespace KenneyAsteroids.Desktop
 {
     /* TODO: Global tasks
-     * 
-     * Implement pipeline processor for Kenney's Sprite Sheets 
-     *  - http://rbwhitaker.wikidot.com/content-pipeline-extension-7
-     * Introduce content file conventions: 
-     *   Textures -> filename.texture
-     *   Spirtes -> filename.sprite
-     *   Audion -> filename.audio
-     *   Music -> filename.music
-     * Abstract MonoGame: Remove dependencier from the CORE, leave depedencie in the Engine
-     * [DEBUG] Add in game debug console ???
-     * [DEBUG] Add game play snapshot to be able to timeline the entire gameplay???
      * [DEBUG] Show body physics boundaries
-     * [DevOps] Add project to CI and make available to download game
-     * Introduce pixel collision
-     * Abastract game CORE from MonoGame so ENGINE has direct access to MonoGame
-     * [TechDept] Introduce DI-Container
+     * [Tech] Abstract MonoGame: Remove dependencier from the CORE, leave depedencie in the Engine
+     * [Tech] Port XNA studio ui entites
+     * [Tech] Implement pipeline processor for Kenney's Sprite Sheets 
+     *  - http://rbwhitaker.wikidot.com/content-pipeline-extension-7
+     * [Game] Introduce pixel collision
+     * [Tech] Upgrate to .NET 5 after release windows, linux, android, web
+     * [??] Localization
+     * [??][DEBUG] Add in game debug console
+     * [??][DEBUG] Add game play snapshot to be able to timeline the entire gameplay
+     * For the future project:
+        * [Tech] Replace ugly Screen system with better Scene+Layer+Entities system
     */
     public static class Program
     {
@@ -36,7 +35,10 @@ namespace KenneyAsteroids.Desktop
                         container
                             // TODO: Move file name to configuraiton
                             // TODO: Add extension methods to wrap repository with cahing one
-                            .AddScoped<IRepository<GameSettings>>(_ => new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json"))); 
+                            .AddScoped<IRepository<GameSettings>>(_ => new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json"))) //TODO: think about Decorate and Scrutor
+                            .AddScoped<IEntitySystem, EntitySystem>()
+                            .AddScoped<IEventHandler<EntityCreatedEvent>, EntityCreatedEventHandler>()
+                            .AddEventBus();
                     })
                 .WithConfiguration(config =>
                     {

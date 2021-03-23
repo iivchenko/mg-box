@@ -1,6 +1,7 @@
 ﻿using KenneyAsteroids.Core.Entities;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
+using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
@@ -16,8 +17,8 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 {
     public sealed class GamePlayScreen : GameScreen
     {
-        private readonly EventSystem _bus;
-        private readonly EntityCollection _entities;
+        private readonly IEventSystem _bus;
+        private readonly IEntitySystem _entities;
         private readonly ICollisionSystem _collisions;
         private readonly IRepository<GameSettings> _settingsRepository;
 
@@ -29,6 +30,10 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         public GamePlayScreen(IServiceProvider container)
             : base(container)
         {
+            _entities = Container.GetService<IEntitySystem>();
+            _bus = Container.GetService<IEventSystem>();
+            _settingsRepository = Container.GetService<IRepository<GameSettings>>();
+
             var rules = new List<IRule>
             {
                 new LazyRule<Ship, Asteroid>
@@ -42,13 +47,8 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     (projectile, asteroid) => _entities.Remove(projectile, asteroid)
                 )
             };
-            
-            _entities = new EntityCollection();
-            _collisions = new CollisionSystem(rules);
-            _bus = new EventSystem();
 
-            _bus.Register(new EntityCreatedEventHandler(_entities));
-            _settingsRepository = Container.GetService<IRepository<GameSettings>>();
+            _collisions = new CollisionSystem(rules);
         }
 
         public override void LoadContent()
@@ -58,8 +58,8 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _viewport = ScreenManager.Game.GraphicsDevice.Viewport;
             _spriteSheet = ScreenManager.Game.Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
             var font = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/Default");
-            _factory = new EntityFactory(_spriteSheet, ScreenManager.SpriteBatch, _bus);
-            _enemySpawner = new EnemySpawner(_viewport, _factory, _bus);
+            _factory = new EntityFactory(_spriteSheet, ScreenManager.SpriteBatch, Container.GetService<IPublisher>());
+            _enemySpawner = new EnemySpawner(_viewport, _factory, Container.GetService<IPublisher>());
 
             var ship = _factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
             var controller = new ShipPlayerKeyboardController(ship);

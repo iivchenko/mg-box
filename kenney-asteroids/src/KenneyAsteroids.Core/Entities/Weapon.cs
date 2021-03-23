@@ -11,7 +11,7 @@ namespace KenneyAsteroids.Core.Entities
         private readonly Vector2 _offset;
         private readonly TimeSpan _reload;
         private readonly IProjectileFactory _factory;
-        private readonly IEventService _eventService;
+        private readonly IPublisher _eventService;
 
         private State _state;
         private double _reloading;
@@ -20,7 +20,7 @@ namespace KenneyAsteroids.Core.Entities
             Vector2 offset,
             TimeSpan reload,
             IProjectileFactory factory,
-            IEventService eventService)
+            IPublisher eventService)
         {
             _offset = offset;
             _reload = reload;

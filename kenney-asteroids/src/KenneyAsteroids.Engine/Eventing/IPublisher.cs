@@ -2,7 +2,7 @@
 {
     namespace Eventing
     {
-        public interface IEventService
+        public interface IPublisher
         {
             void Publish<TEvent>(TEvent @event)
                 where TEvent : IEvent;

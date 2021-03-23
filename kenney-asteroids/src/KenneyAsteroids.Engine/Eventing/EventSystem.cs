@@ -1,25 +1,26 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenneyAsteroids.Engine.Eventing
 {
     namespace Eventing
     {
-        public sealed class EventSystem : IEventBus, IEventService, IUpdatable
+        public delegate IEnumerable<object> ServiceFactory(Type serviceType);
+
+        public sealed class EventSystem : IEventSystem, IPublisher
         {
-            private readonly IDictionary<Type, IEnumerable<dynamic>> _eventHandlers;
+            private readonly ServiceFactory _serviceFactory;
             private readonly IList<IEvent> _events;
+            private readonly Type _handlerType;
 
-            public EventSystem()
+            public EventSystem(ServiceFactory serviceFactory)
             {
-                _eventHandlers = new Dictionary<Type, IEnumerable<dynamic>>();
+                _serviceFactory = serviceFactory;
+
+                _handlerType = typeof(IEventHandler<>);
                 _events = new List<IEvent>();
-            }
-
-            public void Register<TEvent>(params IEventHandler<TEvent>[] handlers) where TEvent : IEvent
-            {
-                _eventHandlers.Add(typeof(TEvent), handlers);
             }
 
             public void Publish<TEvent>(TEvent @event) where TEvent : IEvent
@@ -29,7 +30,12 @@ namespace KenneyAsteroids.Engine.Eventing
 
             public void Update(GameTime time)
             {
-                _events.Iter(@event => _eventHandlers[@event.GetType()].Iter(handler => handler.Handle((dynamic)@event)));
+                _events
+                    .Select(x => new { EventType = x.GetType(), Event = x })
+                    .Select(x => new { HandlerType = _handlerType.MakeGenericType(x.EventType), Event = x.Event })
+                    .Select(x => new { Handers = (IEnumerable<dynamic>)_serviceFactory(x.HandlerType), Event = x.Event })
+                    .Iter(x => x.Handers.Iter(handler => handler.Handle((dynamic)x.Event)));
+
                 _events.Clear();
             }
         }

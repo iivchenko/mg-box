@@ -13,9 +13,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private readonly IUpdatable _timer;
         private readonly Viewport _viewport;
         private readonly EntityFactory _factory;
-        private readonly IEventService _eventService;
+        private readonly IPublisher _eventService;
 
-        public EnemySpawner(Viewport viewport, EntityFactory factory, IEventService eventService)
+        public EnemySpawner(Viewport viewport, EntityFactory factory, IPublisher eventService)
         {
             _viewport = viewport;
             _factory = factory;
