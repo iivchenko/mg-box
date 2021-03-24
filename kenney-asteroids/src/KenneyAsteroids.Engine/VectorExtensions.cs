@@ -25,10 +25,5 @@ namespace KenneyAsteroids.Engine
         {
             return MathF.Atan2(direction.X, -direction.Y);
         }
-
-        public static Vector2 ToXna(this Vector vector)
-        {
-            return new Vector2(vector.X, vector.Y);
-        }
     }
 }

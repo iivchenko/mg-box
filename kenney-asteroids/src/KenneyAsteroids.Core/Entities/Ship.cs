@@ -1,7 +1,6 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -59,7 +58,7 @@ namespace KenneyAsteroids.Core.Entities
             _action = action;
         }
 
-        void IUpdatable.Update(GameTime time)
+        void IUpdatable.Update(Microsoft.Xna.Framework.GameTime time)
         {
             _weapon.Update(time);
 
@@ -84,7 +83,7 @@ namespace KenneyAsteroids.Core.Entities
             _action = ShipAction.None;
         }
 
-        void Engine.IDrawable.Draw(GameTime time)
+        void Engine.IDrawable.Draw(Microsoft.Xna.Framework.GameTime time)
         {
             _batch
                 .Draw(

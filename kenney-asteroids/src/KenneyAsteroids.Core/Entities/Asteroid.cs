@@ -1,7 +1,6 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -44,13 +43,13 @@ namespace KenneyAsteroids.Core.Entities
         public float Width { get; set; }
         public float Height { get; set; }
 
-        void IUpdatable.Update(GameTime gameTime)
+        void IUpdatable.Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
             Position += _velocity * gameTime.ToDelta();
             _rotation += _rotationSpeed * gameTime.ToDelta();
         }
 
-        void Engine.IDrawable.Draw(GameTime gameTime)
+        void Engine.IDrawable.Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             _batch
                 .Draw(

@@ -20,7 +20,7 @@ namespace KenneyAsteroids.Engine.Graphics
                     sprite.Texture,
                     position,
                     sprite.SourceRectangle,
-                    color,
+                    color.ToXna(),
                     rotation,
                     origin,
                     scale,
