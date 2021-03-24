@@ -76,11 +76,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     break;
             }
 
-            var position = new Vector2(x, y);
-            var direction = new Vector2(dx, dy) - position;
-            direction.Normalize();
-
-            var velocity = direction * new Vector2(_random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed), _random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed));
+            var position = new Vector(x, y);
+            var direction = new Vector(dx, dy) - position;
+            var velocity = direction.Normalize() * new Vector(_random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed), _random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed));
             var rotationSpeed = _random.Next(BigAsteroidMinRotationSpeed, BigAsteroidMaxRotationSpeed).AsRadians() * _random.NextDouble() > 0.5 ? 1 : -1;
 
             var asteroid = _factory.CreateAsteroid(position, velocity, rotationSpeed);

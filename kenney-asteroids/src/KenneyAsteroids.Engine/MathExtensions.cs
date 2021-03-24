@@ -5,9 +5,9 @@ namespace KenneyAsteroids.Engine
 {
     public static class MathExtensions
     {
-        public static Vector2 ToDirection(this float angle)
+        public static Vector ToDirection(this float angle)
         {
-            var direction = new Vector2(MathF.Sin(angle), -MathF.Cos(angle));
+            var direction = new Vector(MathF.Sin(angle), -MathF.Cos(angle));
 
             direction.Normalize();
 
@@ -22,20 +22,6 @@ namespace KenneyAsteroids.Engine
         public static float AsRadians(this int angle)
         {
             return MathHelper.ToRadians(angle);
-        }
-
-        public static float ToRotation(this Vector2 direction)
-        {
-            return MathF.Atan2(direction.X, -direction.Y);
-        }
-
-        public static Vector2 ToNormalized(this Vector2 vector)
-        {
-            var clone = new Vector2(vector.X, vector.Y);
-
-            clone.Normalize();
-
-            return clone;
         }
     }
 }

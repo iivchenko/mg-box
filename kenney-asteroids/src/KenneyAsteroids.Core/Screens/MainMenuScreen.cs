@@ -1,4 +1,5 @@
 ﻿using KenneyAsteroids.Core.Screens.GamePlay;
+using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Xna.Framework;
 using System;
@@ -8,7 +9,7 @@ namespace KenneyAsteroids.Core.Screens
     public sealed class MainMenuScreen : MenuScreen
     {
         private string _version;
-        private Vector2 _versionPosition;
+        private Vector _versionPosition;
 
         /// <summary>
         /// Constructor fills in the menu contents.
@@ -40,7 +41,7 @@ namespace KenneyAsteroids.Core.Screens
             var font = ScreenManager.Font;
             var viewport = ScreenManager.GraphicsDevice.Viewport;
             var size = font.MeasureString(_version);
-            _versionPosition = new Vector2(viewport.Width - size.X, viewport.Height - size.Y);
+            _versionPosition = new Vector(viewport.Width - size.X, viewport.Height - size.Y);
         }
 
         public override void Draw(GameTime gameTime)
@@ -48,7 +49,7 @@ namespace KenneyAsteroids.Core.Screens
             base.Draw(gameTime);
             
             ScreenManager.SpriteBatch.Begin();
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.Font, _version, _versionPosition, Color.White);
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.Font, _version, _versionPosition.ToXna(), Color.White);
             ScreenManager.SpriteBatch.End();
         }
 

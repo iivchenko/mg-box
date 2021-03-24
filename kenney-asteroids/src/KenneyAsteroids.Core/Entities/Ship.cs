@@ -12,12 +12,12 @@ namespace KenneyAsteroids.Core.Entities
         private readonly Sprite _sprite;
         private readonly SpriteBatch _batch;
         private readonly Weapon _weapon;
-        private readonly Vector2 _scale;
+        private readonly Vector _scale;
         private readonly float _maxSpeed;
         private readonly float _maxAcceleration;
         private readonly float _maxRotation;
 
-        private Vector2 _velocity;
+        private Vector _velocity;
         private float _rotation;
         private ShipAction _action;
 
@@ -36,21 +36,21 @@ namespace KenneyAsteroids.Core.Entities
             _maxAcceleration = maxAcceleration;
             _maxRotation = maxRotation;
 
-            _velocity = Vector2.Zero;
-            _scale = Vector2.One;
+            _velocity = Vector.Zero;
+            _scale = Vector.One;
             _rotation = 0.0f;
             _action = ShipAction.None;
 
             Id = Guid.NewGuid();
-            Origin = new Vector2(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
-            Position = Vector2.Zero;
+            Origin = new Vector(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
+            Position = Vector.Zero;
             Width = _sprite.Width;
             Height = _sprite.Height;
         }
         
         public Guid Id { get; }
-        public Vector2 Position { get; set; }
-        public Vector2 Origin { get; set; }
+        public Vector Position { get; set; }
+        public Vector Origin { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
 
@@ -73,7 +73,7 @@ namespace KenneyAsteroids.Core.Entities
             {
                 var velocity = _velocity + _rotation.ToDirection() * _maxAcceleration;
 
-                _velocity = velocity.Length() > _maxSpeed ? velocity.ToNormalized() * _maxSpeed : velocity;
+                _velocity = velocity.Length() > _maxSpeed ? velocity.Normalize() * _maxSpeed : velocity;
             }
 
             Position += _velocity * time.ToDelta();
@@ -89,9 +89,9 @@ namespace KenneyAsteroids.Core.Entities
             _batch
                 .Draw(
                     _sprite,
-                    Position,
-                    Origin,
-                    _scale,
+                    Position.ToXna(),
+                    Origin.ToXna(),
+                    _scale.ToXna(),
                     _rotation,
                     Color.White,
                     SpriteEffects.None);

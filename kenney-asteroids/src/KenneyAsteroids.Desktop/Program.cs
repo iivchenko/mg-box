@@ -16,12 +16,13 @@ namespace KenneyAsteroids.Desktop
      * [Tech] Implement pipeline processor for Kenney's Sprite Sheets 
      *  - http://rbwhitaker.wikidot.com/content-pipeline-extension-7
      * [Game] Introduce pixel collision
-     * [Tech] Upgrate to .NET 5 after release windows, linux, android, web
      * [??] Localization
      * [??][DEBUG] Add in game debug console
      * [??][DEBUG] Add game play snapshot to be able to timeline the entire gameplay
      * For the future project:
         * [Tech] Replace ugly Screen system with better Scene+Layer+Entities system
+     * [Tech] Xamarin doesn't support .NET 5 - NO UPGRADE, MONOGAME Content Pipeline still depends on .NET CORE 3.1
+     * [Tech] Upgrade to .NET 6 when MonoGame will support .NET 6
     */
     public static class Program
     {

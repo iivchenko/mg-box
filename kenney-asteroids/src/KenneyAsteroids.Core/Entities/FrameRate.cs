@@ -25,9 +25,9 @@ namespace KenneyAsteroids.Core.Entities
         {
             var rate = $"{Math.Round(1 / time.ToDelta())}fps";
             var size = _font.MeasureString(rate);
-            var position = new Vector2(_viewport.Width - size.X, size.Y); // TODO: Fix the bug. When I set Y = 0 the simxel font partialy out of screen!
+            var position = new Vector(_viewport.Width - size.X, size.Y); // TODO: Fix the bug. When I set Y = 0 the simxel font partialy out of screen!
 
-            _spriteBatch.DrawString(_font, rate, position, Color.White);
+            _spriteBatch.DrawString(_font, rate, position.ToXna(), Color.White);
         }
     }
 }

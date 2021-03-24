@@ -61,7 +61,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _factory = new EntityFactory(_spriteSheet, ScreenManager.SpriteBatch, Container.GetService<IPublisher>());
             _enemySpawner = new EnemySpawner(_viewport, _factory, Container.GetService<IPublisher>());
 
-            var ship = _factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
+            var ship = _factory.CreateShip(new Vector(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
             var controller = new ShipPlayerKeyboardController(ship);
 
             _entities.Add(controller, ship);
@@ -78,12 +78,11 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             base.Update(time, otherScreenHasFocus, coveredByOtherScreen);
 
-            _bus.Update(time);
             _entities.SelectUpdatable().Iter(x => x.Update(time));
             _collisions.ApplyCollisions(_entities.SelectBodies());
             _entities.SelectBodies().Where(IsOutOfScreen).Iter(HandleOutOfScreenBodies);
             _enemySpawner.Update(time);
-
+            _bus.Update(time);
             _entities.Commit();
         }
 
@@ -136,7 +135,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                         y = 0 - body.Height / 2.0f;
                     }
 
-                    body.Position = new Vector2(x, y);
+                    body.Position = new Vector(x, y);
                     break;
             }
         }

@@ -8,7 +8,7 @@ namespace KenneyAsteroids.Core.Entities
 {
     public sealed class Weapon : IEntity<Guid>, IUpdatable
     {
-        private readonly Vector2 _offset;
+        private readonly Vector _offset;
         private readonly TimeSpan _reload;
         private readonly IProjectileFactory _factory;
         private readonly IPublisher _eventService;
@@ -17,7 +17,7 @@ namespace KenneyAsteroids.Core.Entities
         private double _reloading;
 
         public Weapon(
-            Vector2 offset,
+            Vector offset,
             TimeSpan reload,
             IProjectileFactory factory,
             IPublisher eventService)
@@ -51,13 +51,13 @@ namespace KenneyAsteroids.Core.Entities
             }
         }
 
-        public void Fire(Vector2 parentPosition, float parentRotation)
+        public void Fire(Vector parentPosition, float parentRotation)
         {
             if (_state == State.Idle)
             {
                 _state = State.Reload;
                 _reloading = _reload.TotalSeconds;
-                var position = Vector2.Transform(_offset, Matrix.CreateRotationZ(parentRotation)) + parentPosition;
+                var position = _offset.Transform(Matrix.CreateRotationZ(parentRotation)) + parentPosition;
                 var direction = parentRotation.ToDirection();
                 var projectile = _factory.Create(position, direction);
 
@@ -74,6 +74,6 @@ namespace KenneyAsteroids.Core.Entities
 
     public interface IProjectileFactory
     {
-        Projectile Create(Vector2 position, Vector2 direction);
+        Projectile Create(Vector position, Vector direction);
     }
 }

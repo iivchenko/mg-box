@@ -13,7 +13,7 @@ namespace KenneyAsteroids.Core.Entities
         private readonly SpriteBatch _batch;
         private readonly float _rotation;
 
-        private Vector2 _velocity;
+        private Vector _velocity;
 
         public Projectile(
             Sprite sprite,
@@ -27,15 +27,15 @@ namespace KenneyAsteroids.Core.Entities
             _velocity = rotation.ToDirection() * speed;
 
             Id = Guid.NewGuid();
-            Origin = new Vector2(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
-            Position = Vector2.Zero;
+            Origin = new Vector(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
+            Position = Vector.Zero;
             Width = _sprite.Width;
             Height = _sprite.Height;
         }
 
         public Guid Id { get; }
-        public Vector2 Position { get; set; }
-        public Vector2 Origin { get; set; }
+        public Vector Position { get; set; }
+        public Vector Origin { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
 
@@ -49,9 +49,9 @@ namespace KenneyAsteroids.Core.Entities
             _batch
                 .Draw(
                     _sprite,
-                    Position,
-                    Origin,
-                    Vector2.One,
+                    Position.ToXna(),
+                    Origin.ToXna(),
+                    Vector.One.ToXna(),
                     _rotation,
                     Color.White,
                     SpriteEffects.None);
