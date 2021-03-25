@@ -1,9 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace KenneyAsteroids.Engine
+﻿namespace KenneyAsteroids.Engine
 {
     public interface IUpdatable
     {
-        void Update(GameTime time);
+        void Update(float time);
     }
 }

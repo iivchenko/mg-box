@@ -58,15 +58,15 @@ namespace KenneyAsteroids.Core.Entities
             _action = action;
         }
 
-        void IUpdatable.Update(Microsoft.Xna.Framework.GameTime time)
+        void IUpdatable.Update(float time)
         {
             _weapon.Update(time);
 
             if (_action.HasFlag(ShipAction.Left)) 
-                _rotation -= _maxRotation * time.ToDelta();
+                _rotation -= _maxRotation * time;
 
             if (_action.HasFlag(ShipAction.Right))
-                _rotation += _maxRotation * time.ToDelta();
+                _rotation += _maxRotation * time;
 
             if (_action.HasFlag(ShipAction.Accelerate))
             {
@@ -75,7 +75,7 @@ namespace KenneyAsteroids.Core.Entities
                 _velocity = velocity.Length() > _maxSpeed ? velocity.Normalize() * _maxSpeed : velocity;
             }
 
-            Position += _velocity * time.ToDelta();
+            Position += _velocity * time;
 
             if (_action.HasFlag(ShipAction.Fire))
                 _weapon.Fire(Position, _rotation);
@@ -83,7 +83,7 @@ namespace KenneyAsteroids.Core.Entities
             _action = ShipAction.None;
         }
 
-        void Engine.IDrawable.Draw(Microsoft.Xna.Framework.GameTime time)
+        void Engine.IDrawable.Draw(float time)
         {
             _batch
                 .Draw(

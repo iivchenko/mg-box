@@ -115,7 +115,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Draws the message box.
         /// </summary>
-        public override void Draw(GameTime gameTime)
+        public override void Draw(float time)
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;

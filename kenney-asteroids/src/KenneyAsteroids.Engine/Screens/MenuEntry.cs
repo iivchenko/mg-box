@@ -100,7 +100,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Updates the menu entry.
         /// </summary>
-        public virtual void Update(MenuScreen screen, bool isSelected, GameTime gameTime)
+        public virtual void Update(MenuScreen screen, bool isSelected, float time)
         {
             // there is no such thing as a selected item on Windows Phone, so we always
             // force isSelected to be false
@@ -111,7 +111,7 @@ namespace KenneyAsteroids.Engine.Screens
             // When the menu selection changes, entries gradually fade between
             // their selected and deselected appearance, rather than instantly
             // popping to the new state.
-            float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
+            var fadeSpeed = time * 4.0f;
 
             if (isSelected)
                 selectionFade = Math.Min(selectionFade + fadeSpeed, 1);
@@ -123,7 +123,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Draws the menu entry. This can be overridden to customize the appearance.
         /// </summary>
-        public virtual void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
+        public virtual void Draw(MenuScreen screen, bool isSelected, float time)
         {
             // there is no such thing as a selected item on Windows Phone, so we always
             // force isSelected to be false
@@ -133,9 +133,6 @@ namespace KenneyAsteroids.Engine.Screens
 
             // Draw the selected entry in yellow, otherwise white.
             Color color = isSelected ? Color.Yellow : Color.White;
-
-            // Pulsate the size of the selected menu entry.
-            double time = gameTime.TotalGameTime.TotalSeconds;
 
             float pulsate = (float)Math.Sin(time * 6) + 1;
 

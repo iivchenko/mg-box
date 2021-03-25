@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 
 namespace KenneyAsteroids.Engine
 {
@@ -12,13 +11,13 @@ namespace KenneyAsteroids.Engine
         }
 
         private readonly TimeSpan _timeout;
-        private readonly Action<GameTime> _action;
+        private readonly Action<float> _action;
         private readonly bool _loop;
 
         private TimerState _state;
-        private TimeSpan _remain;
+        private float _remain;
 
-        public Timer(TimeSpan timeout, Action<GameTime> action, bool loop)
+        public Timer(TimeSpan timeout, Action<float> action, bool loop)
         {
             _timeout = timeout;
             _action = action;
@@ -27,7 +26,7 @@ namespace KenneyAsteroids.Engine
             _state = TimerState.Idle;
         }
 
-        void IUpdatable.Update(GameTime gameTime)
+        void IUpdatable.Update(float time)
         {
             switch (_state)
             {
@@ -35,12 +34,12 @@ namespace KenneyAsteroids.Engine
                     break;
                 
                 case TimerState.Run:
-                    _remain = _remain.Subtract(gameTime.ElapsedGameTime);
+                    _remain -= time;
 
-                    if (_remain <= TimeSpan.Zero)
+                    if (_remain <= 0.0f)
                     {
-                        _remain = TimeSpan.Zero;
-                        _action(gameTime);
+                        _remain = 0.0f;
+                        _action(time);
 
                         if (_loop)
                         {
@@ -60,9 +59,9 @@ namespace KenneyAsteroids.Engine
         {
             _state = TimerState.Run;
 
-            if (_remain <= TimeSpan.Zero)
+            if (_remain <= 0.0f)
             {
-                _remain = _timeout;
+                _remain = (float)_timeout.TotalSeconds;
             }
         }
 
@@ -74,7 +73,7 @@ namespace KenneyAsteroids.Engine
         public void Reset()
         {
             _state = TimerState.Idle;
-            _remain = _timeout;
+            _remain = (float)_timeout.TotalSeconds;
         }
     }
 }

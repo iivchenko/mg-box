@@ -28,12 +28,12 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             timer.Start();
         }
 
-        public void Update(GameTime time)
+        public void Update(float time)
         {
             _timer.Update(time);
         }
 
-        private void SpawnAsteroid(GameTime gameTime)
+        private void SpawnAsteroid(float time)
         {
             const int BigAsteroidMinSpeed = 15;
             const int BigAsteroidMaxSpeed = 100;

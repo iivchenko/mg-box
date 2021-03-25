@@ -44,9 +44,9 @@ namespace KenneyAsteroids.Core.Screens
             _versionPosition = new Vector(viewport.Width - size.X, viewport.Height - size.Y);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(float time)
         {
-            base.Draw(gameTime);
+            base.Draw(time);
             
             ScreenManager.SpriteBatch.Begin();
             ScreenManager.SpriteBatch.DrawString(ScreenManager.Font, _version, _versionPosition.ToXna(), Color.White);

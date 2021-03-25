@@ -21,9 +21,9 @@ namespace KenneyAsteroids.Core.Entities
             _spriteBatch = spriteBatch;
         }
 
-        public void Draw(GameTime time)
+        public void Draw(float time)
         {
-            var rate = $"{Math.Round(1 / time.ToDelta())}fps";
+            var rate = $"{Math.Round(1 / time)}fps";
             var size = _font.MeasureString(rate);
             var position = new Vector(_viewport.Width - size.X, size.Y); // TODO: Fix the bug. When I set Y = 0 the simxel font partialy out of screen!
 

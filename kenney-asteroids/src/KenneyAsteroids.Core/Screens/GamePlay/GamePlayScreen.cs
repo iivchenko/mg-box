@@ -7,7 +7,6 @@ using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -74,7 +73,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             }
         }
 
-        public override void Update(GameTime time, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public override void Update(float time, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(time, otherScreenHasFocus, coveredByOtherScreen);
 
@@ -86,13 +85,13 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _entities.Commit();
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(float time)
         {
-            base.Draw(gameTime);
+            base.Draw(time);
 
             ScreenManager.SpriteBatch.Begin();
 
-            _entities.SelectDrawable().Iter(x => x.Draw(gameTime));
+            _entities.SelectDrawable().Iter(x => x.Draw(time));
 
             ScreenManager.SpriteBatch.End();
         }

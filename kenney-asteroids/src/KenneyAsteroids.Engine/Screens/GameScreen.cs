@@ -246,7 +246,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// Unlike HandleInput, this method is called regardless of whether the screen
         /// is active, hidden, or in the middle of a transition.
         /// </summary>
-        public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
+        public virtual void Update(float time, bool otherScreenHasFocus,
                                                       bool coveredByOtherScreen)
         {
             this.otherScreenHasFocus = otherScreenHasFocus;
@@ -256,7 +256,7 @@ namespace KenneyAsteroids.Engine.Screens
                 // If the screen is going away to die, it should transition off.
                 screenState = ScreenState.TransitionOff;
 
-                if (!UpdateTransition(gameTime, transitionOffTime, 1))
+                if (!UpdateTransition(time, transitionOffTime, 1))
                 {
                     // When the transition finishes, remove the screen.
                     ScreenManager.RemoveScreen(this);
@@ -265,7 +265,7 @@ namespace KenneyAsteroids.Engine.Screens
             else if (coveredByOtherScreen)
             {
                 // If the screen is covered by another, it should transition off.
-                if (UpdateTransition(gameTime, transitionOffTime, 1))
+                if (UpdateTransition(time, transitionOffTime, 1))
                 {
                     // Still busy transitioning.
                     screenState = ScreenState.TransitionOff;
@@ -279,7 +279,7 @@ namespace KenneyAsteroids.Engine.Screens
             else
             {
                 // Otherwise the screen should transition on and become active.
-                if (UpdateTransition(gameTime, transitionOnTime, -1))
+                if (UpdateTransition(time, transitionOnTime, -1))
                 {
                     // Still busy transitioning.
                     screenState = ScreenState.TransitionOn;
@@ -296,7 +296,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Helper for updating the screen transition position.
         /// </summary>
-        bool UpdateTransition(GameTime gameTime, TimeSpan time, int direction)
+        bool UpdateTransition(float gameTime, TimeSpan time, int direction) // TODO: Remname gameTime to time and time to something else
         {
             // How much should we move by?
             float transitionDelta;
@@ -304,8 +304,7 @@ namespace KenneyAsteroids.Engine.Screens
             if (time == TimeSpan.Zero)
                 transitionDelta = 1;
             else
-                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
-                                          time.TotalMilliseconds);
+                transitionDelta = (float)(gameTime/time.TotalSeconds) * 1000.0f;
 
             // Update the transition position.
             transitionPosition += transitionDelta * direction;
@@ -334,7 +333,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// This is called when the screen should draw itself.
         /// </summary>
-        public virtual void Draw(GameTime gameTime) { }
+        public virtual void Draw(float time) { }
 
 
         #endregion

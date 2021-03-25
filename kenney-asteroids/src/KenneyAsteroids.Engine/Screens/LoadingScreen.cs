@@ -77,10 +77,10 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Updates the loading screen.
         /// </summary>
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
+        public override void Update(float time, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
         {
-            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+            base.Update(time, otherScreenHasFocus, coveredByOtherScreen);
 
             // If all the previous screens have finished transitioning
             // off, it is time to actually perform the load.
@@ -107,7 +107,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Draws the loading screen.
         /// </summary>
-        public override void Draw(GameTime gameTime)
+        public override void Draw(float time)
         {
             // If we are the only active screen, that means all the previous screens
             // must have finished transitioning off. We check for this in the Draw

@@ -168,17 +168,17 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Updates the menu.
         /// </summary>
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
+        public override void Update(float time, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
         {
-            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+            base.Update(time, otherScreenHasFocus, coveredByOtherScreen);
 
             // Update each nested MenuEntry object.
             for (int i = 0; i < menuEntries.Count; i++)
             {
                 bool isSelected = IsActive && (i == selectedEntry);
 
-                menuEntries[i].Update(this, isSelected, gameTime);
+                menuEntries[i].Update(this, isSelected, time);
             }
         }
 
@@ -186,7 +186,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Draws the menu.
         /// </summary>
-        public override void Draw(GameTime gameTime)
+        public override void Draw(float time)
         {
             // make sure our entries are in the right place before we draw them
             UpdateMenuEntryLocations();
@@ -204,7 +204,7 @@ namespace KenneyAsteroids.Engine.Screens
 
                 bool isSelected = IsActive && (i == selectedEntry);
 
-                menuEntry.Draw(this, isSelected, gameTime);
+                menuEntry.Draw(this, isSelected, time);
             }
 
             // Make the menu slide into place during transitions, using a

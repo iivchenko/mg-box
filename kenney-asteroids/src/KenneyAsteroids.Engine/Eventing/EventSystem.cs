@@ -28,7 +28,7 @@ namespace KenneyAsteroids.Engine.Eventing
                 _events.Add(@event);
             }
 
-            public void Update(GameTime time)
+            public void Update(float time)
             {
                 _events
                     .Select(x => new { EventType = x.GetType(), Event = x })

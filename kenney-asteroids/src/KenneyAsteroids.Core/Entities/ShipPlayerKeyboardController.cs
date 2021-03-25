@@ -1,5 +1,4 @@
 ﻿using KenneyAsteroids.Engine;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace KenneyAsteroids.Core.Entities
@@ -13,7 +12,7 @@ namespace KenneyAsteroids.Core.Entities
             _ship = ship;
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(float time)
         {
             var action = ShipAction.None;
             var keyboard = Keyboard.GetState();

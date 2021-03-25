@@ -34,14 +34,14 @@ namespace KenneyAsteroids.Core.Entities
 
         public Guid Id { get; }
 
-        public void Update(GameTime time)
+        public void Update(float time)
         {
             switch(_state)
             {
                 case State.Idle:
                     break;
                 case State.Reload:
-                    _reloading -= time.ToDelta();
+                    _reloading -= time;
 
                     if (_reloading <= 0)
                     {

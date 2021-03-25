@@ -166,7 +166,7 @@ namespace KenneyAsteroids.Engine.Screens
                 screensToUpdate.RemoveAt(screensToUpdate.Count - 1);
 
                 // Update the screen.
-                screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+                screen.Update((float)gameTime.ElapsedGameTime.TotalSeconds, otherScreenHasFocus, coveredByOtherScreen);
 
                 if (screen.ScreenState == ScreenState.TransitionOn ||
                     screen.ScreenState == ScreenState.Active)
@@ -217,7 +217,7 @@ namespace KenneyAsteroids.Engine.Screens
                 if (screen.ScreenState == ScreenState.Hidden)
                     continue;
 
-                screen.Draw(gameTime);
+                screen.Draw((float)gameTime.ElapsedGameTime.TotalSeconds);
             }
         }
 

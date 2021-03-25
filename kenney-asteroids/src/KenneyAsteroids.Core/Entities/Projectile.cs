@@ -38,12 +38,12 @@ namespace KenneyAsteroids.Core.Entities
         public float Width { get; set; }
         public float Height { get; set; }
 
-        void IUpdatable.Update(Microsoft.Xna.Framework.GameTime time)
+        void IUpdatable.Update(float time)
         {
-            Position += _velocity * time.ToDelta();
+            Position += _velocity * time;
         }
 
-        void Engine.IDrawable.Draw(Microsoft.Xna.Framework.GameTime time)
+        void Engine.IDrawable.Draw(float time)
         {
             _batch
                 .Draw(
