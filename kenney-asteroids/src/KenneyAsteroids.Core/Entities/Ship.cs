@@ -1,15 +1,14 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace KenneyAsteroids.Core.Entities
 {
     public sealed class Ship : IEntity<Guid>, IUpdatable, Engine.IDrawable, IBody
     {
+        private readonly IDrawSystem _draw;
         private readonly Sprite _sprite;
-        private readonly SpriteBatch _batch;
         private readonly Weapon _weapon;
         private readonly Vector _scale;
         private readonly float _maxSpeed;
@@ -21,15 +20,15 @@ namespace KenneyAsteroids.Core.Entities
         private ShipAction _action;
 
         public Ship(
-            Sprite sprite, 
-            SpriteBatch batch,
+            IDrawSystem draw,
+            Sprite sprite,
             Weapon weapon,
             float maxSpeed,
             float maxAcceleration,
             float maxRotation)
         {
+            _draw = draw;
             _sprite = sprite;
-            _batch = batch;
             _weapon = weapon;
             _maxSpeed = maxSpeed;
             _maxAcceleration = maxAcceleration;
@@ -83,17 +82,16 @@ namespace KenneyAsteroids.Core.Entities
             _action = ShipAction.None;
         }
 
-        void Engine.IDrawable.Draw(float time)
+        void IDrawable.Draw(float time)
         {
-            _batch
+            _draw
                 .Draw(
                     _sprite,
-                    Position.ToXna(),
-                    Origin.ToXna(),
-                    _scale.ToXna(),
+                    Position,
+                    Origin,
+                    _scale,
                     _rotation,
-                    Color.White,
-                    SpriteEffects.None);
+                    Color.White);
         }
     }
 

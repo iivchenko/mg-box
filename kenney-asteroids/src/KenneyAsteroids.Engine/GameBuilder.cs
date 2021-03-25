@@ -51,15 +51,7 @@ namespace KenneyAsteroids.Engine
                 throw new InvalidOperationException($"Initial Screen was not set!");
             }
 
-            var options = new ServiceProviderOptions
-            {
-                ValidateOnBuild = true,
-                ValidateScopes = true
-            };
-
-            var provider = _container.BuildServiceProvider(options);
-
-            return new Game(provider, _configuration, _initialScreen);
+            return new Game(_container, _configuration, _initialScreen);
         }
     }
 }

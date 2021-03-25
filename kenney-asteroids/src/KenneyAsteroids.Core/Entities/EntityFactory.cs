@@ -1,8 +1,6 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace KenneyAsteroids.Core.Entities
@@ -10,17 +8,17 @@ namespace KenneyAsteroids.Core.Entities
     public sealed class EntityFactory : IProjectileFactory // TODO: Extract Projectile factory class
     {
         private readonly SpriteSheet _spriteSheet;
-        private readonly SpriteBatch _spriteBatch;
         private readonly IPublisher _eventService;
+        private readonly IDrawSystem _draw;
 
         public EntityFactory(
-            SpriteSheet spriteSheet, 
-            SpriteBatch spriteBatch,
-            IPublisher eventService)
+            SpriteSheet spriteSheet,
+            IPublisher eventService,
+            IDrawSystem draw)
         {
             _spriteSheet = spriteSheet;
-            _spriteBatch = spriteBatch;
             _eventService = eventService;
+            _draw = draw;
         }
 
         public Ship CreateShip(Vector position)
@@ -32,7 +30,7 @@ namespace KenneyAsteroids.Core.Entities
             var sprite = _spriteSheet["playerShip1_blue"];
             var reload = TimeSpan.FromMilliseconds(500);
             var weapon = new Weapon(new Vector(0, -sprite.Width / 2), reload, this, _eventService);
-            return new Ship(sprite, _spriteBatch, weapon, MaxSpeed, Acceleration, MaxRotation.AsRadians())
+            return new Ship(_draw, sprite, weapon, MaxSpeed, Acceleration, MaxRotation.AsRadians())
             {
                 Position = position
             };
@@ -42,7 +40,7 @@ namespace KenneyAsteroids.Core.Entities
         {
             var sprite = _spriteSheet["meteorBrown_big2"];
             
-            return new Asteroid(sprite, _spriteBatch, velocity, rotationSpeed)
+            return new Asteroid(_draw, sprite, velocity, rotationSpeed)
             {
                 Position = position
             };
@@ -54,7 +52,7 @@ namespace KenneyAsteroids.Core.Entities
             var sprite = _spriteSheet["laserBlue01"];
             var rotation = direction.ToRotation();
 
-            return new Projectile(sprite, _spriteBatch, rotation, Speed)
+            return new Projectile(_draw, sprite, rotation, Speed)
             {
                 Position = position
             };

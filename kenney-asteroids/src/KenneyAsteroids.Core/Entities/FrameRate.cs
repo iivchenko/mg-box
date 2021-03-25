@@ -1,24 +1,24 @@
 ﻿using KenneyAsteroids.Engine;
-using Microsoft.Xna.Framework;
+using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class FrameRate : IEntity, Engine.IDrawable
+    public sealed class FrameRate : IEntity, IDrawable
     {
+        private readonly IDrawSystem _draw;
         private readonly SpriteFont _font;
         private readonly Viewport _viewport;
-        private readonly SpriteBatch _spriteBatch;
 
         public FrameRate(
+            IDrawSystem draw,
             SpriteFont font,
-            Viewport viewport, 
-            SpriteBatch spriteBatch)
+            Viewport viewport)
         {
+            _draw = draw;
             _font = font;
             _viewport = viewport;
-            _spriteBatch = spriteBatch;
         }
 
         public void Draw(float time)
@@ -27,7 +27,7 @@ namespace KenneyAsteroids.Core.Entities
             var size = _font.MeasureString(rate);
             var position = new Vector(_viewport.Width - size.X, size.Y); // TODO: Fix the bug. When I set Y = 0 the simxel font partialy out of screen!
 
-            _spriteBatch.DrawString(_font, rate, position.ToXna(), Color.White);
+            _draw.DrawString(_font, rate, position, Color.White);
         }
     }
 }

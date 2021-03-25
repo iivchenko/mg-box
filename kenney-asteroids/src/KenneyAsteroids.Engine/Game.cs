@@ -1,4 +1,5 @@
 ﻿using KenneyAsteroids.Engine.Screens;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -9,15 +10,17 @@ namespace KenneyAsteroids.Engine
     {
         private readonly GraphicsDeviceManager _graphics;
         private readonly ScreenManager _screenManager;
-        private readonly IServiceProvider _container;
-        
+        private readonly IServiceCollection _services;
+
+        private IServiceProvider _container;
+
         private readonly GameConfiguration _configuration;
 
         private readonly Type _initialScreen;
 
-        public Game(IServiceProvider container, GameConfiguration configuration, Type initialScreen)
+        public Game(IServiceCollection services, GameConfiguration configuration, Type initialScreen)
         {
-            _container = container ?? throw new ArgumentNullException(nameof(container));
+            _services = services;
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _initialScreen = initialScreen ?? throw new ArgumentNullException(nameof(initialScreen));
 
@@ -36,6 +39,16 @@ namespace KenneyAsteroids.Engine
             Content.RootDirectory = _configuration.ContentPath;
             IsMouseVisible = _configuration.IsMouseVisible;
             ScreenColor = _configuration.ScreenColor;
+
+            _services.AddSingleton(new SpriteBatch(GraphicsDevice));
+
+            var options = new ServiceProviderOptions
+            {
+                ValidateOnBuild = true,
+                ValidateScopes = true
+            };
+
+            _container = _services.BuildServiceProvider(options);
 
             // TODO: Move Screens to the container and remove reflectrion
             var screen = (GameScreen)Activator.CreateInstance(_initialScreen, _container);

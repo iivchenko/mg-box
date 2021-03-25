@@ -1,4 +1,5 @@
-﻿using KenneyAsteroids.Engine.Screens;
+﻿using KenneyAsteroids.Engine.Graphics;
+using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -35,11 +36,12 @@ namespace KenneyAsteroids.Core.Screens
         public SettingsScreen(IServiceProvider container)
             : base("Settings", container)
         {
+            var draw = Container.GetService<IDrawSystem>();
             _settingsRepository = Container.GetService<IRepository<GameSettings>>();
 
             var settings = _settingsRepository.Read();
 
-            _toggleFramerate = new MenuEntry($"Frame Rate: {Toggle(settings.ToggleFramerate.Toggle)}");
+            _toggleFramerate = new MenuEntry(draw, $"Frame Rate: {Toggle(settings.ToggleFramerate.Toggle)}");
             _toggleFramerate.Selected += (_, __) =>
             {
                 var settings = _settingsRepository.Read();
@@ -50,7 +52,7 @@ namespace KenneyAsteroids.Core.Screens
                 _settingsRepository.Update(settings);
             };
 
-            _back = new MenuEntry("Back");
+            _back = new MenuEntry(draw, "Back");
             _back.Selected += (_, e) => OnCancel(e.PlayerIndex);
 
             MenuEntries.Add(_toggleFramerate);

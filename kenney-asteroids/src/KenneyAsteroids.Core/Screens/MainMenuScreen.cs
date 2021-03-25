@@ -1,13 +1,16 @@
 ﻿using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
-using Microsoft.Xna.Framework;
 using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace KenneyAsteroids.Core.Screens
 {
     public sealed class MainMenuScreen : MenuScreen
     {
+        private readonly IDrawSystem _draw;
+
         private string _version;
         private Vector _versionPosition;
 
@@ -17,10 +20,12 @@ namespace KenneyAsteroids.Core.Screens
         public MainMenuScreen(IServiceProvider container)
             : base("Main Menu", container)
         {
+            _draw = Container.GetService<IDrawSystem>();
+
             // Create our menu entries.
-            MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
-            MenuEntry settingsMenuEntry = new MenuEntry("Settings");
-            MenuEntry exitMenuEntry = new MenuEntry("Exit");
+            MenuEntry playGameMenuEntry = new MenuEntry(_draw, "Play Game");
+            MenuEntry settingsMenuEntry = new MenuEntry(_draw, "Settings");
+            MenuEntry exitMenuEntry = new MenuEntry(_draw, "Exit");
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
@@ -48,9 +53,7 @@ namespace KenneyAsteroids.Core.Screens
         {
             base.Draw(time);
             
-            ScreenManager.SpriteBatch.Begin();
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.Font, _version, _versionPosition.ToXna(), Color.White);
-            ScreenManager.SpriteBatch.End();
+            _draw.DrawString(ScreenManager.Font, _version, _versionPosition, Color.White);
         }
 
         /// <summary>
@@ -73,7 +76,7 @@ namespace KenneyAsteroids.Core.Screens
         /// <summary>
         /// When the user cancels the main menu, ask if they want to exit the sample.
         /// </summary>
-        protected override void OnCancel(PlayerIndex playerIndex)
+        protected override void OnCancel(Microsoft.Xna.Framework.PlayerIndex playerIndex)
         {
             const string message = "Are you sure you want to exit this sample?";
 

@@ -54,10 +54,12 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             base.LoadContent();
 
+            var draw = Container.GetService<IDrawSystem>();
+
             _viewport = ScreenManager.Game.GraphicsDevice.Viewport;
             _spriteSheet = ScreenManager.Game.Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
             var font = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/Default");
-            _factory = new EntityFactory(_spriteSheet, ScreenManager.SpriteBatch, Container.GetService<IPublisher>());
+            _factory = new EntityFactory(_spriteSheet, Container.GetService<IPublisher>(), draw);
             _enemySpawner = new EnemySpawner(_viewport, _factory, Container.GetService<IPublisher>());
 
             var ship = _factory.CreateShip(new Vector(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
@@ -69,7 +71,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             if (settings.ToggleFramerate.Toggle)
             {
-                _entities.Add(new FrameRate(font, _viewport, ScreenManager.SpriteBatch));
+                _entities.Add(new FrameRate(draw, font, _viewport));
             }
         }
 
@@ -89,11 +91,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             base.Draw(time);
 
-            ScreenManager.SpriteBatch.Begin();
-
             _entities.SelectDrawable().Iter(x => x.Draw(time));
-
-            ScreenManager.SpriteBatch.End();
         }
 
         private bool IsOutOfScreen(IBody entity)

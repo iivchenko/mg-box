@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
+using KenneyAsteroids.Engine.Graphics;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -43,6 +44,7 @@ namespace KenneyAsteroids.Engine.Screens
         #region Properties
 
         public IServiceProvider Container { get; }
+        public IDrawSystem DrawSystem { get; }
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -220,6 +222,8 @@ namespace KenneyAsteroids.Engine.Screens
         {
             _scope = container.CreateScope();
             Container = _scope.ServiceProvider;
+
+            DrawSystem = Container.GetService<IDrawSystem>();
         }
 
         /// <summary>

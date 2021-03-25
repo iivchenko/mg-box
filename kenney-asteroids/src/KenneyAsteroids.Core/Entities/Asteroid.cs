@@ -1,15 +1,15 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace KenneyAsteroids.Core.Entities
 {
     public sealed class Asteroid : IEntity<Guid>, IUpdatable, Engine.IDrawable, IBody
     {
+        private readonly IDrawSystem _draw;
+
         private readonly Sprite _sprite;
-        private readonly SpriteBatch _batch;
         private readonly Vector _scale;
         private readonly float _rotationSpeed;
 
@@ -17,13 +17,13 @@ namespace KenneyAsteroids.Core.Entities
         private float _rotation;
 
         public Asteroid(
+            IDrawSystem draw,
             Sprite sprite,
-            SpriteBatch batch,
             Vector velocity,
             float rotationSpeed)
         {
             _sprite = sprite;
-            _batch = batch;
+            _draw = draw;
             _velocity = velocity;
             _rotationSpeed = rotationSpeed;
 
@@ -51,15 +51,14 @@ namespace KenneyAsteroids.Core.Entities
 
         void Engine.IDrawable.Draw(float time)
         {
-            _batch
+            _draw
                 .Draw(
                     _sprite,
-                    Position.ToXna(),
-                    Origin.ToXna(),
-                    _scale.ToXna(),
+                    Position,
+                    Origin,
+                    _scale,
                     _rotation,
-                    Color.White,
-                    SpriteEffects.None);
+                    Color.White);
         }
     }
 }

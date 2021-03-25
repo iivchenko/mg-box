@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using KenneyAsteroids.Engine.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+
 namespace KenneyAsteroids.Engine.Screens
 {
     /// <summary>
@@ -13,6 +15,7 @@ namespace KenneyAsteroids.Engine.Screens
     {
         #region Fields
 
+        private IDrawSystem _draw;
         /// <summary>
         /// The text rendered for this entry.
         /// </summary>
@@ -30,12 +33,11 @@ namespace KenneyAsteroids.Engine.Screens
         /// The position at which the entry is drawn. This is set by the MenuScreen
         /// each frame in Update.
         /// </summary>
-        Vector2 position;
+        Vector position;
 
         #endregion
 
         #region Properties
-
 
         /// <summary>
         /// Gets or sets the text of this menu entry.
@@ -50,7 +52,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Gets or sets the position at which to draw this menu entry.
         /// </summary>
-        public Vector2 Position
+        public Vector Position
         {
             get { return position; }
             set { position = value; }
@@ -86,11 +88,11 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
-        public MenuEntry(string text)
+        public MenuEntry(IDrawSystem draw, string text)
         {
+            _draw = draw;
             this.text = text;
         }
-
 
         #endregion
 
@@ -132,7 +134,7 @@ namespace KenneyAsteroids.Engine.Screens
 #endif
 
             // Draw the selected entry in yellow, otherwise white.
-            Color color = isSelected ? Color.Yellow : Color.White;
+            var color = isSelected ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
 
             float pulsate = (float)Math.Sin(time * 6) + 1;
 
@@ -146,12 +148,10 @@ namespace KenneyAsteroids.Engine.Screens
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = screenManager.Font;
 
-            Vector2 origin = new Vector2(0, font.LineSpacing / 2);
+            Vector origin = new Vector(0, font.LineSpacing / 2);
 
-            spriteBatch.DrawString(font, text, position, color, 0,
-                                   origin, scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(font, text, position.ToXna(), color, 0, origin.ToXna(), scale, SpriteEffects.None, 0);
         }
-
 
         /// <summary>
         /// Queries how much space this menu entry requires.

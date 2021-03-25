@@ -157,7 +157,7 @@ namespace KenneyAsteroids.Engine.Screens
                     position.X += transitionOffset * 512;
 
                 // set the entry's position
-                menuEntry.Position = position;
+                menuEntry.Position = position.ToEngine();
 
                 // move down for the next entry the size of this entry
                 position.Y += menuEntry.GetHeight(this);

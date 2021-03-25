@@ -3,6 +3,7 @@ using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Eventing.Eventing;
+using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -38,6 +39,7 @@ namespace KenneyAsteroids.Desktop
                             // TODO: Add extension methods to wrap repository with cahing one
                             .AddScoped<IRepository<GameSettings>>(_ => new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json"))) //TODO: think about Decorate and Scrutor
                             .AddScoped<IEntitySystem, EntitySystem>()
+                            .AddScoped<IDrawSystem, DrawSystem>()
                             .AddScoped<IEventHandler<EntityCreatedEvent>, EntityCreatedEventHandler>()
                             .AddEventBus();
                     })

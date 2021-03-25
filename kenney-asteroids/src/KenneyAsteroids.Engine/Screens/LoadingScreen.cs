@@ -128,7 +128,6 @@ namespace KenneyAsteroids.Engine.Screens
             // to bother drawing the message.
             if (loadingIsSlow)
             {
-                SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
                 SpriteFont font = ScreenManager.Font;
 
                 const string message = "Loading...";
@@ -142,12 +141,9 @@ namespace KenneyAsteroids.Engine.Screens
                 Color color = Color.White * TransitionAlpha;
 
                 // Draw the text.
-                spriteBatch.Begin();
-                spriteBatch.DrawString(font, message, textPosition, color);
-                spriteBatch.End();
+                DrawSystem.DrawString(font, message, textPosition.ToEngine(), color.ToEngine());
             }
         }
-
 
         #endregion
     }
