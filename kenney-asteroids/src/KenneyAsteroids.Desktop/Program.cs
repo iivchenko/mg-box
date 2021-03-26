@@ -8,6 +8,8 @@ using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
+using XColor = Microsoft.Xna.Framework.Color;
+
 namespace KenneyAsteroids.Desktop
 {
     /* TODO: Global tasks
@@ -48,7 +50,7 @@ namespace KenneyAsteroids.Desktop
                         config.FullScreen = false;
                         config.IsMouseVisible = true;
                         config.ContentPath = "Content";
-                        config.ScreenColor = Microsoft.Xna.Framework.Color.Black;
+                        config.ScreenColor = XColor.Black;
                     })
                 .WithInitialScreen<MainMenuScreen>()
                 .Build()

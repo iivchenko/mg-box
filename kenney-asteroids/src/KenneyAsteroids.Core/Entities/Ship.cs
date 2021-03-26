@@ -1,21 +1,25 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
+
 using System;
+
+using XVector = Microsoft.Xna.Framework.Vector2;
+using XColor = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class Ship : IEntity<Guid>, IUpdatable, Engine.IDrawable, IBody
+    public sealed class Ship : IEntity<Guid>, IUpdatable, IDrawable, IBody
     {
         private readonly IDrawSystem _draw;
         private readonly Sprite _sprite;
         private readonly Weapon _weapon;
-        private readonly Vector _scale;
+        private readonly XVector _scale;
         private readonly float _maxSpeed;
         private readonly float _maxAcceleration;
         private readonly float _maxRotation;
 
-        private Vector _velocity;
+        private XVector _velocity;
         private float _rotation;
         private ShipAction _action;
 
@@ -34,21 +38,21 @@ namespace KenneyAsteroids.Core.Entities
             _maxAcceleration = maxAcceleration;
             _maxRotation = maxRotation;
 
-            _velocity = Vector.Zero;
-            _scale = Vector.One;
+            _velocity = XVector.Zero;
+            _scale = XVector.One;
             _rotation = 0.0f;
             _action = ShipAction.None;
 
             Id = Guid.NewGuid();
-            Origin = new Vector(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
-            Position = Vector.Zero;
+            Origin = new XVector(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
+            Position = XVector.Zero;
             Width = _sprite.Width;
             Height = _sprite.Height;
         }
         
         public Guid Id { get; }
-        public Vector Position { get; set; }
-        public Vector Origin { get; set; }
+        public XVector Position { get; set; }
+        public XVector Origin { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
 
@@ -71,7 +75,7 @@ namespace KenneyAsteroids.Core.Entities
             {
                 var velocity = _velocity + _rotation.ToDirection() * _maxAcceleration;
 
-                _velocity = velocity.Length() > _maxSpeed ? velocity.Normalize() * _maxSpeed : velocity;
+                _velocity = velocity.Length() > _maxSpeed ? velocity.ToNormalized() * _maxSpeed : velocity;
             }
 
             Position += _velocity * time;
@@ -91,7 +95,7 @@ namespace KenneyAsteroids.Core.Entities
                     Origin,
                     _scale,
                     _rotation,
-                    Color.White);
+                    XColor.White);
         }
     }
 

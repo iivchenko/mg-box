@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using XVector = Microsoft.Xna.Framework.Vector2;
+
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
     public sealed class GamePlayScreen : GameScreen
@@ -62,7 +64,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _factory = new EntityFactory(_spriteSheet, Container.GetService<IPublisher>(), draw);
             _enemySpawner = new EnemySpawner(_viewport, _factory, Container.GetService<IPublisher>());
 
-            var ship = _factory.CreateShip(new Vector(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
+            var ship = _factory.CreateShip(new XVector(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
             var controller = new ShipPlayerKeyboardController(ship);
 
             _entities.Add(controller, ship);
@@ -132,7 +134,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                         y = 0 - body.Height / 2.0f;
                     }
 
-                    body.Position = new Vector(x, y);
+                    body.Position = new XVector(x, y);
                     break;
             }
         }

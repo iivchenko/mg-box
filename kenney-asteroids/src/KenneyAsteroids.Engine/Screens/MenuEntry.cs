@@ -33,7 +33,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// The position at which the entry is drawn. This is set by the MenuScreen
         /// each frame in Update.
         /// </summary>
-        Vector position;
+        Vector2 position;
 
         #endregion
 
@@ -52,7 +52,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Gets or sets the position at which to draw this menu entry.
         /// </summary>
-        public Vector Position
+        public Vector2 Position
         {
             get { return position; }
             set { position = value; }
@@ -148,9 +148,9 @@ namespace KenneyAsteroids.Engine.Screens
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = screenManager.Font;
 
-            Vector origin = new Vector(0, font.LineSpacing / 2);
+            Vector2 origin = new Vector2(0, font.LineSpacing / 2);
 
-            spriteBatch.DrawString(font, text, position.ToXna(), color, 0, origin.ToXna(), scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(font, text, position, color, 0, origin, scale, SpriteEffects.None, 0);
         }
 
         /// <summary>

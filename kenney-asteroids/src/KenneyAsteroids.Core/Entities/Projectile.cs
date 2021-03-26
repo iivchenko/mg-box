@@ -1,7 +1,11 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
+
 using System;
+
+using XVector = Microsoft.Xna.Framework.Vector2;
+using XColor = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Entities
 {
@@ -12,7 +16,7 @@ namespace KenneyAsteroids.Core.Entities
         private readonly Sprite _sprite;
         private readonly float _rotation;
 
-        private Vector _velocity;
+        private XVector _velocity;
 
         public Projectile(
             IDrawSystem draw,
@@ -26,15 +30,15 @@ namespace KenneyAsteroids.Core.Entities
             _velocity = rotation.ToDirection() * speed;
 
             Id = Guid.NewGuid();
-            Origin = new Vector(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
-            Position = Vector.Zero;
+            Origin = new XVector(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
+            Position = XVector.Zero;
             Width = _sprite.Width;
             Height = _sprite.Height;
         }
 
         public Guid Id { get; }
-        public Vector Position { get; set; }
-        public Vector Origin { get; set; }
+        public XVector Position { get; set; }
+        public XVector Origin { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
 
@@ -50,9 +54,9 @@ namespace KenneyAsteroids.Core.Entities
                     _sprite,
                     Position,
                     Origin,
-                    Vector.One,
+                    XVector.One,
                     _rotation,
-                    Color.White);
+                    XColor.White);
         }
     }
 }

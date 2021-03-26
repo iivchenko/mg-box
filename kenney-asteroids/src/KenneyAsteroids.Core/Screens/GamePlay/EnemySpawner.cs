@@ -4,6 +4,8 @@ using KenneyAsteroids.Engine.Eventing.Eventing;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
+using XVector = Microsoft.Xna.Framework.Vector2;
+
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
     public sealed class EnemySpawner : IUpdatable
@@ -75,9 +77,10 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     break;
             }
 
-            var position = new Vector(x, y);
-            var direction = new Vector(dx, dy) - position;
-            var velocity = direction.Normalize() * new Vector(_random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed), _random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed));
+            var position = new XVector(x, y);
+            var direction = new XVector(dx - x, dy - y).ToNormalized();
+
+            var velocity = direction * new XVector(_random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed), _random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed));
             var rotationSpeed = _random.Next(BigAsteroidMinRotationSpeed, BigAsteroidMaxRotationSpeed).AsRadians() * _random.NextDouble() > 0.5 ? 1 : -1;
 
             var asteroid = _factory.CreateAsteroid(position, velocity, rotationSpeed);

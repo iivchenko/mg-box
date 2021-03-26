@@ -3,6 +3,8 @@ using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
 using System;
 
+using XVector = Microsoft.Xna.Framework.Vector2;
+
 namespace KenneyAsteroids.Core.Entities
 {
     public sealed class EntityFactory : IProjectileFactory // TODO: Extract Projectile factory class
@@ -21,7 +23,7 @@ namespace KenneyAsteroids.Core.Entities
             _draw = draw;
         }
 
-        public Ship CreateShip(Vector position)
+        public Ship CreateShip(XVector position)
         {
             const float MaxSpeed = 400.0f;
             const float Acceleration = 10.0f;
@@ -29,14 +31,14 @@ namespace KenneyAsteroids.Core.Entities
 
             var sprite = _spriteSheet["playerShip1_blue"];
             var reload = TimeSpan.FromMilliseconds(500);
-            var weapon = new Weapon(new Vector(0, -sprite.Width / 2), reload, this, _eventService);
+            var weapon = new Weapon(new XVector(0, -sprite.Width / 2), reload, this, _eventService);
             return new Ship(_draw, sprite, weapon, MaxSpeed, Acceleration, MaxRotation.AsRadians())
             {
                 Position = position
             };
         }
 
-        public Asteroid CreateAsteroid(Vector position, Vector velocity, float rotationSpeed)
+        public Asteroid CreateAsteroid(XVector position, XVector velocity, float rotationSpeed)
         {
             var sprite = _spriteSheet["meteorBrown_big2"];
             
@@ -46,7 +48,7 @@ namespace KenneyAsteroids.Core.Entities
             };
         }
 
-        public Projectile Create(Vector position, Vector direction)
+        public Projectile Create(XVector position, XVector direction)
         {
             const float Speed = 800.0f;
             var sprite = _spriteSheet["laserBlue01"];

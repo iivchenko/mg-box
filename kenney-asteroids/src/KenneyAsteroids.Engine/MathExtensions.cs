@@ -5,9 +5,9 @@ namespace KenneyAsteroids.Engine
 {
     public static class MathExtensions
     {
-        public static Vector ToDirection(this float angle)
+        public static Vector2 ToDirection(this float angle)
         {
-            var direction = new Vector(MathF.Sin(angle), -MathF.Cos(angle));
+            var direction = new Vector2(MathF.Sin(angle), -MathF.Cos(angle));
 
             direction.Normalize();
 

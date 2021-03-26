@@ -1,9 +1,11 @@
 ﻿using KenneyAsteroids.Core.Screens.GamePlay;
-using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+
+using XVector = Microsoft.Xna.Framework.Vector2;
+using XColor = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Screens
 {
@@ -12,7 +14,7 @@ namespace KenneyAsteroids.Core.Screens
         private readonly IDrawSystem _draw;
 
         private string _version;
-        private Vector _versionPosition;
+        private XVector _versionPosition;
 
         /// <summary>
         /// Constructor fills in the menu contents.
@@ -46,14 +48,14 @@ namespace KenneyAsteroids.Core.Screens
             var font = ScreenManager.Font;
             var viewport = ScreenManager.GraphicsDevice.Viewport;
             var size = font.MeasureString(_version);
-            _versionPosition = new Vector(viewport.Width - size.X, viewport.Height - size.Y);
+            _versionPosition = new XVector(viewport.Width - size.X, viewport.Height - size.Y);
         }
 
         public override void Draw(float time)
         {
             base.Draw(time);
             
-            _draw.DrawString(ScreenManager.Font, _version, _versionPosition, Color.White);
+            _draw.DrawString(ScreenManager.Font, _version, _versionPosition, XColor.White);
         }
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         protected override void OnCancel(Microsoft.Xna.Framework.PlayerIndex playerIndex)
         {
-            const string message = "Are you sure you want to exit this sample?";
+            const string message = "Are you sure you want to exit this sample?\nA button, Space, Enter = ok\nB button, Esc = cancel";
 
             MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message, Container);
 

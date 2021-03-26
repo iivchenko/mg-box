@@ -141,7 +141,7 @@ namespace KenneyAsteroids.Engine.Screens
                 Color color = Color.White * TransitionAlpha;
 
                 // Draw the text.
-                DrawSystem.DrawString(font, message, textPosition.ToEngine(), color.ToEngine());
+                DrawSystem.DrawString(font, message, textPosition, color);
             }
         }
 
