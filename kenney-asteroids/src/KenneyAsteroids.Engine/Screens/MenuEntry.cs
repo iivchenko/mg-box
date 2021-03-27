@@ -13,16 +13,9 @@ namespace KenneyAsteroids.Engine.Screens
     /// </summary>
     public class MenuEntry
     {
-        #region Fields
-
-        private IPainter _draw;
+        private readonly IPainter _draw;
 
         private readonly SpriteFont _font;
-
-        /// <summary>
-        /// The text rendered for this entry.
-        /// </summary>
-        string _text;
 
         /// <summary>
         /// Tracks a fading selection effect on the entry.
@@ -30,48 +23,23 @@ namespace KenneyAsteroids.Engine.Screens
         /// <remarks>
         /// The entries transition out of the selection effect when they are deselected.
         /// </remarks>
-        float selectionFade;
+        private float _selectionFade;
 
         /// <summary>
-        /// The position at which the entry is drawn. This is set by the MenuScreen
-        /// each frame in Update.
+        /// Constructs a new menu entry with the specified text.
         /// </summary>
-        Vector2 position;
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the text of this menu entry.
-        /// </summary>
-        public string Text
+        public MenuEntry(IPainter draw, SpriteFont font)
         {
-            get { return _text; }
-            set { _text = value; }
+            _draw = draw;
+            _font = font;
+
+            _selectionFade = 1;
         }
-
-
-        /// <summary>
-        /// Gets or sets the position at which to draw this menu entry.
-        /// </summary>
-        public Vector2 Position
-        {
-            get { return position; }
-            set { position = value; }
-        }
-
-
-        #endregion
-
-        #region Events
-
 
         /// <summary>
         /// Event raised when the menu entry is selected.
         /// </summary>
         public event EventHandler<PlayerIndexEventArgs> Selected;
-
 
         /// <summary>
         /// Method for raising the Selected event.
@@ -82,26 +50,8 @@ namespace KenneyAsteroids.Engine.Screens
                 Selected(this, new PlayerIndexEventArgs(playerIndex));
         }
 
-
-        #endregion
-
-        #region Initialization
-
-
-        /// <summary>
-        /// Constructs a new menu entry with the specified text.
-        /// </summary>
-        public MenuEntry(IPainter draw, SpriteFont font, string text)
-        {
-            _draw = draw;
-            _font = font;
-            _text = text;
-        }
-
-        #endregion
-
-        #region Update and Draw
-
+        public string Text { get; set; }
+        public Vector2 Position { get; set; }
 
         /// <summary>
         /// Updates the menu entry.
@@ -120,11 +70,10 @@ namespace KenneyAsteroids.Engine.Screens
             var fadeSpeed = time * 4.0f;
 
             if (isSelected)
-                selectionFade = Math.Min(selectionFade + fadeSpeed, 1);
+                _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1);
             else
-                selectionFade = Math.Max(selectionFade - fadeSpeed, 0);
+                _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0);
         }
-
 
         /// <summary>
         /// Draws the menu entry. This can be overridden to customize the appearance.
@@ -138,18 +87,18 @@ namespace KenneyAsteroids.Engine.Screens
 #endif
 
             // Draw the selected entry in yellow, otherwise white.
-            var color = isSelected ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
+            var color = isSelected ? Color.Yellow : Color.White;
 
             float pulsate = (float)Math.Sin(time * 6) + 1;
 
-            float scale = 1 + pulsate * 0.05f * selectionFade;
+            float scale = 1 + pulsate * 0.05f * _selectionFade;
 
             // Modify the alpha to fade text out during transitions.
             color *= screen.TransitionAlpha;
 
             Vector2 origin = new Vector2(0, _font.LineSpacing / 2);
 
-            _draw.DrawString(_font, _text, position, color, 0, origin, scale, SpriteEffects.None, 0);
+            _draw.DrawString(_font, Text, Position, color, 0, origin, scale, SpriteEffects.None, 0);
         }
 
         /// <summary>
@@ -160,7 +109,6 @@ namespace KenneyAsteroids.Engine.Screens
             return _font.LineSpacing;
         }
 
-
         /// <summary>
         /// Queries how wide the entry is, used for centering on the screen.
         /// </summary>
@@ -168,7 +116,5 @@ namespace KenneyAsteroids.Engine.Screens
         {
             return (int)_font.MeasureString(Text).X;
         }
-
-        #endregion
     }
 }

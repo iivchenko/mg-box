@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace KenneyAsteroids.Engine.Screens
@@ -8,18 +6,14 @@ namespace KenneyAsteroids.Engine.Screens
     // TODO: Refine interface
     public interface IScreenSystem
     {
-        GraphicsDevice GraphicsDevice { get; }
-
-        ContentManager Content { get; }
-
         IEnumerable<GameScreen> GetScreens();
 
         void Add(GameScreen screen, PlayerIndex? controllingPlayer);
 
         void Remove(GameScreen screen);
 
-        void ResetElapsedTime();
+        void ResetElapsedTime(); // TODO: used in loading screen. Refactor in more efficient way content loading stuff
 
-        void Exit();
+        void Exit(); // TODO: Refactor to use event
     }
 }

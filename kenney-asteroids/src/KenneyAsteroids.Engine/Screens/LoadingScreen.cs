@@ -140,7 +140,7 @@ namespace KenneyAsteroids.Engine.Screens
                 const string message = "Loading...";
 
                 // Center the text in the viewport.
-                Viewport viewport = ScreenSystem.GraphicsDevice.Viewport;
+                Viewport viewport = GraphicsDevice.Viewport;
                 Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
                 Vector2 textSize = _font.MeasureString(message);
                 Vector2 textPosition = (viewportSize - textSize) / 2;

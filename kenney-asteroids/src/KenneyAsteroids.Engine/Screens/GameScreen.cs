@@ -8,9 +8,6 @@ using System;
 
 namespace KenneyAsteroids.Engine.Screens
 {
-    /// <summary>
-    /// Enum describes the screen transition state.
-    /// </summary>
     public enum ScreenState
     {
         TransitionOn,
@@ -50,8 +47,9 @@ namespace KenneyAsteroids.Engine.Screens
             IsExiting = false;
         }
 
+        public IScreenSystem ScreenSystem { get; set; }
         protected IServiceProvider Container { get; }
-        protected IPainter DrawSystem { get; }
+        protected IPainter DrawSystem { get; }        
         protected ContentManager Content { get; }
         protected GraphicsDevice GraphicsDevice { get; }
 
@@ -111,17 +109,6 @@ namespace KenneyAsteroids.Engine.Screens
         public bool IsActive => !_otherScreenHasFocus && (ScreenState == ScreenState.TransitionOn || ScreenState == ScreenState.Active);
 
         /// <summary>
-        /// Gets the manager that this screen belongs to.
-        /// </summary>
-        public IScreenSystem ScreenSystem
-        {
-            get { return _screenSystem; }
-            internal set { _screenSystem = value; }
-        }
-
-        IScreenSystem _screenSystem;
-
-        /// <summary>
         /// Gets the index of the player who is currently controlling this screen,
         /// or null if it is accepting input from any player. This is used to lock
         /// the game to a specific player profile. The main menu responds to input
@@ -129,14 +116,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// this menu is given control over all subsequent screens, so other gamepads
         /// are inactive until the controlling player returns to the main menu.
         /// </summary>
-        public PlayerIndex? ControllingPlayer
-        {
-            get { return controllingPlayer; }
-            internal set { controllingPlayer = value; }
-        }
-
-        PlayerIndex? controllingPlayer;
-
+        public PlayerIndex? ControllingPlayer { get; internal set; }
 
         /// <summary>
         /// Gets the gestures the screen is interested in. Screens should be as specific
@@ -180,9 +160,6 @@ namespace KenneyAsteroids.Engine.Screens
             // TODO: Think on content unload
             _scope.Dispose();
         }
-
-        #region Update and Draw
-
 
         /// <summary>
         /// Allows the screen to run logic, such as updating the transition position.
@@ -262,7 +239,6 @@ namespace KenneyAsteroids.Engine.Screens
             return true;
         }
 
-
         /// <summary>
         /// Allows the screen to handle user input. Unlike Update, this method
         /// is only called when the screen is active, and not when some other
@@ -274,11 +250,6 @@ namespace KenneyAsteroids.Engine.Screens
         /// This is called when the screen should draw itself.
         /// </summary>
         public virtual void Draw(float time) { }
-
-        #endregion
-
-        #region Public Methods
-
 
         /// <summary>
         /// Tells the screen to go away. Unlike ScreenManager.RemoveScreen, which
@@ -298,8 +269,6 @@ namespace KenneyAsteroids.Engine.Screens
                 IsExiting = true;
             }
         }
-
-        #endregion
         
         protected void FadeBackBufferToBlack(float alpha)
         {

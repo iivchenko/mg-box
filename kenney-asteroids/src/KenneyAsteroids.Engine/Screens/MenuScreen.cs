@@ -157,7 +157,7 @@ namespace KenneyAsteroids.Engine.Screens
                 MenuEntry menuEntry = menuEntries[i];
 
                 // each entry is to be centered horizontally
-                position.X = ScreenSystem.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
+                position.X = GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
 
                 if (ScreenState == ScreenState.TransitionOn)
                     position.X -= transitionOffset * 256;
@@ -176,8 +176,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Updates the menu.
         /// </summary>
-        public override void Update(float time, bool otherScreenHasFocus,
-                                                       bool coveredByOtherScreen)
+        public override void Update(float time, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(time, otherScreenHasFocus, coveredByOtherScreen);
 
@@ -196,6 +195,8 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public override void Draw(float time)
         {
+            base.Draw(time);
+
             // make sure our entries are in the right place before we draw them
             UpdateMenuEntryLocations();
 

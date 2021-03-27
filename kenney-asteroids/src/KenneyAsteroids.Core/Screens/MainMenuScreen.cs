@@ -33,14 +33,14 @@ namespace KenneyAsteroids.Core.Screens
 
             _version = Version.Current;
 
-            var viewport = ScreenSystem.GraphicsDevice.Viewport;
+            var viewport = GraphicsDevice.Viewport;
             var size = _font.MeasureString(_version);
             _versionPosition = new Vector2(viewport.Width - size.X, viewport.Height - size.Y);
 
             // Create our menu entries.
-            MenuEntry playGameMenuEntry = new MenuEntry(_draw, _font, "Play Game");
-            MenuEntry settingsMenuEntry = new MenuEntry(_draw, _font, "Settings");
-            MenuEntry exitMenuEntry = new MenuEntry(_draw, _font, "Exit");
+            MenuEntry playGameMenuEntry = new MenuEntry(_draw, _font) { Text = "Play Game" };
+            MenuEntry settingsMenuEntry = new MenuEntry(_draw, _font) { Text = "Settings" };
+            MenuEntry exitMenuEntry = new MenuEntry(_draw, _font) { Text = "Exit" };
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;

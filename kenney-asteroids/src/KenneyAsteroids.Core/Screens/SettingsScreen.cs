@@ -50,7 +50,7 @@ namespace KenneyAsteroids.Core.Screens
 
             var settings = _settingsRepository.Read();
 
-            _toggleFramerate = new MenuEntry(DrawSystem, _font, $"Frame Rate: {Toggle(settings.ToggleFramerate.Toggle)}");
+            _toggleFramerate = new MenuEntry(DrawSystem, _font) { Text = $"Frame Rate: {Toggle(settings.ToggleFramerate.Toggle)}" };
             _toggleFramerate.Selected += (_, __) =>
             {
                 var settings = _settingsRepository.Read();
@@ -61,7 +61,7 @@ namespace KenneyAsteroids.Core.Screens
                 _settingsRepository.Update(settings);
             };
 
-            _back = new MenuEntry(DrawSystem, _font, "Back");
+            _back = new MenuEntry(DrawSystem, _font) { Text = "Back" };
             _back.Selected += (_, e) => OnCancel(e.PlayerIndex);
 
             MenuEntries.Add(_toggleFramerate);
