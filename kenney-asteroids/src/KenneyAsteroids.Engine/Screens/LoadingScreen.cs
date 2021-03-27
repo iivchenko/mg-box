@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Linq;
 
 namespace KenneyAsteroids.Engine.Screens
 {
@@ -39,7 +40,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// be activated via the static Load method instead.
         /// </summary>
         private LoadingScreen(
-            ScreenManager screenManager, 
+            IScreenSystem screenSystem, 
             bool loadingIsSlow,
             GameScreen[] screensToLoad,
             IServiceProvider container)
@@ -61,19 +62,19 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Activates the loading screen.
         /// </summary>
-        public static void Load(ScreenManager screenManager, bool loadingIsSlow,
+        public static void Load(IScreenSystem screenSystem, bool loadingIsSlow,
                                 PlayerIndex? controllingPlayer,
                                 IServiceProvider container,
                                 params GameScreen[] screensToLoad)
         {
             // Tell all the current screens to transition off.
-            foreach (GameScreen screen in screenManager.GetScreens())
+            foreach (GameScreen screen in screenSystem.GetScreens())
                 screen.ExitScreen();
 
             // Create and activate the loading screen.
-            LoadingScreen loadingScreen = new LoadingScreen(screenManager, loadingIsSlow, screensToLoad, container);
+            LoadingScreen loadingScreen = new LoadingScreen(screenSystem, loadingIsSlow, screensToLoad, container);
 
-            screenManager.AddScreen(loadingScreen, controllingPlayer);
+            screenSystem.Add(loadingScreen, controllingPlayer);
         }
 
 
@@ -94,20 +95,20 @@ namespace KenneyAsteroids.Engine.Screens
             // off, it is time to actually perform the load.
             if (otherScreensAreGone)
             {
-                ScreenManager.RemoveScreen(this);
+                ScreenSystem.Remove(this);
 
                 foreach (GameScreen screen in screensToLoad)
                 {
                     if (screen != null)
                     {
-                        ScreenManager.AddScreen(screen, ControllingPlayer);
+                        ScreenSystem.Add(screen, ControllingPlayer);
                     }
                 }
 
                 // Once the load has finished, we use ResetElapsedTime to tell
                 // the  game timing mechanism that we have just finished a very
                 // long frame, and that it should not try to catch up.
-                ScreenManager.Game.ResetElapsedTime();
+                ScreenSystem.ResetElapsedTime();
             }
         }
 
@@ -123,7 +124,7 @@ namespace KenneyAsteroids.Engine.Screens
             // screens to be gone: in order for the transition to look good we must
             // have actually drawn a frame without them before we perform the load.
             if ((ScreenState == ScreenState.Active) &&
-                (ScreenManager.GetScreens().Length == 1))
+                (ScreenSystem.GetScreens().Count() == 1))
             {
                 otherScreensAreGone = true;
             }
@@ -139,7 +140,7 @@ namespace KenneyAsteroids.Engine.Screens
                 const string message = "Loading...";
 
                 // Center the text in the viewport.
-                Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+                Viewport viewport = ScreenSystem.GraphicsDevice.Viewport;
                 Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
                 Vector2 textSize = _font.MeasureString(message);
                 Vector2 textPosition = (viewportSize - textSize) / 2;

@@ -33,7 +33,7 @@ namespace KenneyAsteroids.Core.Screens
 
             _version = Version.Current;
 
-            var viewport = ScreenManager.GraphicsDevice.Viewport;
+            var viewport = ScreenSystem.GraphicsDevice.Viewport;
             var size = _font.MeasureString(_version);
             _versionPosition = new Vector2(viewport.Width - size.X, viewport.Height - size.Y);
 
@@ -65,7 +65,7 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, Container, new GamePlayScreen(Container));
+            LoadingScreen.Load(ScreenSystem, true, e.PlayerIndex, Container, new GamePlayScreen(Container));
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         void SettingsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.AddScreen(new SettingsScreen(Container), e.PlayerIndex);
+            ScreenSystem.Add(new SettingsScreen(Container), e.PlayerIndex);
         }
 
 
@@ -88,7 +88,7 @@ namespace KenneyAsteroids.Core.Screens
 
             confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;
 
-            ScreenManager.AddScreen(confirmExitMessageBox, playerIndex);
+            ScreenSystem.Add(confirmExitMessageBox, playerIndex);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         void ConfirmExitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.Game.Exit();
+            ScreenSystem.Exit();
         }
     }
 }

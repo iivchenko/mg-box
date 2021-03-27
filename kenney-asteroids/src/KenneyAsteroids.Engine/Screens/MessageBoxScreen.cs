@@ -70,7 +70,7 @@ namespace KenneyAsteroids.Engine.Screens
             FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
 
             // Center the message text in the viewport.
-            var viewport = ScreenManager.GraphicsDevice.Viewport;
+            var viewport = ScreenSystem.GraphicsDevice.Viewport;
             var viewportSize = new Vector2(viewport.Width, viewport.Height);
             var textSize = _font.MeasureString(_message);
             var textPosition = (viewportSize - textSize) / 2;

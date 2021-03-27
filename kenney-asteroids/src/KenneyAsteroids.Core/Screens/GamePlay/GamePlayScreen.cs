@@ -58,9 +58,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             var draw = Container.GetService<IPainter>();
 
-            _viewport = ScreenManager.Game.GraphicsDevice.Viewport;
-            _spriteSheet = ScreenManager.Game.Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
-            var font = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/Default");
+            _viewport = ScreenSystem.GraphicsDevice.Viewport;
+            _spriteSheet = ScreenSystem.Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
+            var font = ScreenSystem.Content.Load<SpriteFont>("Fonts/Default");
             _factory = new EntityFactory(_spriteSheet, Container.GetService<IPublisher>(), draw);
             _enemySpawner = new EnemySpawner(_viewport, _factory, Container.GetService<IPublisher>());
 

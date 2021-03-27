@@ -1,12 +1,10 @@
-using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input.Touch;
-
-using Microsoft.Extensions.DependencyInjection;
 using KenneyAsteroids.Engine.Graphics;
-
-using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input.Touch;
+using System;
 
 namespace KenneyAsteroids.Engine.Screens
 {
@@ -115,14 +113,13 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Gets the manager that this screen belongs to.
         /// </summary>
-        public ScreenManager ScreenManager
+        public IScreenSystem ScreenSystem
         {
-            get { return screenManager; }
-            internal set { screenManager = value; }
+            get { return _screenSystem; }
+            internal set { _screenSystem = value; }
         }
 
-        ScreenManager screenManager;
-
+        IScreenSystem _screenSystem;
 
         /// <summary>
         /// Gets the index of the player who is currently controlling this screen,
@@ -204,7 +201,7 @@ namespace KenneyAsteroids.Engine.Screens
                 if (!UpdateTransition(time, TransitionOffTime, 1))
                 {
                     // When the transition finishes, remove the screen.
-                    ScreenManager.RemoveScreen(this);
+                    ScreenSystem.Remove(this);
                 }
             }
             else if (coveredByOtherScreen)
@@ -293,7 +290,7 @@ namespace KenneyAsteroids.Engine.Screens
             if (TransitionOffTime == TimeSpan.Zero)
             {
                 // If the screen has a zero transition time, remove it immediately.
-                ScreenManager.RemoveScreen(this);
+                ScreenSystem.Remove(this);
             }
             else
             {
