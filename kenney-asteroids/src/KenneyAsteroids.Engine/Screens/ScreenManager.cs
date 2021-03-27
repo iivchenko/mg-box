@@ -35,7 +35,6 @@ namespace KenneyAsteroids.Engine.Screens
         InputState input = new InputState();
 
         SpriteBatch spriteBatch;
-        SpriteFont font;
         Texture2D blankTexture;
 
         bool isInitialized;
@@ -54,12 +53,6 @@ namespace KenneyAsteroids.Engine.Screens
         {
             get { return spriteBatch; }
         }
-
-        /// <summary>
-        /// A default font shared by all the screens. This saves
-        /// each screen having to bother loading their own local copy.
-        /// </summary>
-        public SpriteFont Font => font; // TODO: Remove it complitelly afte all screens are used
 
         /// <summary>
         /// If true, the manager prints out a list of all the screens
@@ -109,7 +102,6 @@ namespace KenneyAsteroids.Engine.Screens
             ContentManager content = Game.Content;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("Fonts/simxel.font");  // TODO: Remove it complitelly afte all screens are used
             blankTexture = content.Load<Texture2D>("Sprites/blank.sprite"); // TODO: Replace with programatic one pixel black texture
 
             // Tell each of the screens to load their content.

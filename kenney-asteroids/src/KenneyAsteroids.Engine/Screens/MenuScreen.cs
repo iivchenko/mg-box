@@ -14,6 +14,8 @@ namespace KenneyAsteroids.Engine.Screens
     {
         #region Fields
 
+        private SpriteFont _font;
+
         List<MenuEntry> menuEntries = new List<MenuEntry>();
         int selectedEntry = 0;
         string menuTitle;
@@ -49,6 +51,12 @@ namespace KenneyAsteroids.Engine.Screens
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
+        public override void LoadContent()
+        {
+            base.LoadContent();
+
+            _font = Content.Load<SpriteFont>("Fonts/simxel.font");
+        }
 
         #endregion
 
@@ -193,7 +201,6 @@ namespace KenneyAsteroids.Engine.Screens
 
             GraphicsDevice graphics = ScreenManager.GraphicsDevice;
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-            SpriteFont font = ScreenManager.Font;
 
             spriteBatch.Begin();
 
@@ -214,18 +221,17 @@ namespace KenneyAsteroids.Engine.Screens
 
             // Draw the menu title centered on the screen
             Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
-            Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
+            Vector2 titleOrigin = _font.MeasureString(menuTitle) / 2;
             Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
             float titleScale = 1.25f;
 
             titlePosition.Y -= transitionOffset * 100;
 
-            spriteBatch.DrawString(font, menuTitle, titlePosition, titleColor, 0,
+            spriteBatch.DrawString(_font, menuTitle, titlePosition, titleColor, 0,
                                    titleOrigin, titleScale, SpriteEffects.None, 0);
 
             spriteBatch.End();
         }
-
 
         #endregion
     }

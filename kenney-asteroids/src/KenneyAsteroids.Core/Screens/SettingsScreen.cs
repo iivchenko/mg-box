@@ -2,6 +2,7 @@
 using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace KenneyAsteroids.Core.Screens
@@ -30,18 +31,26 @@ namespace KenneyAsteroids.Core.Screens
     {
         private readonly IRepository<GameSettings> _settingsRepository;
 
-        private readonly MenuEntry _toggleFramerate;
-        private readonly MenuEntry _back;
+        private SpriteFont _font;
+
+        private MenuEntry _toggleFramerate;
+        private MenuEntry _back;
 
         public SettingsScreen(IServiceProvider container)
             : base("Settings", container)
         {
-            var draw = Container.GetService<IDrawSystem>();
             _settingsRepository = Container.GetService<IRepository<GameSettings>>();
+        }
+
+        public override void LoadContent()
+        {
+            base.LoadContent();
+
+            _font = Content.Load<SpriteFont>("Fonts/simxel.font");
 
             var settings = _settingsRepository.Read();
 
-            _toggleFramerate = new MenuEntry(draw, $"Frame Rate: {Toggle(settings.ToggleFramerate.Toggle)}");
+            _toggleFramerate = new MenuEntry(DrawSystem, _font, $"Frame Rate: {Toggle(settings.ToggleFramerate.Toggle)}");
             _toggleFramerate.Selected += (_, __) =>
             {
                 var settings = _settingsRepository.Read();
@@ -52,7 +61,7 @@ namespace KenneyAsteroids.Core.Screens
                 _settingsRepository.Update(settings);
             };
 
-            _back = new MenuEntry(draw, "Back");
+            _back = new MenuEntry(DrawSystem, _font, "Back");
             _back.Selected += (_, e) => OnCancel(e.PlayerIndex);
 
             MenuEntries.Add(_toggleFramerate);

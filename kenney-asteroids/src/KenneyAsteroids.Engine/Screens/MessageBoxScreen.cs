@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
 using KenneyAsteroids.Engine.Graphics;
 
 namespace KenneyAsteroids.Engine.Screens
@@ -12,6 +10,7 @@ namespace KenneyAsteroids.Engine.Screens
         private readonly string _message;
 
         private Sprite _gradient;
+        private SpriteFont _font;
 
         public MessageBoxScreen(string message, IServiceProvider container)
             : base(container)
@@ -28,9 +27,8 @@ namespace KenneyAsteroids.Engine.Screens
 
         public override void LoadContent()
         {
-            ContentManager content = ScreenManager.Game.Content;
-
-            _gradient = new Sprite(content.Load<Texture2D>("Sprites/gradient.sprite"));
+            _gradient = new Sprite(Content.Load<Texture2D>("Sprites/gradient.sprite")); // TODO: Make Sprite pipeline loader
+            _font = Content.Load<SpriteFont>("Fonts/simxel.font");
         }
 
         public override void HandleInput(InputState input)
@@ -62,15 +60,13 @@ namespace KenneyAsteroids.Engine.Screens
 
         public override void Draw(float time)
         {
-            var font = ScreenManager.Font;
-
             // Darken down any other screens that were drawn beneath the popup.
             ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
 
             // Center the message text in the viewport.
             var viewport = ScreenManager.GraphicsDevice.Viewport;
             var viewportSize = new Vector2(viewport.Width, viewport.Height);
-            var textSize = font.MeasureString(_message);
+            var textSize = _font.MeasureString(_message);
             var textPosition = (viewportSize - textSize) / 2;
 
             // The background includes a border somewhat larger than the text itself.
@@ -89,7 +85,7 @@ namespace KenneyAsteroids.Engine.Screens
             DrawSystem.Draw(_gradient, backgroundRectangle, color);
 
             // Draw the message box text.
-            DrawSystem.DrawString(font, _message, textPosition, color);
+            DrawSystem.DrawString(_font, _message, textPosition, color);
         }
     }
 }

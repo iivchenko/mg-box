@@ -3,9 +3,8 @@ using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using System;
 using Microsoft.Extensions.DependencyInjection;
-
-using XVector = Microsoft.Xna.Framework.Vector2;
-using XColor = Microsoft.Xna.Framework.Color;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace KenneyAsteroids.Core.Screens
 {
@@ -13,8 +12,9 @@ namespace KenneyAsteroids.Core.Screens
     {
         private readonly IDrawSystem _draw;
 
+        private SpriteFont _font;
         private string _version;
-        private XVector _versionPosition;
+        private Vector2 _versionPosition;
 
         /// <summary>
         /// Constructor fills in the menu contents.
@@ -23,11 +23,24 @@ namespace KenneyAsteroids.Core.Screens
             : base("Main Menu", container)
         {
             _draw = Container.GetService<IDrawSystem>();
+        }
+
+        public override void LoadContent()
+        {
+            base.LoadContent();
+            
+            _font = Content.Load<SpriteFont>("Fonts/simxel.font");
+
+            _version = Version.Current;
+
+            var viewport = ScreenManager.GraphicsDevice.Viewport;
+            var size = _font.MeasureString(_version);
+            _versionPosition = new Vector2(viewport.Width - size.X, viewport.Height - size.Y);
 
             // Create our menu entries.
-            MenuEntry playGameMenuEntry = new MenuEntry(_draw, "Play Game");
-            MenuEntry settingsMenuEntry = new MenuEntry(_draw, "Settings");
-            MenuEntry exitMenuEntry = new MenuEntry(_draw, "Exit");
+            MenuEntry playGameMenuEntry = new MenuEntry(_draw, _font, "Play Game");
+            MenuEntry settingsMenuEntry = new MenuEntry(_draw, _font, "Settings");
+            MenuEntry exitMenuEntry = new MenuEntry(_draw, _font, "Exit");
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
@@ -40,22 +53,11 @@ namespace KenneyAsteroids.Core.Screens
             MenuEntries.Add(exitMenuEntry);
         }
 
-        public override void LoadContent()
-        {
-            base.LoadContent();
-            _version = Version.Current;
-
-            var font = ScreenManager.Font;
-            var viewport = ScreenManager.GraphicsDevice.Viewport;
-            var size = font.MeasureString(_version);
-            _versionPosition = new XVector(viewport.Width - size.X, viewport.Height - size.Y);
-        }
-
         public override void Draw(float time)
         {
             base.Draw(time);
             
-            _draw.DrawString(ScreenManager.Font, _version, _versionPosition, XColor.White);
+            _draw.DrawString(_font, _version, _versionPosition, Color.White);
         }
 
         /// <summary>

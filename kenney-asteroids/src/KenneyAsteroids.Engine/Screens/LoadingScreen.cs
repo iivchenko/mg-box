@@ -27,6 +27,8 @@ namespace KenneyAsteroids.Engine.Screens
 
         GameScreen[] screensToLoad;
 
+        private SpriteFont _font;
+
         #endregion
 
         #region Initialization
@@ -49,6 +51,12 @@ namespace KenneyAsteroids.Engine.Screens
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
         }
 
+        public override void LoadContent()
+        {
+            base.LoadContent();
+
+            _font = Content.Load<SpriteFont>("Fonts/simxel.font");
+        }
 
         /// <summary>
         /// Activates the loading screen.
@@ -128,20 +136,18 @@ namespace KenneyAsteroids.Engine.Screens
             // to bother drawing the message.
             if (loadingIsSlow)
             {
-                SpriteFont font = ScreenManager.Font;
-
                 const string message = "Loading...";
 
                 // Center the text in the viewport.
                 Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
                 Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-                Vector2 textSize = font.MeasureString(message);
+                Vector2 textSize = _font.MeasureString(message);
                 Vector2 textPosition = (viewportSize - textSize) / 2;
 
                 Color color = Color.White * TransitionAlpha;
 
                 // Draw the text.
-                DrawSystem.DrawString(font, message, textPosition, color);
+                DrawSystem.DrawString(_font, message, textPosition, color);
             }
         }
 

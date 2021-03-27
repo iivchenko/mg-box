@@ -40,6 +40,7 @@ namespace KenneyAsteroids.Engine
             IsMouseVisible = _configuration.IsMouseVisible;
             ScreenColor = _configuration.ScreenColor;
 
+            _services.AddSingleton(Content);
             _services.AddSingleton(new SpriteBatch(GraphicsDevice));
 
             var options = new ServiceProviderOptions

@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Extensions.DependencyInjection;
 using KenneyAsteroids.Engine.Graphics;
 
+using XSpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
+using XContent = Microsoft.Xna.Framework.Content.ContentManager;
+
 namespace KenneyAsteroids.Engine.Screens
 {
     /// <summary>
@@ -31,12 +34,14 @@ namespace KenneyAsteroids.Engine.Screens
 
         private bool _otherScreenHasFocus;
 
-        protected GameScreen (IServiceProvider container)
+        protected GameScreen(IServiceProvider container)
         {
             _scope = container.CreateScope();
             Container = _scope.ServiceProvider;
 
             DrawSystem = Container.GetService<IDrawSystem>();
+            Batch = Container.GetService<XSpriteBatch>();
+            Content = Container.GetService<XContent>();
 
             TransitionOnTime = TimeSpan.Zero;
             TransitionOffTime = TimeSpan.Zero;
@@ -45,8 +50,10 @@ namespace KenneyAsteroids.Engine.Screens
             IsExiting = false;
         }
 
-        public IServiceProvider Container { get; }
-        public IDrawSystem DrawSystem { get; }
+        protected IServiceProvider Container { get; }
+        protected IDrawSystem DrawSystem { get; }
+        protected XSpriteBatch Batch { get; }
+        protected XContent Content { get; }
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
