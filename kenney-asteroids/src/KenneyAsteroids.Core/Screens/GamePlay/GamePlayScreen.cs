@@ -22,6 +22,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private readonly ICollisionSystem _collisions;
 
         private EnemySpawner _enemySpawner;
+        private ShipPlayerKeyboardController _controller;
 
         public GamePlayScreen(IServiceProvider container)
             : base(container)
@@ -59,15 +60,17 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _enemySpawner = new EnemySpawner(GraphicsDevice.Viewport, factory, Container.GetService<IPublisher>());
 
             var ship = factory.CreateShip(new Vector2(GraphicsDevice.Viewport.Width / 2.0f, GraphicsDevice.Viewport.Height / 2.0f));
-            var controller = new ShipPlayerKeyboardController(ship);
+            _controller = new ShipPlayerKeyboardController(ship);
 
-            _entities.Add(controller, ship);
+            _entities.Add(ship, new GamePlayHud(Container));
         }
 
         public override void HandleInput(InputState input)
         {
             base.HandleInput(input);
-            
+
+            _controller.Handle(input);
+
             // TODO: Refactor Ship Controller to use Screen input
         }
 

@@ -1,9 +1,10 @@
 ﻿using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Screens;
 using Microsoft.Xna.Framework.Input;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public class ShipPlayerKeyboardController : IEntity, IUpdatable
+    public class ShipPlayerKeyboardController : IEntity
     {
         private readonly Ship _ship;
 
@@ -12,10 +13,10 @@ namespace KenneyAsteroids.Core.Entities
             _ship = ship;
         }
 
-        public void Update(float time)
+        public void Handle(InputState input)
         {
             var action = ShipAction.None;
-            var keyboard = Keyboard.GetState();
+            var keyboard = input.CurrentKeyboardStates[0];
 
             if (keyboard.IsKeyDown(Keys.W))
             {
