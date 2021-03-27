@@ -1,5 +1,4 @@
-﻿using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Screens;
+﻿using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework.Graphics;

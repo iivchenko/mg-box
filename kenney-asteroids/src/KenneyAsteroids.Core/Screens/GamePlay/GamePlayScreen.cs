@@ -20,7 +20,6 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private readonly IEventSystem _bus;
         private readonly IEntitySystem _entities;
         private readonly ICollisionSystem _collisions;
-        private readonly IRepository<GameSettings> _settingsRepository;
 
         private EnemySpawner _enemySpawner;
 
@@ -29,7 +28,6 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             _entities = Container.GetService<IEntitySystem>();
             _bus = Container.GetService<IEventSystem>();
-            _settingsRepository = Container.GetService<IRepository<GameSettings>>();
 
             var rules = new List<IRule>
             {
@@ -55,7 +53,6 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             var draw = Container.GetService<IPainter>();
 
             var spriteSheet = Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
-            var font = Content.Load<SpriteFont>("Fonts/Default");
 
             var factory = new EntityFactory(spriteSheet, Container.GetService<IPublisher>(), draw);
 
@@ -65,13 +62,6 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             var controller = new ShipPlayerKeyboardController(ship);
 
             _entities.Add(controller, ship);
-
-            var settings = _settingsRepository.Read();
-
-            if (settings.ToggleFramerate.Toggle)
-            {
-                _entities.Add(new FrameRate(draw, font, GraphicsDevice.Viewport));
-            }
         }
 
         public override void HandleInput(InputState input)
