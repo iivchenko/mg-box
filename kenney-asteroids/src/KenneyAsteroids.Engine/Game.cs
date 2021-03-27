@@ -52,11 +52,6 @@ namespace KenneyAsteroids.Engine
 
             _container = _services.BuildServiceProvider(options);
 
-            // TODO: Move Screens to the container and remove reflectrion
-            var screen = (GameScreen)Activator.CreateInstance(_initialScreen, _container);
-
-            _screenManager.AddScreen(screen, null);
-
 #if DEBUG
             _graphics.PreferredBackBufferWidth = (int)(GraphicsDevice.DisplayMode.Width * (2.0 / 3.0));
             _graphics.PreferredBackBufferHeight = (int)(GraphicsDevice.DisplayMode.Height * (2.0 / 3.0));
@@ -68,6 +63,11 @@ namespace KenneyAsteroids.Engine
             _graphics.ApplyChanges();
 
             base.Initialize();
+
+            // TODO: Move Screens to the container and remove reflectrion
+            var screen = (GameScreen)Activator.CreateInstance(_initialScreen, _container);
+
+            _screenManager.AddScreen(screen, null);
         }
 
         protected override void Draw(GameTime gameTime)

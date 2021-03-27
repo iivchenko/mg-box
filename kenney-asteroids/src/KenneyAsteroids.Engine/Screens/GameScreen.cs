@@ -173,7 +173,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Load graphics content for the screen.
         /// </summary>
-        public virtual void LoadContent() 
+        public virtual void Initialize() 
         {
             _blankTexture = Content.Load<Texture2D>("Sprites/blank.sprite");
         }
@@ -181,7 +181,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Unload content for the screen.
         /// </summary>
-        public virtual void UnloadContent() 
+        public virtual void Free() 
         {
             // TODO: Think on content unload
             _scope.Dispose();

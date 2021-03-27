@@ -25,9 +25,9 @@ namespace KenneyAsteroids.Core.Screens
             _draw = Container.GetService<IDrawSystem>();
         }
 
-        public override void LoadContent()
+        public override void Initialize()
         {
-            base.LoadContent();
+            base.Initialize();
             
             _font = Content.Load<SpriteFont>("Fonts/simxel.font");
 

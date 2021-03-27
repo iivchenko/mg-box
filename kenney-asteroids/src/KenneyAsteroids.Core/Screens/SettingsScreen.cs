@@ -42,9 +42,9 @@ namespace KenneyAsteroids.Core.Screens
             _settingsRepository = Container.GetService<IRepository<GameSettings>>();
         }
 
-        public override void LoadContent()
+        public override void Initialize()
         {
-            base.LoadContent();
+            base.Initialize();
 
             _font = Content.Load<SpriteFont>("Fonts/simxel.font");
 

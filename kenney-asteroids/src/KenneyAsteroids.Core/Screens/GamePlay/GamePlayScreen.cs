@@ -52,9 +52,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _collisions = new CollisionSystem(rules);
         }
 
-        public override void LoadContent()
+        public override void Initialize()
         {
-            base.LoadContent();
+            base.Initialize();
 
             var draw = Container.GetService<IDrawSystem>();
 

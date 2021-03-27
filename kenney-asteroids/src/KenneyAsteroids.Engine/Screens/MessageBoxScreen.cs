@@ -25,9 +25,9 @@ namespace KenneyAsteroids.Engine.Screens
         public event EventHandler<PlayerIndexEventArgs> Accepted;
         public event EventHandler<PlayerIndexEventArgs> Cancelled;
 
-        public override void LoadContent()
+        public override void Initialize()
         {
-            base.LoadContent();
+            base.Initialize();
 
             _gradient = new Sprite(Content.Load<Texture2D>("Sprites/gradient.sprite")); // TODO: Make Sprite pipeline loader
             _font = Content.Load<SpriteFont>("Fonts/simxel.font");

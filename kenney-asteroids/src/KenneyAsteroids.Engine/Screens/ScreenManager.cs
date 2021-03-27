@@ -5,22 +5,25 @@ using Microsoft.Xna.Framework.Input.Touch;
 
 namespace KenneyAsteroids.Engine.Screens
 {
-    public class ScreenManager : DrawableGameComponent
+    public sealed class ScreenManager : DrawableGameComponent
     {
-        #region Fields
+        private readonly List<GameScreen> _screens;
+        private readonly List<GameScreen> _screensToUpdate = new List<GameScreen>();
+        private readonly InputState _input;
 
-        List<GameScreen> screens = new List<GameScreen>();
-        List<GameScreen> screensToUpdate = new List<GameScreen>();
+        private bool _traceEnabled;
 
-        InputState input = new InputState();
+        public ScreenManager(Game game)
+            : base(game)
+        {
+            _screens = new List<GameScreen>();
+            _screensToUpdate = new List<GameScreen>();
+            _input = new InputState();
 
-        bool isInitialized;
-
-        bool traceEnabled;
-
-        #endregion
-
-        #region Properties
+            // we must set EnabledGestures before we can query for them, but
+            // we don't assume the game wants to read them.
+            TouchPanel.EnabledGestures = GestureType.None;
+        }
 
         /// <summary>
         /// If true, the manager prints out a list of all the screens
@@ -29,94 +32,32 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public bool TraceEnabled
         {
-            get { return traceEnabled; }
-            set { traceEnabled = value; }
+            get { return _traceEnabled; }
+            set { _traceEnabled = value; }
         }
 
-
-        #endregion
-
-        #region Initialization
-
-        /// <summary>
-        /// Constructs a new screen manager component.
-        /// </summary>
-        public ScreenManager(Game game)
-            : base(game)
-        {
-            // we must set EnabledGestures before we can query for them, but
-            // we don't assume the game wants to read them.
-            TouchPanel.EnabledGestures = GestureType.None;
-        }
-
-
-        /// <summary>
-        /// Initializes the screen manager component.
-        /// </summary>
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            isInitialized = true;
-        }
-
-
-        /// <summary>
-        /// Load your graphics content.
-        /// </summary>
-        protected override void LoadContent()
-        {
-            // Tell each of the screens to load their content.
-            foreach (GameScreen screen in screens)
-            {
-                screen.LoadContent();
-            }
-        }
-
-
-        /// <summary>
-        /// Unload your graphics content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            // Tell each of the screens to unload their content.
-            foreach (GameScreen screen in screens)
-            {
-                screen.UnloadContent();
-            }
-        }
-
-
-        #endregion
-
-        #region Update and Draw
-
-
-        /// <summary>
-        /// Allows each screen to run logic.
-        /// </summary>
         public override void Update(GameTime gameTime)
         {
             // Read the keyboard and gamepad.
-            input.Update();
+            _input.Update();
 
             // Make a copy of the master screen list, to avoid confusion if
             // the process of updating one screen adds or removes others.
-            screensToUpdate.Clear();
+            _screensToUpdate.Clear();
 
-            foreach (GameScreen screen in screens)
-                screensToUpdate.Add(screen);
+            foreach (GameScreen screen in _screens)
+                _screensToUpdate.Add(screen);
 
             bool otherScreenHasFocus = !Game.IsActive;
             bool coveredByOtherScreen = false;
 
             // Loop as long as there are screens waiting to be updated.
-            while (screensToUpdate.Count > 0)
+            while (_screensToUpdate.Count > 0)
             {
                 // Pop the topmost screen off the waiting list.
-                GameScreen screen = screensToUpdate[screensToUpdate.Count - 1];
+                GameScreen screen = _screensToUpdate[_screensToUpdate.Count - 1];
 
-                screensToUpdate.RemoveAt(screensToUpdate.Count - 1);
+                _screensToUpdate.RemoveAt(_screensToUpdate.Count - 1);
 
                 // Update the screen.
                 screen.Update((float)gameTime.ElapsedGameTime.TotalSeconds, otherScreenHasFocus, coveredByOtherScreen);
@@ -128,7 +69,7 @@ namespace KenneyAsteroids.Engine.Screens
                     // give it a chance to handle input.
                     if (!otherScreenHasFocus)
                     {
-                        screen.HandleInput(input);
+                        screen.HandleInput(_input);
 
                         otherScreenHasFocus = true;
                     }
@@ -141,31 +82,13 @@ namespace KenneyAsteroids.Engine.Screens
             }
 
             // Print debug trace?
-            if (traceEnabled)
+            if (_traceEnabled)
                 TraceScreens();
         }
 
-
-        /// <summary>
-        /// Prints a list of all the screens, for debugging.
-        /// </summary>
-        void TraceScreens()
-        {
-            List<string> screenNames = new List<string>();
-
-            foreach (GameScreen screen in screens)
-                screenNames.Add(screen.GetType().Name);
-
-            Debug.WriteLine(string.Join(", ", screenNames.ToArray()));
-        }
-
-
-        /// <summary>
-        /// Tells each screen to draw itself.
-        /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            foreach (GameScreen screen in screens)
+            foreach (GameScreen screen in _screens)
             {
                 if (screen.ScreenState == ScreenState.Hidden)
                     continue;
@@ -174,28 +97,14 @@ namespace KenneyAsteroids.Engine.Screens
             }
         }
 
-
-        #endregion
-
-        #region Public Methods
-
-
-        /// <summary>
-        /// Adds a new screen to the screen manager.
-        /// </summary>
         public void AddScreen(GameScreen screen, PlayerIndex? controllingPlayer)
         {
             screen.ControllingPlayer = controllingPlayer;
             screen.ScreenManager = this;
             screen.IsExiting = false;
+            screen.Initialize();
 
-            // If we have a graphics device, tell the screen to load content.
-            if (isInitialized)
-            {
-                screen.LoadContent();
-            }
-
-            screens.Add(screen);
+            _screens.Add(screen);
 
             // update the TouchPanel to respond to gestures this screen is interested in
             TouchPanel.EnabledGestures = screen.EnabledGestures;
@@ -209,35 +118,35 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public void RemoveScreen(GameScreen screen)
         {
-            // If we have a graphics device, tell the screen to unload content.
-            if (isInitialized)
-            {
-                screen.UnloadContent();
-            }
+            screen.Free();
 
-            screens.Remove(screen);
-            screensToUpdate.Remove(screen);
+            _screens.Remove(screen);
+            _screensToUpdate.Remove(screen);
 
             // if there is a screen still in the manager, update TouchPanel
             // to respond to gestures that screen is interested in.
-            if (screens.Count > 0)
+            if (_screens.Count > 0)
             {
-                TouchPanel.EnabledGestures = screens[screens.Count - 1].EnabledGestures;
+                TouchPanel.EnabledGestures = _screens[_screens.Count - 1].EnabledGestures;
             }
         }
-
-
-        /// <summary>
-        /// Expose an array holding all the screens. We return a copy rather
-        /// than the real master list, because screens should only ever be added
-        /// or removed using the AddScreen and RemoveScreen methods.
-        /// </summary>
+        
         public GameScreen[] GetScreens()
         {
-            return screens.ToArray();
+            return _screens.ToArray();
         }
 
+        /// <summary>
+        /// Prints a list of all the screens, for debugging.
+        /// </summary>
+        private void TraceScreens()
+        {
+            List<string> screenNames = new List<string>();
 
-        #endregion
+            foreach (GameScreen screen in _screens)
+                screenNames.Add(screen.GetType().Name);
+
+            Debug.WriteLine(string.Join(", ", screenNames.ToArray()));
+        }
     }
 }
