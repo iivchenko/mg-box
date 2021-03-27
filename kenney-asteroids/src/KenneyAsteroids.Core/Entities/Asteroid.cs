@@ -1,29 +1,26 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
-
+using Microsoft.Xna.Framework;
 using System;
-
-using XVector = Microsoft.Xna.Framework.Vector2;
-using XColor = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class Asteroid : IEntity<Guid>, IUpdatable, IDrawable, IBody
+    public sealed class Asteroid : IEntity<Guid>, IUpdatable, Engine.IDrawable, IBody
     {
         private readonly IPainter _draw;
 
         private readonly Sprite _sprite;
-        private readonly XVector _scale;
+        private readonly Vector2 _scale;
         private readonly float _rotationSpeed;
 
-        private XVector _velocity;
+        private Vector2 _velocity;
         private float _rotation;
 
         public Asteroid(
             IPainter draw,
             Sprite sprite,
-            XVector velocity,
+            Vector2 velocity,
             float rotationSpeed)
         {
             _sprite = sprite;
@@ -31,19 +28,19 @@ namespace KenneyAsteroids.Core.Entities
             _velocity = velocity;
             _rotationSpeed = rotationSpeed;
 
-            _scale = XVector.One;
+            _scale = Vector2.One;
             _rotation = 0.0f;
 
             Id = Guid.NewGuid();
-            Origin = new XVector(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
-            Position = XVector.Zero;
+            Origin = new Vector2(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
+            Position = Vector2.Zero;
             Width = _sprite.Width;
             Height = _sprite.Height;
         }
 
         public Guid Id { get; }
-        public XVector Position { get; set; }
-        public XVector Origin { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 Origin { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
 
@@ -53,7 +50,7 @@ namespace KenneyAsteroids.Core.Entities
             _rotation += _rotationSpeed * time;
         }
 
-        void IDrawable.Draw(float time)
+        void Engine.IDrawable.Draw(float time)
         {
             _draw
                 .Draw(
@@ -62,7 +59,7 @@ namespace KenneyAsteroids.Core.Entities
                     Origin,
                     _scale,
                     _rotation,
-                    XColor.White);
+                    Color.White);
         }
     }
 }

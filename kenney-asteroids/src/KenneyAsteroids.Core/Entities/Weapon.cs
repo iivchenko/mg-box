@@ -4,13 +4,11 @@ using KenneyAsteroids.Engine.Eventing.Eventing;
 using Microsoft.Xna.Framework;
 using System;
 
-using XVector = Microsoft.Xna.Framework.Vector2;
-
 namespace KenneyAsteroids.Core.Entities
 {
     public sealed class Weapon : IEntity<Guid>, IUpdatable
     {
-        private readonly XVector _offset;
+        private readonly Vector2 _offset;
         private readonly TimeSpan _reload;
         private readonly IProjectileFactory _factory;
         private readonly IPublisher _eventService;
@@ -19,7 +17,7 @@ namespace KenneyAsteroids.Core.Entities
         private double _reloading;
 
         public Weapon(
-            XVector offset,
+            Vector2 offset,
             TimeSpan reload,
             IProjectileFactory factory,
             IPublisher eventService)
@@ -53,7 +51,7 @@ namespace KenneyAsteroids.Core.Entities
             }
         }
 
-        public void Fire(XVector parentPosition, float parentRotation)
+        public void Fire(Vector2 parentPosition, float parentRotation)
         {
             if (_state == State.Idle)
             {
@@ -76,6 +74,6 @@ namespace KenneyAsteroids.Core.Entities
 
     public interface IProjectileFactory
     {
-        Projectile Create(XVector position, XVector direction);
+        Projectile Create(Vector2 position, Vector2 direction);
     }
 }

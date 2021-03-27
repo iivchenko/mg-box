@@ -7,12 +7,11 @@ using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using XVector = Microsoft.Xna.Framework.Vector2;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
@@ -23,9 +22,6 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private readonly ICollisionSystem _collisions;
         private readonly IRepository<GameSettings> _settingsRepository;
 
-        private Viewport _viewport;
-        private EntityFactory _factory;
-        private SpriteSheet _spriteSheet;
         private EnemySpawner _enemySpawner;
 
         public GamePlayScreen(IServiceProvider container)
@@ -58,13 +54,14 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             var draw = Container.GetService<IPainter>();
 
-            _viewport = GraphicsDevice.Viewport;
-            _spriteSheet = Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
+            var spriteSheet = Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
             var font = Content.Load<SpriteFont>("Fonts/Default");
-            _factory = new EntityFactory(_spriteSheet, Container.GetService<IPublisher>(), draw);
-            _enemySpawner = new EnemySpawner(_viewport, _factory, Container.GetService<IPublisher>());
 
-            var ship = _factory.CreateShip(new XVector(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
+            var factory = new EntityFactory(spriteSheet, Container.GetService<IPublisher>(), draw);
+
+            _enemySpawner = new EnemySpawner(GraphicsDevice.Viewport, factory, Container.GetService<IPublisher>());
+
+            var ship = factory.CreateShip(new Vector2(GraphicsDevice.Viewport.Width / 2.0f, GraphicsDevice.Viewport.Height / 2.0f));
             var controller = new ShipPlayerKeyboardController(ship);
 
             _entities.Add(controller, ship);
@@ -73,8 +70,15 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             if (settings.ToggleFramerate.Toggle)
             {
-                _entities.Add(new FrameRate(draw, font, _viewport));
+                _entities.Add(new FrameRate(draw, font, GraphicsDevice.Viewport));
             }
+        }
+
+        public override void HandleInput(InputState input)
+        {
+            base.HandleInput(input);
+            
+            // TODO: Refactor Ship Controller to use Screen input
         }
 
         public override void Update(float time, bool otherScreenHasFocus, bool coveredByOtherScreen)
@@ -100,9 +104,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             return
                 entity.Position.X + entity.Width / 2.0 < 0 ||
-                entity.Position.X - entity.Width / 2.0 > _viewport.Width ||
+                entity.Position.X - entity.Width / 2.0 > GraphicsDevice.Viewport.Width ||
                 entity.Position.Y + entity.Height / 2.0 < 0 ||
-                entity.Position.Y - entity.Height / 2.0 > _viewport.Height;
+                entity.Position.Y - entity.Height / 2.0 > GraphicsDevice.Viewport.Height;
         }
 
         private void HandleOutOfScreenBodies(IBody body)
@@ -118,23 +122,23 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
                     if (body.Position.X + body.Width / 2.0f < 0)
                     {
-                        x = _viewport.Width + body.Width / 2.0f;
+                        x = GraphicsDevice.Viewport.Width + body.Width / 2.0f;
                     }
-                    else if (body.Position.X - body.Width / 2.0f > _viewport.Width)
+                    else if (body.Position.X - body.Width / 2.0f > GraphicsDevice.Viewport.Width)
                     {
                         x = 0 - body.Width / 2.0f;
                     }
 
                     if (body.Position.Y + body.Height / 2.0f < 0)
                     {
-                        y = _viewport.Height + body.Height / 2.0f;
+                        y = GraphicsDevice.Viewport.Height + body.Height / 2.0f;
                     }
-                    else if (body.Position.Y - body.Height / 2.0f > _viewport.Height)
+                    else if (body.Position.Y - body.Height / 2.0f > GraphicsDevice.Viewport.Height)
                     {
                         y = 0 - body.Height / 2.0f;
                     }
 
-                    body.Position = new XVector(x, y);
+                    body.Position = new Vector2(x, y);
                     break;
             }
         }
