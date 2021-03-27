@@ -10,7 +10,7 @@ namespace KenneyAsteroids.Core.Screens
 {
     public sealed class MainMenuScreen : MenuScreen
     {
-        private readonly IDrawSystem _draw;
+        private readonly IPainter _draw;
 
         private SpriteFont _font;
         private string _version;
@@ -22,7 +22,7 @@ namespace KenneyAsteroids.Core.Screens
         public MainMenuScreen(IServiceProvider container)
             : base("Main Menu", container)
         {
-            _draw = Container.GetService<IDrawSystem>();
+            _draw = Container.GetService<IPainter>();
         }
 
         public override void Initialize()

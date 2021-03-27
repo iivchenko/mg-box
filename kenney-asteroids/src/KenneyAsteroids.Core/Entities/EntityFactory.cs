@@ -11,12 +11,12 @@ namespace KenneyAsteroids.Core.Entities
     {
         private readonly SpriteSheet _spriteSheet;
         private readonly IPublisher _eventService;
-        private readonly IDrawSystem _draw;
+        private readonly IPainter _draw;
 
         public EntityFactory(
             SpriteSheet spriteSheet,
             IPublisher eventService,
-            IDrawSystem draw)
+            IPainter draw)
         {
             _spriteSheet = spriteSheet;
             _eventService = eventService;

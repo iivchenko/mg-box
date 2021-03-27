@@ -11,7 +11,7 @@ namespace KenneyAsteroids.Core.Entities
 {
     public sealed class Asteroid : IEntity<Guid>, IUpdatable, IDrawable, IBody
     {
-        private readonly IDrawSystem _draw;
+        private readonly IPainter _draw;
 
         private readonly Sprite _sprite;
         private readonly XVector _scale;
@@ -21,7 +21,7 @@ namespace KenneyAsteroids.Core.Entities
         private float _rotation;
 
         public Asteroid(
-            IDrawSystem draw,
+            IPainter draw,
             Sprite sprite,
             XVector velocity,
             float rotationSpeed)

@@ -11,7 +11,7 @@ namespace KenneyAsteroids.Core.Entities
 {
     public sealed class Projectile : IEntity<Guid>, IBody, IUpdatable, Engine.IDrawable
     {
-        private readonly IDrawSystem _draw;
+        private readonly IPainter _draw;
 
         private readonly Sprite _sprite;
         private readonly float _rotation;
@@ -19,7 +19,7 @@ namespace KenneyAsteroids.Core.Entities
         private XVector _velocity;
 
         public Projectile(
-            IDrawSystem draw,
+            IPainter draw,
             Sprite sprite,
             float rotation,
             float speed)

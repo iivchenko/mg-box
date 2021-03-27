@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace KenneyAsteroids.Engine.Graphics
 {
-    public interface IDrawSystem
+    public interface IPainter
     {
         void Draw(Texture2D texture, Rectangle target, Color color);
         void Draw(Sprite sprite, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color);

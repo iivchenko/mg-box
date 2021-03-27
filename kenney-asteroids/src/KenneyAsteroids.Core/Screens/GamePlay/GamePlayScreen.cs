@@ -56,7 +56,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             base.Initialize();
 
-            var draw = Container.GetService<IDrawSystem>();
+            var draw = Container.GetService<IPainter>();
 
             _viewport = ScreenManager.Game.GraphicsDevice.Viewport;
             _spriteSheet = ScreenManager.Game.Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");

@@ -41,7 +41,7 @@ namespace KenneyAsteroids.Desktop
                             // TODO: Add extension methods to wrap repository with cahing one
                             .AddScoped<IRepository<GameSettings>>(_ => new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json"))) //TODO: think about Decorate and Scrutor
                             .AddScoped<IEntitySystem, EntitySystem>()
-                            .AddScoped<IDrawSystem, DrawSystem>()
+                            .AddDrawSystem()
                             .AddScoped<IEventHandler<EntityCreatedEvent>, EntityCreatedEventHandler>()
                             .AddEventBus();
                     })

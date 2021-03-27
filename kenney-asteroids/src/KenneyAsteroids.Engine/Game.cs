@@ -8,10 +8,10 @@ namespace KenneyAsteroids.Engine
 {
     public sealed class Game : Microsoft.Xna.Framework.Game
     {
-        private readonly GraphicsDeviceManager _graphics;
-        private readonly ScreenManager _screenManager;
+        private readonly GraphicsDeviceManager _graphics;        
         private readonly IServiceCollection _services;
 
+        private ScreenManager _screenManager;
         private IServiceProvider _container;
 
         private readonly GameConfiguration _configuration;
@@ -25,9 +25,6 @@ namespace KenneyAsteroids.Engine
             _initialScreen = initialScreen ?? throw new ArgumentNullException(nameof(initialScreen));
 
             _graphics = new GraphicsDeviceManager(this);
-            _screenManager = new ScreenManager(this);
-
-            Components.Add(_screenManager);
 
             ScreenColor = Color.CornflowerBlue;
         }
@@ -61,6 +58,10 @@ namespace KenneyAsteroids.Engine
             _graphics.IsFullScreen = true;
 #endif
             _graphics.ApplyChanges();
+
+            _screenManager = new ScreenManager(this, _container);
+
+            Components.Add(_screenManager);
 
             base.Initialize();
 

@@ -35,6 +35,8 @@ namespace KenneyAsteroids.Engine.Screens
 
         public override void HandleInput(InputState input)
         {
+            base.HandleInput(input);
+
             PlayerIndex playerIndex;
 
             // We pass in our ControllingPlayer, which may either be null (to
@@ -62,6 +64,8 @@ namespace KenneyAsteroids.Engine.Screens
 
         public override void Draw(float time)
         {
+            base.Draw(time);
+
             // Darken down any other screens that were drawn beneath the popup.
             FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
 

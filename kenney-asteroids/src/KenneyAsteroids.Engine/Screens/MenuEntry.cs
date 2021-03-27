@@ -15,7 +15,7 @@ namespace KenneyAsteroids.Engine.Screens
     {
         #region Fields
 
-        private IDrawSystem _draw;
+        private IPainter _draw;
 
         private readonly SpriteFont _font;
 
@@ -91,7 +91,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
-        public MenuEntry(IDrawSystem draw, SpriteFont font, string text)
+        public MenuEntry(IPainter draw, SpriteFont font, string text)
         {
             _draw = draw;
             _font = font;

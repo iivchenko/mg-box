@@ -10,12 +10,12 @@ namespace KenneyAsteroids.Core.Entities
 {
     public sealed class FrameRate : IEntity, IDrawable
     {
-        private readonly IDrawSystem _draw;
+        private readonly IPainter _draw;
         private readonly SpriteFont _font;
         private readonly Viewport _viewport;
 
         public FrameRate(
-            IDrawSystem draw,
+            IPainter draw,
             SpriteFont font,
             Viewport viewport)
         {

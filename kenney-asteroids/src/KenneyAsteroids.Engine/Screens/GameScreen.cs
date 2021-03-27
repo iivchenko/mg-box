@@ -5,9 +5,8 @@ using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Extensions.DependencyInjection;
 using KenneyAsteroids.Engine.Graphics;
 
-using XSpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
-using XContent = Microsoft.Xna.Framework.Content.ContentManager;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace KenneyAsteroids.Engine.Screens
 {
@@ -42,9 +41,8 @@ namespace KenneyAsteroids.Engine.Screens
             _scope = container.CreateScope();
             Container = _scope.ServiceProvider;
 
-            DrawSystem = Container.GetService<IDrawSystem>();
-            Batch = Container.GetService<XSpriteBatch>();
-            Content = Container.GetService<XContent>();
+            DrawSystem = Container.GetService<IPainter>();
+            Content = Container.GetService<ContentManager>();
             GraphicsDevice = Container.GetService<GraphicsDevice>();
 
             TransitionOnTime = TimeSpan.Zero;
@@ -55,9 +53,8 @@ namespace KenneyAsteroids.Engine.Screens
         }
 
         protected IServiceProvider Container { get; }
-        protected IDrawSystem DrawSystem { get; }
-        protected XSpriteBatch Batch { get; }
-        protected XContent Content { get; }
+        protected IPainter DrawSystem { get; }
+        protected ContentManager Content { get; }
         protected GraphicsDevice GraphicsDevice { get; }
 
         /// <summary>

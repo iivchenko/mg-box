@@ -1,30 +1,28 @@
-﻿using KenneyAsteroids.Engine;
+﻿using System;
+
+using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
-
-using System;
-
-using XVector = Microsoft.Xna.Framework.Vector2;
-using XColor = Microsoft.Xna.Framework.Color;
+using Microsoft.Xna.Framework;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class Ship : IEntity<Guid>, IUpdatable, IDrawable, IBody
+    public sealed class Ship : IEntity<Guid>, IUpdatable, Engine.IDrawable, IBody
     {
-        private readonly IDrawSystem _draw;
+        private readonly IPainter _draw;
         private readonly Sprite _sprite;
         private readonly Weapon _weapon;
-        private readonly XVector _scale;
+        private readonly Vector2 _scale;
         private readonly float _maxSpeed;
         private readonly float _maxAcceleration;
         private readonly float _maxRotation;
 
-        private XVector _velocity;
+        private Vector2 _velocity;
         private float _rotation;
         private ShipAction _action;
 
         public Ship(
-            IDrawSystem draw,
+            IPainter draw,
             Sprite sprite,
             Weapon weapon,
             float maxSpeed,
@@ -38,21 +36,21 @@ namespace KenneyAsteroids.Core.Entities
             _maxAcceleration = maxAcceleration;
             _maxRotation = maxRotation;
 
-            _velocity = XVector.Zero;
-            _scale = XVector.One;
+            _velocity = Vector2.Zero;
+            _scale = Vector2.One;
             _rotation = 0.0f;
             _action = ShipAction.None;
 
             Id = Guid.NewGuid();
-            Origin = new XVector(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
-            Position = XVector.Zero;
+            Origin = new Vector2(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
+            Position = Vector2.Zero;
             Width = _sprite.Width;
             Height = _sprite.Height;
         }
         
         public Guid Id { get; }
-        public XVector Position { get; set; }
-        public XVector Origin { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 Origin { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
 
@@ -86,7 +84,7 @@ namespace KenneyAsteroids.Core.Entities
             _action = ShipAction.None;
         }
 
-        void IDrawable.Draw(float time)
+        void Engine.IDrawable.Draw(float time)
         {
             _draw
                 .Draw(
@@ -95,7 +93,7 @@ namespace KenneyAsteroids.Core.Entities
                     Origin,
                     _scale,
                     _rotation,
-                    XColor.White);
+                    Color.White);
         }
     }
 

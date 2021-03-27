@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace KenneyAsteroids.Engine.Graphics
 {
-    public sealed class DrawSystem : IDrawSystem
+    public sealed class DrawSystem : IPainter, IDrawSystemBatcher
     {
         private readonly Lazy<SpriteBatch> _batch;
 
@@ -14,9 +14,18 @@ namespace KenneyAsteroids.Engine.Graphics
             _batch = new Lazy<SpriteBatch>(() => container.GetService<SpriteBatch>());
         }
 
-        public void Draw(Sprite sprite, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color)
+        public void Begin()
         {
             _batch.Value.Begin();
+        }
+
+        public void End()
+        {
+            _batch.Value.End();
+        }
+
+        public void Draw(Sprite sprite, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color)
+        {
             _batch
                 .Value
                 .Draw(
@@ -29,39 +38,31 @@ namespace KenneyAsteroids.Engine.Graphics
                     scale,
                     SpriteEffects.None,
                     0);
-            _batch.Value.End();
         }
 
         public void Draw(Sprite sprite, Rectangle rectagle, Color color)
         {
-            _batch.Value.Begin();
             _batch
                 .Value
                 .Draw(
                     sprite.Texture,
                     rectagle,
                     color);
-            _batch.Value.End();
         }
 
         public void Draw(Texture2D texture, Rectangle target, Color color)
         {
-            _batch.Value.Begin();
             _batch.Value.Draw(texture, target, color);
-            _batch.Value.End();
         }
 
         public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color)
         {
-            _batch.Value.Begin();
             _batch.Value.DrawString(spriteFont, text, position, color);
-            _batch.Value.End();
         }
+        
         public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
         {
-            _batch.Value.Begin();
             _batch.Value.DrawString(spriteFont, text, position, color, rotation, origin, scale, effects, layerDepth);
-            _batch.Value.End();
         }
     }
 }

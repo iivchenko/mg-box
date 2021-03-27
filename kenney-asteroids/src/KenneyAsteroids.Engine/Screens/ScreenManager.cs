@@ -1,21 +1,29 @@
+using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
+using Microsoft.Extensions.DependencyInjection;
+using KenneyAsteroids.Engine.Graphics;
 
 namespace KenneyAsteroids.Engine.Screens
 {
     public sealed class ScreenManager : DrawableGameComponent
     {
+        private readonly IServiceProvider _container;
         private readonly List<GameScreen> _screens;
         private readonly List<GameScreen> _screensToUpdate = new List<GameScreen>();
         private readonly InputState _input;
 
+        private IDrawSystemBatcher _batch;
+
         private bool _traceEnabled;
 
-        public ScreenManager(Game game)
+        public ScreenManager(Game game, IServiceProvider container)
             : base(game)
         {
+            _container = container;
+
             _screens = new List<GameScreen>();
             _screensToUpdate = new List<GameScreen>();
             _input = new InputState();
@@ -23,6 +31,13 @@ namespace KenneyAsteroids.Engine.Screens
             // we must set EnabledGestures before we can query for them, but
             // we don't assume the game wants to read them.
             TouchPanel.EnabledGestures = GestureType.None;
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            _batch = _container.GetService<IDrawSystemBatcher>();
         }
 
         /// <summary>
@@ -88,6 +103,8 @@ namespace KenneyAsteroids.Engine.Screens
 
         public override void Draw(GameTime gameTime)
         {
+            _batch.Begin();
+
             foreach (GameScreen screen in _screens)
             {
                 if (screen.ScreenState == ScreenState.Hidden)
@@ -95,6 +112,8 @@ namespace KenneyAsteroids.Engine.Screens
 
                 screen.Draw((float)gameTime.ElapsedGameTime.TotalSeconds);
             }
+
+            _batch.End();
         }
 
         public void AddScreen(GameScreen screen, PlayerIndex? controllingPlayer)
