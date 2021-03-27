@@ -78,7 +78,7 @@ namespace KenneyAsteroids.Engine
 
         public IEnumerable<GameScreen> GetScreens()
         {
-            return _screens;
+            return _screens.ToArray();
         }
 
         public void Add(GameScreen screen, PlayerIndex? controllingPlayer)

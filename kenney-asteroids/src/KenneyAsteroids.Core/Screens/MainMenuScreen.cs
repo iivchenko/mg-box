@@ -76,7 +76,6 @@ namespace KenneyAsteroids.Core.Screens
             ScreenSystem.Add(new SettingsScreen(Container), e.PlayerIndex);
         }
 
-
         /// <summary>
         /// When the user cancels the main menu, ask if they want to exit the sample.
         /// </summary>

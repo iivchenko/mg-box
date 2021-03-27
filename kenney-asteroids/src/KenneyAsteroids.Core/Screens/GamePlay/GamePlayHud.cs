@@ -33,7 +33,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
         public void Draw(float time)
         {
-            _rate.Draw(time);
+            _rate?.Draw(time);
         }
     }
 }

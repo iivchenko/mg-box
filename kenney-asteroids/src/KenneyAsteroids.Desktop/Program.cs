@@ -5,9 +5,8 @@ using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xna.Framework;
 using System;
-
-using XColor = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Desktop
 {
@@ -38,10 +37,10 @@ namespace KenneyAsteroids.Desktop
                         container
                             // TODO: Move file name to configuraiton
                             // TODO: Add extension methods to wrap repository with cahing one
-                            .AddScoped<IRepository<GameSettings>>(_ => new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json"))) //TODO: think about Decorate and Scrutor
-                            .AddScoped<IEntitySystem, EntitySystem>()
+                            .AddTransient<IRepository<GameSettings>>(_ => new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json"))) //TODO: think about Decorate and Scrutor
+                            .AddSingleton<IEntitySystem, EntitySystem>()
                             .AddDrawSystem()
-                            .AddScoped<IEventHandler<EntityCreatedEvent>, EntityCreatedEventHandler>()
+                            .AddSingleton<IEventHandler<EntityCreatedEvent>, EntityCreatedEventHandler>()
                             .AddEventBus();
                     })
                 .WithConfiguration(config =>
@@ -49,7 +48,7 @@ namespace KenneyAsteroids.Desktop
                         config.FullScreen = false;
                         config.IsMouseVisible = true;
                         config.ContentPath = "Content";
-                        config.ScreenColor = XColor.Black;
+                        config.ScreenColor = Color.Black;
                     })
                 .WithInitialScreen<MainMenuScreen>()
                 .Build()

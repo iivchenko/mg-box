@@ -25,16 +25,13 @@ namespace KenneyAsteroids.Engine.Screens
     /// </summary>
     public abstract class GameScreen
     {
-        private readonly IServiceScope _scope;
-
         private Texture2D _blankTexture;
 
         private bool _otherScreenHasFocus;
 
         protected GameScreen(IServiceProvider container)
         {
-            _scope = container.CreateScope();
-            Container = _scope.ServiceProvider;
+            Container = container;
 
             DrawSystem = Container.GetService<IPainter>();
             Content = Container.GetService<ContentManager>();
@@ -158,7 +155,6 @@ namespace KenneyAsteroids.Engine.Screens
         public virtual void Free() 
         {
             // TODO: Think on content unload
-            _scope.Dispose();
         }
 
         /// <summary>
