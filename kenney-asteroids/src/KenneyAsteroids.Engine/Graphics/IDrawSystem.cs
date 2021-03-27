@@ -1,14 +1,13 @@
-﻿using XVector = Microsoft.Xna.Framework.Vector2;
-using XColor = Microsoft.Xna.Framework.Color;
-using XRectangle = Microsoft.Xna.Framework.Rectangle;
-using XFont = Microsoft.Xna.Framework.Graphics.SpriteFont;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace KenneyAsteroids.Engine.Graphics
 {
     public interface IDrawSystem
     {
-        void Draw(Sprite sprite, XVector position, XVector origin, XVector scale, float rotation, XColor color);
-        void Draw(Sprite sprite, XRectangle rectagle, XColor color);
-        void DrawString(XFont spriteFont, string text, XVector position, XColor color);
+        void Draw(Texture2D texture, Rectangle target, Color color);
+        void Draw(Sprite sprite, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color);
+        void Draw(Sprite sprite, Rectangle rectagle, Color color);
+        void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color);
     }
 }

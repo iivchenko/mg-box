@@ -35,7 +35,6 @@ namespace KenneyAsteroids.Engine.Screens
         InputState input = new InputState();
 
         SpriteBatch spriteBatch;
-        Texture2D blankTexture;
 
         bool isInitialized;
 
@@ -98,11 +97,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         protected override void LoadContent()
         {
-            // Load content belonging to the screen manager.
-            ContentManager content = Game.Content;
-
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            blankTexture = content.Load<Texture2D>("Sprites/blank.sprite"); // TODO: Replace with programatic one pixel black texture
 
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in screens)
@@ -273,24 +268,6 @@ namespace KenneyAsteroids.Engine.Screens
         public GameScreen[] GetScreens()
         {
             return screens.ToArray();
-        }
-
-
-        /// <summary>
-        /// Helper draws a translucent black fullscreen sprite, used for fading
-        /// screens in and out, and for darkening the background behind popups.
-        /// </summary>
-        public void FadeBackBufferToBlack(float alpha)
-        {
-            Viewport viewport = GraphicsDevice.Viewport;
-
-            spriteBatch.Begin();
-
-            spriteBatch.Draw(blankTexture,
-                             new Rectangle(0, 0, viewport.Width, viewport.Height),
-                             Color.Black * alpha);
-
-            spriteBatch.End();
         }
 
 

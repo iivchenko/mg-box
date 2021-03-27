@@ -27,6 +27,8 @@ namespace KenneyAsteroids.Engine.Screens
 
         public override void LoadContent()
         {
+            base.LoadContent();
+
             _gradient = new Sprite(Content.Load<Texture2D>("Sprites/gradient.sprite")); // TODO: Make Sprite pipeline loader
             _font = Content.Load<SpriteFont>("Fonts/simxel.font");
         }
@@ -61,7 +63,7 @@ namespace KenneyAsteroids.Engine.Screens
         public override void Draw(float time)
         {
             // Darken down any other screens that were drawn beneath the popup.
-            ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
+            FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
 
             // Center the message text in the viewport.
             var viewport = ScreenManager.GraphicsDevice.Viewport;

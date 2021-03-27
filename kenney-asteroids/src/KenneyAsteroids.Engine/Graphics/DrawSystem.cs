@@ -1,25 +1,20 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-
-using XVector = Microsoft.Xna.Framework.Vector2;
-using XColor = Microsoft.Xna.Framework.Color;
-using XRectangle = Microsoft.Xna.Framework.Rectangle;
-using XFont = Microsoft.Xna.Framework.Graphics.SpriteFont;
-using XSpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
-using XSpriteEffects = Microsoft.Xna.Framework.Graphics.SpriteEffects;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace KenneyAsteroids.Engine.Graphics
 {
     public sealed class DrawSystem : IDrawSystem
     {
-        private readonly Lazy<XSpriteBatch> _batch;
+        private readonly Lazy<SpriteBatch> _batch;
 
         public DrawSystem(IServiceProvider container)
         {
-            _batch = new Lazy<XSpriteBatch>(() => container.GetService<XSpriteBatch>());
+            _batch = new Lazy<SpriteBatch>(() => container.GetService<SpriteBatch>());
         }
 
-        public void Draw(Sprite sprite, XVector position, XVector origin, XVector scale, float rotation, XColor color)
+        public void Draw(Sprite sprite, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color)
         {
             _batch.Value.Begin();
             _batch
@@ -32,12 +27,12 @@ namespace KenneyAsteroids.Engine.Graphics
                     rotation,
                     origin,
                     scale,
-                    XSpriteEffects.None,
+                    SpriteEffects.None,
                     0);
             _batch.Value.End();
         }
 
-        public void Draw(Sprite sprite, XRectangle rectagle, XColor color)
+        public void Draw(Sprite sprite, Rectangle rectagle, Color color)
         {
             _batch.Value.Begin();
             _batch
@@ -49,7 +44,14 @@ namespace KenneyAsteroids.Engine.Graphics
             _batch.Value.End();
         }
 
-        public void DrawString(XFont spriteFont, string text, XVector position, XColor color)
+        public void Draw(Texture2D texture, Rectangle target, Color color)
+        {
+            _batch.Value.Begin();
+            _batch.Value.Draw(texture, target, color);
+            _batch.Value.End();
+        }
+
+        public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color)
         {
             _batch.Value.Begin();
             _batch.Value.DrawString(spriteFont, text, position, color);

@@ -41,6 +41,7 @@ namespace KenneyAsteroids.Engine
             ScreenColor = _configuration.ScreenColor;
 
             _services.AddSingleton(Content);
+            _services.AddSingleton(GraphicsDevice);
             _services.AddSingleton(new SpriteBatch(GraphicsDevice));
 
             var options = new ServiceProviderOptions

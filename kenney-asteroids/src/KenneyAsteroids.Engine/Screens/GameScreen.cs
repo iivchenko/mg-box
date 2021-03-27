@@ -7,6 +7,7 @@ using KenneyAsteroids.Engine.Graphics;
 
 using XSpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
 using XContent = Microsoft.Xna.Framework.Content.ContentManager;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace KenneyAsteroids.Engine.Screens
 {
@@ -32,6 +33,8 @@ namespace KenneyAsteroids.Engine.Screens
     {
         private readonly IServiceScope _scope;
 
+        private Texture2D _blankTexture;
+
         private bool _otherScreenHasFocus;
 
         protected GameScreen(IServiceProvider container)
@@ -42,6 +45,7 @@ namespace KenneyAsteroids.Engine.Screens
             DrawSystem = Container.GetService<IDrawSystem>();
             Batch = Container.GetService<XSpriteBatch>();
             Content = Container.GetService<XContent>();
+            GraphicsDevice = Container.GetService<GraphicsDevice>();
 
             TransitionOnTime = TimeSpan.Zero;
             TransitionOffTime = TimeSpan.Zero;
@@ -54,6 +58,7 @@ namespace KenneyAsteroids.Engine.Screens
         protected IDrawSystem DrawSystem { get; }
         protected XSpriteBatch Batch { get; }
         protected XContent Content { get; }
+        protected GraphicsDevice GraphicsDevice { get; }
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -168,14 +173,17 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Load graphics content for the screen.
         /// </summary>
-        public virtual void LoadContent() { }
-
+        public virtual void LoadContent() 
+        {
+            _blankTexture = Content.Load<Texture2D>("Sprites/blank.sprite");
+        }
 
         /// <summary>
         /// Unload content for the screen.
         /// </summary>
         public virtual void UnloadContent() 
         {
+            // TODO: Think on content unload
             _scope.Dispose();
         }
 
@@ -298,5 +306,12 @@ namespace KenneyAsteroids.Engine.Screens
         }
 
         #endregion
+        
+        protected void FadeBackBufferToBlack(float alpha)
+        {
+            var viewport = GraphicsDevice.Viewport;
+
+            DrawSystem.Draw(_blankTexture, new Rectangle(0, 0, viewport.Width, viewport.Height), Color.Black * alpha);
+        }
     }
 }
