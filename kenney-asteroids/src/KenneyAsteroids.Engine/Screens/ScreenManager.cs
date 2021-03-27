@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +13,6 @@ namespace KenneyAsteroids.Engine.Screens
     {
         private readonly IServiceProvider _container;
         private readonly List<GameScreen> _screens;
-        private readonly List<GameScreen> _screensToUpdate = new List<GameScreen>();
         private readonly InputState _input;
 
         private IDrawSystemBatcher _batch;
@@ -25,7 +25,6 @@ namespace KenneyAsteroids.Engine.Screens
             _container = container;
 
             _screens = new List<GameScreen>();
-            _screensToUpdate = new List<GameScreen>();
             _input = new InputState();
 
             // we must set EnabledGestures before we can query for them, but
@@ -56,26 +55,13 @@ namespace KenneyAsteroids.Engine.Screens
             // Read the keyboard and gamepad.
             _input.Update();
 
-            // Make a copy of the master screen list, to avoid confusion if
-            // the process of updating one screen adds or removes others.
-            _screensToUpdate.Clear();
+            var otherScreenHasFocus = !Game.IsActive;
+            var coveredByOtherScreen = false;
+            var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            foreach (GameScreen screen in _screens)
-                _screensToUpdate.Add(screen);
-
-            bool otherScreenHasFocus = !Game.IsActive;
-            bool coveredByOtherScreen = false;
-
-            // Loop as long as there are screens waiting to be updated.
-            while (_screensToUpdate.Count > 0)
+            foreach (var screen in _screens.ToArray().Reverse())
             {
-                // Pop the topmost screen off the waiting list.
-                GameScreen screen = _screensToUpdate[_screensToUpdate.Count - 1];
-
-                _screensToUpdate.RemoveAt(_screensToUpdate.Count - 1);
-
-                // Update the screen.
-                screen.Update((float)gameTime.ElapsedGameTime.TotalSeconds, otherScreenHasFocus, coveredByOtherScreen);
+                screen.Update(time, otherScreenHasFocus, coveredByOtherScreen);
 
                 if (screen.ScreenState == ScreenState.TransitionOn ||
                     screen.ScreenState == ScreenState.Active)
@@ -103,15 +89,13 @@ namespace KenneyAsteroids.Engine.Screens
 
         public override void Draw(GameTime gameTime)
         {
+            var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             _batch.Begin();
 
-            foreach (GameScreen screen in _screens)
-            {
-                if (screen.ScreenState == ScreenState.Hidden)
-                    continue;
-
-                screen.Draw((float)gameTime.ElapsedGameTime.TotalSeconds);
-            }
+            _screens
+                .Where(screen => screen.ScreenState != ScreenState.Hidden)
+                .Iter(screen => screen.Draw(time));
 
             _batch.End();
         }
@@ -140,7 +124,6 @@ namespace KenneyAsteroids.Engine.Screens
             screen.Free();
 
             _screens.Remove(screen);
-            _screensToUpdate.Remove(screen);
 
             // if there is a screen still in the manager, update TouchPanel
             // to respond to gestures that screen is interested in.
