@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,8 +9,6 @@ namespace KenneyAsteroids.Engine.Screens
 {
     public sealed class MessageBoxScreen : GameScreen
     {
-        private readonly IDrawSystem _draw;
-
         private readonly string _message;
 
         private Sprite _gradient;
@@ -19,8 +16,6 @@ namespace KenneyAsteroids.Engine.Screens
         public MessageBoxScreen(string message, IServiceProvider container)
             : base(container)
         {
-            _draw = Container.GetService<IDrawSystem>();
-
             _message = message;
 
             IsPopup = true;
@@ -91,10 +86,10 @@ namespace KenneyAsteroids.Engine.Screens
             var color = Color.White * TransitionAlpha;
 
             // Draw the background rectangle.
-            _draw.Draw(_gradient, backgroundRectangle, color);
+            DrawSystem.Draw(_gradient, backgroundRectangle, color);
 
             // Draw the message box text.
-            _draw.DrawString(font, _message, textPosition, color);
+            DrawSystem.DrawString(font, _message, textPosition, color);
         }
     }
 }

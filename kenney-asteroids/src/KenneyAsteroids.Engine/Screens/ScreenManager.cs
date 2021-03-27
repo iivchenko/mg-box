@@ -55,7 +55,6 @@ namespace KenneyAsteroids.Engine.Screens
             get { return spriteBatch; }
         }
 
-
         /// <summary>
         /// A default font shared by all the screens. This saves
         /// each screen having to bother loading their own local copy.
@@ -247,7 +246,6 @@ namespace KenneyAsteroids.Engine.Screens
             // update the TouchPanel to respond to gestures this screen is interested in
             TouchPanel.EnabledGestures = screen.EnabledGestures;
         }
-
 
         /// <summary>
         /// Removes a screen from the screen manager. You should normally
