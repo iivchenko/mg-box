@@ -199,11 +199,6 @@ namespace KenneyAsteroids.Engine.Screens
             // make sure our entries are in the right place before we draw them
             UpdateMenuEntryLocations();
 
-            GraphicsDevice graphics = ScreenManager.GraphicsDevice;
-            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-
-            spriteBatch.Begin();
-
             // Draw each menu entry in turn.
             for (int i = 0; i < menuEntries.Count; i++)
             {
@@ -220,17 +215,14 @@ namespace KenneyAsteroids.Engine.Screens
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // Draw the menu title centered on the screen
-            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
+            Vector2 titlePosition = new Vector2(GraphicsDevice.Viewport.Width / 2, 80);
             Vector2 titleOrigin = _font.MeasureString(menuTitle) / 2;
             Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
             float titleScale = 1.25f;
 
             titlePosition.Y -= transitionOffset * 100;
 
-            spriteBatch.DrawString(_font, menuTitle, titlePosition, titleColor, 0,
-                                   titleOrigin, titleScale, SpriteEffects.None, 0);
-
-            spriteBatch.End();
+            DrawSystem.DrawString(_font, menuTitle, titlePosition, titleColor, 0, titleOrigin, titleScale, SpriteEffects.None, 0);
         }
 
         #endregion

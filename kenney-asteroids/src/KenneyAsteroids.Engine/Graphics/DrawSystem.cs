@@ -57,5 +57,11 @@ namespace KenneyAsteroids.Engine.Graphics
             _batch.Value.DrawString(spriteFont, text, position, color);
             _batch.Value.End();
         }
+        public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
+        {
+            _batch.Value.Begin();
+            _batch.Value.DrawString(spriteFont, text, position, color, rotation, origin, scale, effects, layerDepth);
+            _batch.Value.End();
+        }
     }
 }

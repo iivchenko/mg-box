@@ -147,13 +147,9 @@ namespace KenneyAsteroids.Engine.Screens
             // Modify the alpha to fade text out during transitions.
             color *= screen.TransitionAlpha;
 
-            // Draw text, centered on the middle of each line.
-            ScreenManager screenManager = screen.ScreenManager;
-            SpriteBatch spriteBatch = screenManager.SpriteBatch;
-
             Vector2 origin = new Vector2(0, _font.LineSpacing / 2);
 
-            spriteBatch.DrawString(_font, _text, position, color, 0, origin, scale, SpriteEffects.None, 0);
+            _draw.DrawString(_font, _text, position, color, 0, origin, scale, SpriteEffects.None, 0);
         }
 
         /// <summary>

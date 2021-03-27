@@ -1,30 +1,10 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// ScreenManager.cs
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
-
-#region Using Statements
-using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
-#endregion
 
 namespace KenneyAsteroids.Engine.Screens
 {
-    /// <summary>
-    /// The screen manager is a component which manages one or more GameScreen
-    /// instances. It maintains a stack of screens, calls their Update and Draw
-    /// methods at the appropriate times, and automatically routes input to the
-    /// topmost active screen.
-    /// </summary>
     public class ScreenManager : DrawableGameComponent
     {
         #region Fields
@@ -34,8 +14,6 @@ namespace KenneyAsteroids.Engine.Screens
 
         InputState input = new InputState();
 
-        SpriteBatch spriteBatch;
-
         bool isInitialized;
 
         bool traceEnabled;
@@ -43,15 +21,6 @@ namespace KenneyAsteroids.Engine.Screens
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// A default SpriteBatch shared by all the screens. This saves
-        /// each screen having to bother creating their own local instance.
-        /// </summary>
-        public SpriteBatch SpriteBatch
-        {
-            get { return spriteBatch; }
-        }
 
         /// <summary>
         /// If true, the manager prints out a list of all the screens
@@ -97,8 +66,6 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in screens)
             {
