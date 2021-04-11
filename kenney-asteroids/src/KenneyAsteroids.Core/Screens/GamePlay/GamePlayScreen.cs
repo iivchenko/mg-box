@@ -35,12 +35,12 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                 new LazyRule<Ship, Asteroid>
                 (
                     (_, __) => _hud.Lifes > 0,
-                    (ship, _) => _hud.Lifes--
+                    (ship, _) => RestartShip(ship)
                 ),
                  new LazyRule<Ship, Asteroid>
                 (
                     (_, __) => _hud.Lifes <= 0,
-                    (ship, _) => _entities.Remove(ship)
+                    (ship, _) => GameOver(ship)
                 ),
                 new LazyRule<Projectile, Asteroid>
                 (
@@ -156,6 +156,26 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     body.Position = new Vector2(x, y);
                     break;
             }
+        }
+
+        private void RestartShip(Ship ship)
+        {
+            _hud.Lifes--;
+            var view = ScreenManager.GraphicsDevice.Viewport;
+            ship.Position = new Vector2(view.Width / 2, view.Height / 2);
+        }
+
+        private void GameOver(Ship ship)
+        {
+            _entities.Remove(ship);
+
+            const string message = "GAME OVER?\nA button, Space, Enter = Restart\nB button, Esc = Exit";
+            var msg = new MessageBoxScreen(message);
+
+            msg.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, true, null, new GamePlayScreen());
+            msg.Cancelled += (_, __) => LoadingScreen.Load(ScreenManager, true, null, new MainMenuScreen());
+
+            ScreenManager.AddScreen(msg, null);
         }
     }
 }
