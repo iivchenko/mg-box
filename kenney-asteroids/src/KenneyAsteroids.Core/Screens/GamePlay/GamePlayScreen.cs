@@ -7,9 +7,7 @@ using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,19 +15,20 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 {
     public sealed class GamePlayScreen : GameScreen
     {
-        private readonly IEventSystem _bus;
-        private readonly IEntitySystem _entities;
-        private readonly ICollisionSystem _collisions;
+        private IEventSystem _bus;
+        private IEntitySystem _entities;
+        private ICollisionSystem _collisions;
 
         private GamePlayHud _hud;
         private EnemySpawner _enemySpawner;
         private ShipPlayerKeyboardController _controller;
 
-        public GamePlayScreen(IServiceProvider container)
-            : base(container)
+        public override void Initialize()
         {
-            _entities = Container.GetService<IEntitySystem>();
-            _bus = Container.GetService<IEventSystem>();
+            base.Initialize();
+
+            _entities = ScreenManager.Container.GetService<IEntitySystem>();
+            _bus = ScreenManager.Container.GetService<IEventSystem>();
 
             var rules = new List<IRule>
             {
@@ -51,23 +50,18 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             };
 
             _collisions = new CollisionSystem(rules);
-        }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            var painter = Container.GetService<IPainter>();
-            var publisher = Container.GetService<IPublisher>();
-            var spriteSheet = Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
+            var painter = ScreenManager.Container.GetService<IPainter>();
+            var publisher = ScreenManager.Container.GetService<IPublisher>();
+            var spriteSheet = ScreenManager.Game.Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
             var factory = new EntityFactory(spriteSheet, publisher, painter);
 
-            _enemySpawner = new EnemySpawner(GraphicsDevice.Viewport, factory, publisher);
+            _enemySpawner = new EnemySpawner(ScreenManager.Game.GraphicsDevice.Viewport, factory, publisher);
 
-            var ship = factory.CreateShip(new Vector2(GraphicsDevice.Viewport.Width / 2.0f, GraphicsDevice.Viewport.Height / 2.0f));
+            var ship = factory.CreateShip(new Vector2(ScreenManager.Game.GraphicsDevice.Viewport.Width / 2.0f, ScreenManager.Game.GraphicsDevice.Viewport.Height / 2.0f));
             _controller = new ShipPlayerKeyboardController(ship);
 
-            _hud = new GamePlayHud(Container);
+            _hud = new GamePlayHud(ScreenManager.Container);
             _entities.Add(ship, _hud);
         }
 
@@ -85,19 +79,21 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             if (input.IsNewKeyPress(Keys.Escape, null, out _))
             {
                 const string message = "Exit game?\nA button, Space, Enter = ok\nB button, Esc = cancel";
-                MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message, Container);
+                var confirmExitMessageBox = new MessageBoxScreen(message);
 
-                confirmExitMessageBox.Accepted += (_, __) => LoadingScreen.Load(ScreenSystem, true, null, Container, new MainMenuScreen(Container));
+                confirmExitMessageBox.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, true, null, new MainMenuScreen());
 
-                ScreenSystem.Add(confirmExitMessageBox, null);
+                ScreenManager.AddScreen(confirmExitMessageBox, null);
             }
 
             _controller.Handle(input);
         }
 
-        public override void Update(float time, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            base.Update(time, otherScreenHasFocus, coveredByOtherScreen);
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+
+            var time = gameTime.ToDelta();
 
             if (!otherScreenHasFocus)
             {
@@ -110,9 +106,11 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             }
         }
 
-        public override void Draw(float time)
+        public override void Draw(GameTime gameTime)
         {
-            base.Draw(time);
+            base.Draw(gameTime);
+
+            var time = gameTime.ToDelta();
 
             _entities.SelectDrawable().Iter(x => x.Draw(time));
         }
@@ -121,9 +119,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             return
                 entity.Position.X + entity.Width / 2.0 < 0 ||
-                entity.Position.X - entity.Width / 2.0 > GraphicsDevice.Viewport.Width ||
+                entity.Position.X - entity.Width / 2.0 > ScreenManager.Game.GraphicsDevice.Viewport.Width ||
                 entity.Position.Y + entity.Height / 2.0 < 0 ||
-                entity.Position.Y - entity.Height / 2.0 > GraphicsDevice.Viewport.Height;
+                entity.Position.Y - entity.Height / 2.0 > ScreenManager.Game.GraphicsDevice.Viewport.Height;
         }
 
         private void HandleOutOfScreenBodies(IBody body)
@@ -139,18 +137,18 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
                     if (body.Position.X + body.Width / 2.0f < 0)
                     {
-                        x = GraphicsDevice.Viewport.Width + body.Width / 2.0f;
+                        x = ScreenManager.Game.GraphicsDevice.Viewport.Width + body.Width / 2.0f;
                     }
-                    else if (body.Position.X - body.Width / 2.0f > GraphicsDevice.Viewport.Width)
+                    else if (body.Position.X - body.Width / 2.0f > ScreenManager.Game.GraphicsDevice.Viewport.Width)
                     {
                         x = 0 - body.Width / 2.0f;
                     }
 
                     if (body.Position.Y + body.Height / 2.0f < 0)
                     {
-                        y = GraphicsDevice.Viewport.Height + body.Height / 2.0f;
+                        y = ScreenManager.Game.GraphicsDevice.Viewport.Height + body.Height / 2.0f;
                     }
-                    else if (body.Position.Y - body.Height / 2.0f > GraphicsDevice.Viewport.Height)
+                    else if (body.Position.Y - body.Height / 2.0f > ScreenManager.Game.GraphicsDevice.Viewport.Height)
                     {
                         y = 0 - body.Height / 2.0f;
                     }

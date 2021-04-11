@@ -25,20 +25,19 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _settingsRepository = container.GetService<IRepository<GameSettings>>();
 
             var settings = _settingsRepository.Read();
+            var device = container.GetService<GraphicsDevice>();
+            var content = container.GetService<ContentManager>();
+
+            _view = device.Viewport;
+            _painter = container.GetService<IPainter>();
+            _font = content.Load<SpriteFont>("Fonts/Default");
+            
+            _draws.Add(DrawLifes);
 
             if (settings.ToggleFramerate.Toggle)
             {
-                var device = container.GetService<GraphicsDevice>();
-                var content = container.GetService<ContentManager>();
-
-                _view = device.Viewport;
-                _painter = container.GetService<IPainter>();
-                _font = content.Load<SpriteFont>("Fonts/Default");
-
                 _draws.Add(DrawFrameRate);
             }
-
-            _draws.Add(DrawLifes);
 
             Lifes = 3;
         }

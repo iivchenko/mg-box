@@ -5,13 +5,13 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using KenneyAsteroids.Engine;
 
 namespace KenneyAsteroids.Core.Screens
 {
     public sealed class MainMenuScreen : MenuScreen
     {
-        private readonly IPainter _draw;
-
+        private IPainter _painter;
         private SpriteFont _font;
         private string _version;
         private Vector2 _versionPosition;
@@ -19,28 +19,27 @@ namespace KenneyAsteroids.Core.Screens
         /// <summary>
         /// Constructor fills in the menu contents.
         /// </summary>
-        public MainMenuScreen(IServiceProvider container)
-            : base("Main Menu", container)
+        public MainMenuScreen()
+            : base("Main Menu")
         {
-            _draw = Container.GetService<IPainter>();
         }
 
         public override void Initialize()
         {
             base.Initialize();
-            
-            _font = Content.Load<SpriteFont>("Fonts/simxel.font");
 
+            _painter = ScreenManager.Container.GetService<IPainter>();
+            _font = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/simxel.font");
             _version = Version.Current;
 
-            var viewport = GraphicsDevice.Viewport;
+            var viewport = ScreenManager.Game.GraphicsDevice.Viewport;
             var size = _font.MeasureString(_version);
             _versionPosition = new Vector2(viewport.Width - size.X, viewport.Height - size.Y);
 
             // Create our menu entries.
-            MenuEntry playGameMenuEntry = new MenuEntry(_draw, _font) { Text = "Play Game" };
-            MenuEntry settingsMenuEntry = new MenuEntry(_draw, _font) { Text = "Settings" };
-            MenuEntry exitMenuEntry = new MenuEntry(_draw, _font) { Text = "Exit" };
+            MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
+            MenuEntry settingsMenuEntry = new MenuEntry("Settings");
+            MenuEntry exitMenuEntry = new MenuEntry("Exit");
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
@@ -53,11 +52,13 @@ namespace KenneyAsteroids.Core.Screens
             MenuEntries.Add(exitMenuEntry);
         }
 
-        public override void Draw(float time)
+        public override void Draw(GameTime gameTime)
         {
-            base.Draw(time);
-            
-            _draw.DrawString(_font, _version, _versionPosition, Color.White);
+            base.Draw(gameTime);
+
+            var time = gameTime.ToDelta();
+
+            _painter.DrawString(_font, _version, _versionPosition, Color.White);
         }
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenSystem, true, e.PlayerIndex, Container, new GamePlayScreen(Container));
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GamePlayScreen());
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         void SettingsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenSystem.Add(new SettingsScreen(Container), e.PlayerIndex);
+            ScreenManager.AddScreen(new SettingsScreen(), e.PlayerIndex);
         }
 
         /// <summary>
@@ -83,11 +84,11 @@ namespace KenneyAsteroids.Core.Screens
         {
             const string message = "Are you sure you want to exit this sample?\nA button, Space, Enter = ok\nB button, Esc = cancel";
 
-            MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message, Container);
+            MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message);
 
             confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;
 
-            ScreenSystem.Add(confirmExitMessageBox, playerIndex);
+            ScreenManager.AddScreen(confirmExitMessageBox, playerIndex);
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         void ConfirmExitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
         {
-            ScreenSystem.Exit();
+            ScreenManager.Game.Exit();
         }
     }
 }

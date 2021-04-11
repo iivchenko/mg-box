@@ -10,17 +10,14 @@ using System.Linq;
 
 namespace KenneyAsteroids.Engine
 {
-    public sealed class Game : Microsoft.Xna.Framework.Game, IScreenSystem
+    public sealed class Game : Microsoft.Xna.Framework.Game
     {
         private readonly GraphicsDeviceManager _graphics;
         private readonly GameConfiguration _configuration;
         private readonly IServiceCollection _services;
-        private readonly List<GameScreen> _screens;
-        private readonly InputState _input;
         private readonly Type _initialScreen;
         
         private IServiceProvider _container;
-        private IDrawSystemBatcher _batch;
         private Color _clearColor;
 
         public Game(IServiceCollection services, GameConfiguration configuration, Type initialScreen)
@@ -30,12 +27,6 @@ namespace KenneyAsteroids.Engine
             _initialScreen = initialScreen ?? throw new ArgumentNullException(nameof(initialScreen));
 
             _graphics = new GraphicsDeviceManager(this);
-            _screens = new List<GameScreen>();
-            _input = new InputState();
-
-            // we must set EnabledGestures before we can query for them, but
-            // we don't assume the game wants to read them.
-            TouchPanel.EnabledGestures = GestureType.None;
         }
 
         protected override void Initialize()
@@ -66,104 +57,26 @@ namespace KenneyAsteroids.Engine
 #endif
             _graphics.ApplyChanges();
 
-            base.Initialize();
-
-            _batch = _container.GetService<IDrawSystemBatcher>();
-
             // TODO: Move Screens to the container and remove reflectrion
-            var screen = (GameScreen)Activator.CreateInstance(_initialScreen, _container);
+            var screen = (GameScreen)Activator.CreateInstance(_initialScreen);
+            var screenManager = new ScreenManager(this, _container);
+            screenManager.AddScreen(screen, null);
 
-            Add(screen, null);
-        }
+            Components.Add(screenManager);
 
-        public IEnumerable<GameScreen> GetScreens()
-        {
-            return _screens.ToArray();
-        }
-
-        public void Add(GameScreen screen, PlayerIndex? controllingPlayer)
-        {
-            screen.ControllingPlayer = controllingPlayer;
-            screen.ScreenSystem = this;
-            screen.IsExiting = false;
-            screen.Initialize();
-
-            _screens.Add(screen);
-
-            // update the TouchPanel to respond to gestures this screen is interested in
-            TouchPanel.EnabledGestures = screen.EnabledGestures;
-        }
-
-        /// <summary>
-        /// Removes a screen from the screen manager. You should normally
-        /// use GameScreen.ExitScreen instead of calling this directly, so
-        /// the screen can gradually transition off rather than just being
-        /// instantly removed.
-        /// </summary>
-        public void Remove(GameScreen screen)
-        {
-            screen.Free();
-
-            _screens.Remove(screen);
-
-            // if there is a screen still in the manager, update TouchPanel
-            // to respond to gestures that screen is interested in.
-            if (_screens.Count > 0)
-            {
-                TouchPanel.EnabledGestures = _screens[_screens.Count - 1].EnabledGestures;
-            }
+            base.Initialize();
         }
 
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            // Read the keyboard and gamepad.
-            _input.Update();
-
-            var otherScreenHasFocus = !IsActive;
-            var coveredByOtherScreen = false;
-            var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            foreach (var screen in _screens.ToArray().Reverse())
-            {
-                screen.Update(time, otherScreenHasFocus, coveredByOtherScreen);
-
-                if (screen.ScreenState == ScreenState.TransitionOn ||
-                    screen.ScreenState == ScreenState.Active)
-                {
-                    // If this is the first active screen we came across,
-                    // give it a chance to handle input.
-                    if (!otherScreenHasFocus)
-                    {
-                        screen.HandleInput(_input);
-
-                        otherScreenHasFocus = true;
-                    }
-
-                    // If this is an active non-popup, inform any subsequent
-                    // screens that they are covered by it.
-                    if (!screen.IsPopup)
-                        coveredByOtherScreen = true;
-                }
-            }
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
-
-            var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
             GraphicsDevice.Clear(_clearColor);
 
-            _batch.Begin();
-
-            _screens
-                .Where(screen => screen.ScreenState != ScreenState.Hidden)
-                .Iter(screen => screen.Draw(time));
-
-            _batch.End();
+            base.Draw(gameTime);
         }
     }
 }

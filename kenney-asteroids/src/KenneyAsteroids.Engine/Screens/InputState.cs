@@ -75,7 +75,7 @@ namespace KenneyAsteroids.Engine.Screens
                 LastKeyboardStates[i] = CurrentKeyboardStates[i];
                 LastGamePadStates[i] = CurrentGamePadStates[i];
 
-                CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex)i); // TODO: Fix obsolete stuff
+                CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex)i);
                 CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex)i);
 
                 // Keep track of whether a gamepad has ever been

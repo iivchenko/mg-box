@@ -1,7 +1,17 @@
-﻿using KenneyAsteroids.Engine.Graphics;
+#region File Description
+//-----------------------------------------------------------------------------
+// MenuEntry.cs
+//
+// XNA Community Game Platform
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//-----------------------------------------------------------------------------
+#endregion
+
+#region Using Statements
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
+#endregion
 
 namespace KenneyAsteroids.Engine.Screens
 {
@@ -13,9 +23,12 @@ namespace KenneyAsteroids.Engine.Screens
     /// </summary>
     public class MenuEntry
     {
-        private readonly IPainter _draw;
+        #region Fields
 
-        private readonly SpriteFont _font;
+        /// <summary>
+        /// The text rendered for this entry.
+        /// </summary>
+        string text;
 
         /// <summary>
         /// Tracks a fading selection effect on the entry.
@@ -23,23 +36,49 @@ namespace KenneyAsteroids.Engine.Screens
         /// <remarks>
         /// The entries transition out of the selection effect when they are deselected.
         /// </remarks>
-        private float _selectionFade;
+        float selectionFade;
 
         /// <summary>
-        /// Constructs a new menu entry with the specified text.
+        /// The position at which the entry is drawn. This is set by the MenuScreen
+        /// each frame in Update.
         /// </summary>
-        public MenuEntry(IPainter draw, SpriteFont font)
-        {
-            _draw = draw;
-            _font = font;
+        Vector2 position;
 
-            _selectionFade = 1;
+        #endregion
+
+        #region Properties
+
+
+        /// <summary>
+        /// Gets or sets the text of this menu entry.
+        /// </summary>
+        public string Text
+        {
+            get { return text; }
+            set { text = value; }
         }
+
+
+        /// <summary>
+        /// Gets or sets the position at which to draw this menu entry.
+        /// </summary>
+        public Vector2 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+
+
+        #endregion
+
+        #region Events
+
 
         /// <summary>
         /// Event raised when the menu entry is selected.
         /// </summary>
         public event EventHandler<PlayerIndexEventArgs> Selected;
+
 
         /// <summary>
         /// Method for raising the Selected event.
@@ -50,13 +89,30 @@ namespace KenneyAsteroids.Engine.Screens
                 Selected(this, new PlayerIndexEventArgs(playerIndex));
         }
 
-        public string Text { get; set; }
-        public Vector2 Position { get; set; }
+
+        #endregion
+
+        #region Initialization
+
+
+        /// <summary>
+        /// Constructs a new menu entry with the specified text.
+        /// </summary>
+        public MenuEntry(string text)
+        {
+            this.text = text;
+        }
+
+
+        #endregion
+
+        #region Update and Draw
+
 
         /// <summary>
         /// Updates the menu entry.
         /// </summary>
-        public virtual void Update(MenuScreen screen, bool isSelected, float time)
+        public virtual void Update(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
             // there is no such thing as a selected item on Windows Phone, so we always
             // force isSelected to be false
@@ -67,18 +123,19 @@ namespace KenneyAsteroids.Engine.Screens
             // When the menu selection changes, entries gradually fade between
             // their selected and deselected appearance, rather than instantly
             // popping to the new state.
-            var fadeSpeed = time * 4.0f;
+            float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
 
             if (isSelected)
-                _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1);
+                selectionFade = Math.Min(selectionFade + fadeSpeed, 1);
             else
-                _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0);
+                selectionFade = Math.Max(selectionFade - fadeSpeed, 0);
         }
+
 
         /// <summary>
         /// Draws the menu entry. This can be overridden to customize the appearance.
         /// </summary>
-        public virtual void Draw(MenuScreen screen, bool isSelected, float time)
+        public virtual void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
             // there is no such thing as a selected item on Windows Phone, so we always
             // force isSelected to be false
@@ -87,34 +144,48 @@ namespace KenneyAsteroids.Engine.Screens
 #endif
 
             // Draw the selected entry in yellow, otherwise white.
-            var color = isSelected ? Color.Yellow : Color.White;
+            Color color = isSelected ? Color.Yellow : Color.White;
 
+            // Pulsate the size of the selected menu entry.
+            double time = gameTime.TotalGameTime.TotalSeconds;
+            
             float pulsate = (float)Math.Sin(time * 6) + 1;
 
-            float scale = 1 + pulsate * 0.05f * _selectionFade;
+            float scale = 1 + pulsate * 0.05f * selectionFade;
 
             // Modify the alpha to fade text out during transitions.
             color *= screen.TransitionAlpha;
 
-            Vector2 origin = new Vector2(0, _font.LineSpacing / 2);
+            // Draw text, centered on the middle of each line.
+            ScreenManager screenManager = screen.ScreenManager;
+            var painter = screenManager.Painter;
+            SpriteFont font = screenManager.Font;
 
-            _draw.DrawString(_font, Text, Position, color, 0, origin, scale, SpriteEffects.None, 0);
+            Vector2 origin = new Vector2(0, font.LineSpacing / 2);
+
+            painter.DrawString(font, text, position, color, 0,
+                                   origin, scale, SpriteEffects.None, 0);
         }
+
 
         /// <summary>
         /// Queries how much space this menu entry requires.
         /// </summary>
         public virtual int GetHeight(MenuScreen screen)
         {
-            return _font.LineSpacing;
+            return screen.ScreenManager.Font.LineSpacing;
         }
+
 
         /// <summary>
         /// Queries how wide the entry is, used for centering on the screen.
         /// </summary>
         public virtual int GetWidth(MenuScreen screen)
         {
-            return (int)_font.MeasureString(Text).X;
+            return (int)screen.ScreenManager.Font.MeasureString(Text).X;
         }
+
+
+        #endregion
     }
 }

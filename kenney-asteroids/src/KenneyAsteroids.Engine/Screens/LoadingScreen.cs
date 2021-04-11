@@ -1,7 +1,17 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+#region File Description
+//-----------------------------------------------------------------------------
+// LoadingScreen.cs
+//
+// Microsoft XNA Community Game Platform
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//-----------------------------------------------------------------------------
+#endregion
+
+#region Using Statements
 using System;
-using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endregion
 
 namespace KenneyAsteroids.Engine.Screens
 {
@@ -19,7 +29,7 @@ namespace KenneyAsteroids.Engine.Screens
     ///   next screen, which may take a long time to load its data. The loading
     ///   screen will be the only thing displayed while this load is taking place.
     /// </summary>
-    public class LoadingScreen : GameScreen
+    public sealed class LoadingScreen : GameScreen
     {
         #region Fields
 
@@ -27,8 +37,6 @@ namespace KenneyAsteroids.Engine.Screens
         bool otherScreensAreGone;
 
         GameScreen[] screensToLoad;
-
-        private SpriteFont _font;
 
         #endregion
 
@@ -40,11 +48,9 @@ namespace KenneyAsteroids.Engine.Screens
         /// be activated via the static Load method instead.
         /// </summary>
         private LoadingScreen(
-            IScreenSystem screenSystem, 
+            ScreenManager screenManager, 
             bool loadingIsSlow,
-            GameScreen[] screensToLoad,
-            IServiceProvider container)
-            : base(container)
+            GameScreen[] screensToLoad)
         {
             this.loadingIsSlow = loadingIsSlow;
             this.screensToLoad = screensToLoad;
@@ -52,29 +58,24 @@ namespace KenneyAsteroids.Engine.Screens
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
         }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            _font = Content.Load<SpriteFont>("Fonts/simxel.font");
-        }
 
         /// <summary>
         /// Activates the loading screen.
         /// </summary>
-        public static void Load(IScreenSystem screenSystem, bool loadingIsSlow,
+        public static void Load(ScreenManager screenManager, bool loadingIsSlow,
                                 PlayerIndex? controllingPlayer,
-                                IServiceProvider container,
                                 params GameScreen[] screensToLoad)
         {
             // Tell all the current screens to transition off.
-            foreach (GameScreen screen in screenSystem.GetScreens())
+            foreach (GameScreen screen in screenManager.GetScreens())
                 screen.ExitScreen();
 
             // Create and activate the loading screen.
-            LoadingScreen loadingScreen = new LoadingScreen(screenSystem, loadingIsSlow, screensToLoad, container);
+            LoadingScreen loadingScreen = new LoadingScreen(screenManager,
+                                                            loadingIsSlow,
+                                                            screensToLoad);
 
-            screenSystem.Add(loadingScreen, controllingPlayer);
+            screenManager.AddScreen(loadingScreen, controllingPlayer);
         }
 
 
@@ -86,29 +87,29 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Updates the loading screen.
         /// </summary>
-        public override void Update(float time, bool otherScreenHasFocus,
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
         {
-            base.Update(time, otherScreenHasFocus, coveredByOtherScreen);
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
             // If all the previous screens have finished transitioning
             // off, it is time to actually perform the load.
             if (otherScreensAreGone)
             {
-                ScreenSystem.Remove(this);
+                ScreenManager.RemoveScreen(this);
 
                 foreach (GameScreen screen in screensToLoad)
                 {
                     if (screen != null)
                     {
-                        ScreenSystem.Add(screen, ControllingPlayer);
+                        ScreenManager.AddScreen(screen, ControllingPlayer);
                     }
                 }
 
                 // Once the load has finished, we use ResetElapsedTime to tell
                 // the  game timing mechanism that we have just finished a very
                 // long frame, and that it should not try to catch up.
-                ScreenSystem.ResetElapsedTime();
+                ScreenManager.Game.ResetElapsedTime();
             }
         }
 
@@ -116,7 +117,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Draws the loading screen.
         /// </summary>
-        public override void Draw(float time)
+        public override void Draw(GameTime gameTime)
         {
             // If we are the only active screen, that means all the previous screens
             // must have finished transitioning off. We check for this in the Draw
@@ -124,7 +125,7 @@ namespace KenneyAsteroids.Engine.Screens
             // screens to be gone: in order for the transition to look good we must
             // have actually drawn a frame without them before we perform the load.
             if ((ScreenState == ScreenState.Active) &&
-                (ScreenSystem.GetScreens().Count() == 1))
+                (ScreenManager.GetScreens().Length == 1))
             {
                 otherScreensAreGone = true;
             }
@@ -137,20 +138,23 @@ namespace KenneyAsteroids.Engine.Screens
             // to bother drawing the message.
             if (loadingIsSlow)
             {
+                var painter = ScreenManager.Painter;
+                SpriteFont font = ScreenManager.Font;
+
                 const string message = "Loading...";
 
                 // Center the text in the viewport.
-                Viewport viewport = GraphicsDevice.Viewport;
+                Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
                 Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-                Vector2 textSize = _font.MeasureString(message);
+                Vector2 textSize = font.MeasureString(message);
                 Vector2 textPosition = (viewportSize - textSize) / 2;
 
                 Color color = Color.White * TransitionAlpha;
 
-                // Draw the text.
-                DrawSystem.DrawString(_font, message, textPosition, color);
+                painter.DrawString(font, message, textPosition, color);
             }
         }
+
 
         #endregion
     }

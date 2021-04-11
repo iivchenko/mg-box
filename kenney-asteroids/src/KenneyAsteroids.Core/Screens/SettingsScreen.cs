@@ -28,28 +28,23 @@ namespace KenneyAsteroids.Core.Screens
 
     public sealed class SettingsScreen : MenuScreen
     {
-        private readonly IRepository<GameSettings> _settingsRepository;
-
-        private SpriteFont _font;
-
+        private IRepository<GameSettings> _settingsRepository;
         private MenuEntry _toggleFramerate;
         private MenuEntry _back;
 
-        public SettingsScreen(IServiceProvider container)
-            : base("Settings", container)
+        public SettingsScreen()
+            : base("Settings")
         {
-            _settingsRepository = Container.GetService<IRepository<GameSettings>>();
         }
 
         public override void Initialize()
         {
             base.Initialize();
-
-            _font = Content.Load<SpriteFont>("Fonts/simxel.font");
+            _settingsRepository = ScreenManager.Container.GetService<IRepository<GameSettings>>();
 
             var settings = _settingsRepository.Read();
 
-            _toggleFramerate = new MenuEntry(DrawSystem, _font) { Text = $"Frame Rate: {Toggle(settings.ToggleFramerate.Toggle)}" };
+            _toggleFramerate = new MenuEntry($"Frame Rate: {Toggle(settings.ToggleFramerate.Toggle)}");
             _toggleFramerate.Selected += (_, __) =>
             {
                 var settings = _settingsRepository.Read();
@@ -60,7 +55,7 @@ namespace KenneyAsteroids.Core.Screens
                 _settingsRepository.Update(settings);
             };
 
-            _back = new MenuEntry(DrawSystem, _font) { Text = "Back" };
+            _back = new MenuEntry("Back");
             _back.Selected += (_, e) => OnCancel(e.PlayerIndex);
 
             MenuEntries.Add(_toggleFramerate);

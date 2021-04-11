@@ -1,42 +1,81 @@
-﻿using System;
+#region File Description
+//-----------------------------------------------------------------------------
+// MessageBoxScreen.cs
+//
+// Microsoft XNA Community Game Platform
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//-----------------------------------------------------------------------------
+#endregion
+
+#region Using Statements
+using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using KenneyAsteroids.Engine.Graphics;
+#endregion
 
 namespace KenneyAsteroids.Engine.Screens
 {
-    public sealed class MessageBoxScreen : GameScreen
+    /// <summary>
+    /// A popup message box screen, used to display "are you sure?"
+    /// confirmation messages.
+    /// </summary>
+    public class MessageBoxScreen : GameScreen
     {
-        private readonly string _message;
+        #region Fields
 
-        private Sprite _gradient;
-        private SpriteFont _font;
+        private string _message;
+        Texture2D gradientTexture;
 
-        public MessageBoxScreen(string message, IServiceProvider container)
-            : base(container)
-        {
-            _message = message;
+        #endregion
 
-            IsPopup = true;
-            TransitionOnTime = TimeSpan.FromSeconds(0.2);
-            TransitionOffTime = TimeSpan.FromSeconds(0.2);
-        }
+        #region Events
 
         public event EventHandler<PlayerIndexEventArgs> Accepted;
         public event EventHandler<PlayerIndexEventArgs> Cancelled;
 
+        #endregion
+
+        #region Initialization
+
+        /// <summary>
+        /// Constructor automatically includes the standard "A=ok, B=cancel"
+        /// usage text prompt.
+        /// </summary>
+        public MessageBoxScreen(string message)
+        {
+            _message = message;
+
+            IsPopup = true;
+
+            TransitionOnTime = TimeSpan.FromSeconds(0.2);
+            TransitionOffTime = TimeSpan.FromSeconds(0.2);
+        }
+        
+        /// <summary>
+        /// Loads graphics content for this screen. This uses the shared ContentManager
+        /// provided by the Game class, so the content will remain loaded forever.
+        /// Whenever a subsequent MessageBoxScreen tries to load this same content,
+        /// it will just get back another reference to the already loaded data.
+        /// </summary>
         public override void Initialize()
         {
-            base.Initialize();
+            ContentManager content = ScreenManager.Game.Content;
 
-            _gradient = new Sprite(Content.Load<Texture2D>("Sprites/gradient.sprite")); // TODO: Make Sprite pipeline loader
-            _font = Content.Load<SpriteFont>("Fonts/simxel.font");
+            gradientTexture = content.Load<Texture2D>("Sprites/gradient.sprite");
         }
 
+
+        #endregion
+
+        #region Handle Input
+
+
+        /// <summary>
+        /// Responds to user input, accepting or cancelling the message box.
+        /// </summary>
         public override void HandleInput(InputState input)
         {
-            base.HandleInput(input);
-
             PlayerIndex playerIndex;
 
             // We pass in our ControllingPlayer, which may either be null (to
@@ -62,18 +101,28 @@ namespace KenneyAsteroids.Engine.Screens
             }
         }
 
-        public override void Draw(float time)
+
+        #endregion
+
+        #region Draw
+
+
+        /// <summary>
+        /// Draws the message box.
+        /// </summary>
+        public override void Draw(GameTime gameTime)
         {
-            base.Draw(time);
+            var painter = ScreenManager.Painter;
+            SpriteFont font = ScreenManager.Font;
 
             // Darken down any other screens that were drawn beneath the popup.
-            FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
+            ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
 
             // Center the message text in the viewport.
-            var viewport = GraphicsDevice.Viewport;
-            var viewportSize = new Vector2(viewport.Width, viewport.Height);
-            var textSize = _font.MeasureString(_message);
-            var textPosition = (viewportSize - textSize) / 2;
+            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+            Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
+            Vector2 textSize = font.MeasureString(_message);
+            Vector2 textPosition = (viewportSize - textSize) / 2;
 
             // The background includes a border somewhat larger than the text itself.
             const int hPad = 32;
@@ -85,13 +134,15 @@ namespace KenneyAsteroids.Engine.Screens
                                                           (int)textSize.Y + vPad * 2);
 
             // Fade the popup alpha during transitions.
-            var color = Color.White * TransitionAlpha;
-
+            Color color = Color.White * TransitionAlpha;
             // Draw the background rectangle.
-            DrawSystem.Draw(_gradient, backgroundRectangle, color);
+            painter.Draw(gradientTexture, backgroundRectangle, color);
 
             // Draw the message box text.
-            DrawSystem.DrawString(_font, _message, textPosition, color);
+            painter.DrawString(font, _message, textPosition, color);
         }
+
+
+        #endregion
     }
 }

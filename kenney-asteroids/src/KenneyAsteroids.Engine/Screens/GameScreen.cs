@@ -1,13 +1,26 @@
-using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Extensions.DependencyInjection;
+#region File Description
+//-----------------------------------------------------------------------------
+// GameScreen.cs
+//
+// Microsoft XNA Community Game Platform
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//-----------------------------------------------------------------------------
+#endregion
+
+#region Using Statements
+using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input.Touch;
+using System.IO;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input.Touch;
-using System;
+#endregion
 
 namespace KenneyAsteroids.Engine.Screens
 {
+    /// <summary>
+    /// Enum describes the screen transition state.
+    /// </summary>
     public enum ScreenState
     {
         TransitionOn,
@@ -15,6 +28,7 @@ namespace KenneyAsteroids.Engine.Screens
         TransitionOff,
         Hidden,
     }
+
 
     /// <summary>
     /// A screen is a single layer that has update and draw logic, and which
@@ -25,30 +39,7 @@ namespace KenneyAsteroids.Engine.Screens
     /// </summary>
     public abstract class GameScreen
     {
-        private Texture2D _blankTexture;
-
-        private bool _otherScreenHasFocus;
-
-        protected GameScreen(IServiceProvider container)
-        {
-            Container = container;
-
-            DrawSystem = Container.GetService<IPainter>();
-            Content = Container.GetService<ContentManager>();
-            GraphicsDevice = Container.GetService<GraphicsDevice>();
-
-            TransitionOnTime = TimeSpan.Zero;
-            TransitionOffTime = TimeSpan.Zero;
-            ScreenState = ScreenState.TransitionOn;
-            TransitionPosition = 1.0f;
-            IsExiting = false;
-        }
-
-        public IScreenSystem ScreenSystem { get; set; }
-        protected IServiceProvider Container { get; }
-        protected IPainter DrawSystem { get; }        
-        protected ContentManager Content { get; }
-        protected GraphicsDevice GraphicsDevice { get; }
+        #region Properties
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -57,38 +48,77 @@ namespace KenneyAsteroids.Engine.Screens
         /// popup, in which case screens underneath it do not need to bother
         /// transitioning off.
         /// </summary>
-        public bool IsPopup { get; protected set; }
+        public bool IsPopup
+        {
+            get { return isPopup; }
+            protected set { isPopup = value; }
+        }
+
+        bool isPopup = false;
+
 
         /// <summary>
         /// Indicates how long the screen takes to
         /// transition on when it is activated.
         /// </summary>
-        public TimeSpan TransitionOnTime { get; protected set; }
+        public TimeSpan TransitionOnTime
+        {
+            get { return transitionOnTime; }
+            protected set { transitionOnTime = value; }
+        }
+
+        TimeSpan transitionOnTime = TimeSpan.Zero;
+
 
         /// <summary>
         /// Indicates how long the screen takes to
         /// transition off when it is deactivated.
         /// </summary>
-        public TimeSpan TransitionOffTime { get; protected set; }
+        public TimeSpan TransitionOffTime
+        {
+            get { return transitionOffTime; }
+            protected set { transitionOffTime = value; }
+        }
+
+        TimeSpan transitionOffTime = TimeSpan.Zero;
+
 
         /// <summary>
         /// Gets the current position of the screen transition, ranging
         /// from zero (fully active, no transition) to one (transitioned
         /// fully off to nothing).
         /// </summary>
-        public float TransitionPosition { get; protected set; }
+        public float TransitionPosition
+        {
+            get { return transitionPosition; }
+            protected set { transitionPosition = value; }
+        }
+
+        float transitionPosition = 1;
+
 
         /// <summary>
         /// Gets the current alpha of the screen transition, ranging
         /// from 1 (fully active, no transition) to 0 (transitioned
         /// fully off to nothing).
         /// </summary>
-        public float TransitionAlpha => 1f - TransitionPosition;
+        public float TransitionAlpha
+        {
+            get { return 1f - TransitionPosition; }
+        }
+
 
         /// <summary>
         /// Gets the current screen transition state.
         /// </summary>
-        public ScreenState ScreenState { get; protected set; }
+        public ScreenState ScreenState
+        {
+            get { return screenState; }
+            protected set { screenState = value; }
+        }
+
+        ScreenState screenState = ScreenState.TransitionOn;
+
 
         /// <summary>
         /// There are two possible reasons why a screen might be transitioning
@@ -98,12 +128,42 @@ namespace KenneyAsteroids.Engine.Screens
         /// if set, the screen will automatically remove itself as soon as the
         /// transition finishes.
         /// </summary>
-        public bool IsExiting { get; set; }
+        public bool IsExiting
+        {
+            get { return isExiting; }
+            protected internal set { isExiting = value; }
+        }
+
+        bool isExiting = false;
+
 
         /// <summary>
         /// Checks whether this screen is active and can respond to user input.
         /// </summary>
-        public bool IsActive => !_otherScreenHasFocus && (ScreenState == ScreenState.TransitionOn || ScreenState == ScreenState.Active);
+        public bool IsActive
+        {
+            get
+            {
+                return !otherScreenHasFocus &&
+                       (screenState == ScreenState.TransitionOn ||
+                        screenState == ScreenState.Active);
+            }
+        }
+
+        bool otherScreenHasFocus;
+
+
+        /// <summary>
+        /// Gets the manager that this screen belongs to.
+        /// </summary>
+        public ScreenManager ScreenManager
+        {
+            get { return screenManager; }
+            internal set { screenManager = value; }
+        }
+
+        ScreenManager screenManager;
+
 
         /// <summary>
         /// Gets the index of the player who is currently controlling this screen,
@@ -113,7 +173,14 @@ namespace KenneyAsteroids.Engine.Screens
         /// this menu is given control over all subsequent screens, so other gamepads
         /// are inactive until the controlling player returns to the main menu.
         /// </summary>
-        public PlayerIndex? ControllingPlayer { get; internal set; }
+        public PlayerIndex? ControllingPlayer
+        {
+            get { return controllingPlayer; }
+            internal set { controllingPlayer = value; }
+        }
+
+        PlayerIndex? controllingPlayer;
+
 
         /// <summary>
         /// Gets the gestures the screen is interested in. Screens should be as specific
@@ -141,76 +208,76 @@ namespace KenneyAsteroids.Engine.Screens
 
         GestureType enabledGestures = GestureType.None;
 
-        /// <summary>
-        /// Load graphics content for the screen.
-        /// </summary>
-        public virtual void Initialize() 
-        {
-            _blankTexture = Content.Load<Texture2D>("Sprites/blank.sprite");
-        }
 
-        /// <summary>
-        /// Unload content for the screen.
-        /// </summary>
-        public virtual void Free() 
-        {
-            // TODO: Think on content unload
-        }
+        #endregion
+
+        #region Initialization
+
+        public virtual void Initialize() { }
+
+        public virtual void Free() { }
+
+        #endregion
+
+        #region Update and Draw
+
 
         /// <summary>
         /// Allows the screen to run logic, such as updating the transition position.
         /// Unlike HandleInput, this method is called regardless of whether the screen
         /// is active, hidden, or in the middle of a transition.
         /// </summary>
-        public virtual void Update(float time, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
+                                                      bool coveredByOtherScreen)
         {
-            _otherScreenHasFocus = otherScreenHasFocus;
+            this.otherScreenHasFocus = otherScreenHasFocus;
 
-            if (IsExiting)
+            if (isExiting)
             {
                 // If the screen is going away to die, it should transition off.
-                ScreenState = ScreenState.TransitionOff;
+                screenState = ScreenState.TransitionOff;
 
-                if (!UpdateTransition(time, TransitionOffTime, 1))
+                if (!UpdateTransition(gameTime, transitionOffTime, 1))
                 {
                     // When the transition finishes, remove the screen.
-                    ScreenSystem.Remove(this);
+                    ScreenManager.RemoveScreen(this);
                 }
             }
             else if (coveredByOtherScreen)
             {
                 // If the screen is covered by another, it should transition off.
-                if (UpdateTransition(time, TransitionOffTime, 1))
+                if (UpdateTransition(gameTime, transitionOffTime, 1))
                 {
                     // Still busy transitioning.
-                    ScreenState = ScreenState.TransitionOff;
+                    screenState = ScreenState.TransitionOff;
                 }
                 else
                 {
                     // Transition finished!
-                    ScreenState = ScreenState.Hidden;
+                    screenState = ScreenState.Hidden;
                 }
             }
             else
             {
                 // Otherwise the screen should transition on and become active.
-                if (UpdateTransition(time, TransitionOnTime, -1))
+                if (UpdateTransition(gameTime, transitionOnTime, -1))
                 {
                     // Still busy transitioning.
-                    ScreenState = ScreenState.TransitionOn;
+                    screenState = ScreenState.TransitionOn;
                 }
                 else
                 {
                     // Transition finished!
-                    ScreenState = ScreenState.Active;
+                    screenState = ScreenState.Active;
                 }
             }
         }
 
+
         /// <summary>
         /// Helper for updating the screen transition position.
         /// </summary>
-        bool UpdateTransition(float gameTime, TimeSpan time, int direction) // TODO: Remname gameTime to time and time to something else
+        bool UpdateTransition(GameTime gameTime, TimeSpan time, int direction)
         {
             // How much should we move by?
             float transitionDelta;
@@ -218,22 +285,24 @@ namespace KenneyAsteroids.Engine.Screens
             if (time == TimeSpan.Zero)
                 transitionDelta = 1;
             else
-                transitionDelta = (float)(gameTime/time.TotalSeconds) * 1000.0f;
+                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
+                                          time.TotalMilliseconds);
 
             // Update the transition position.
-            TransitionPosition += transitionDelta * direction;
+            transitionPosition += transitionDelta * direction;
 
             // Did we reach the end of the transition?
-            if (((direction < 0) && (TransitionPosition <= 0)) ||
-                ((direction > 0) && (TransitionPosition >= 1)))
+            if (((direction < 0) && (transitionPosition <= 0)) ||
+                ((direction > 0) && (transitionPosition >= 1)))
             {
-                TransitionPosition = Math.Clamp(TransitionPosition, 0, 1);
+                transitionPosition = MathHelper.Clamp(transitionPosition, 0, 1);
                 return false;
             }
 
             // Otherwise we are still busy transitioning.
             return true;
         }
+
 
         /// <summary>
         /// Allows the screen to handle user input. Unlike Update, this method
@@ -242,10 +311,17 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public virtual void HandleInput(InputState input) { }
 
+
         /// <summary>
         /// This is called when the screen should draw itself.
         /// </summary>
-        public virtual void Draw(float time) { }
+        public virtual void Draw(GameTime gameTime) { }
+
+
+        #endregion
+
+        #region Public Methods
+
 
         /// <summary>
         /// Tells the screen to go away. Unlike ScreenManager.RemoveScreen, which
@@ -257,20 +333,16 @@ namespace KenneyAsteroids.Engine.Screens
             if (TransitionOffTime == TimeSpan.Zero)
             {
                 // If the screen has a zero transition time, remove it immediately.
-                ScreenSystem.Remove(this);
+                ScreenManager.RemoveScreen(this);
             }
             else
             {
                 // Otherwise flag that it should transition off and then exit.
-                IsExiting = true;
+                isExiting = true;
             }
         }
-        
-        protected void FadeBackBufferToBlack(float alpha)
-        {
-            var viewport = GraphicsDevice.Viewport;
 
-            DrawSystem.Draw(_blankTexture, new Rectangle(0, 0, viewport.Width, viewport.Height), Color.Black * alpha);
-        }
+
+        #endregion
     }
 }

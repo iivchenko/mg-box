@@ -1,8 +1,20 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+#region File Description
+//-----------------------------------------------------------------------------
+// MenuScreen.cs
+//
+// XNA Community Game Platform
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//-----------------------------------------------------------------------------
+#endregion
+
+#region Using Statements
+using KenneyAsteroids.Engine.Graphics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+#endregion
 
 namespace KenneyAsteroids.Engine.Screens
 {
@@ -14,7 +26,7 @@ namespace KenneyAsteroids.Engine.Screens
     {
         #region Fields
 
-        private SpriteFont _font;
+        private IPainter _painter;
 
         List<MenuEntry> menuEntries = new List<MenuEntry>();
         int selectedEntry = 0;
@@ -23,6 +35,7 @@ namespace KenneyAsteroids.Engine.Screens
         #endregion
 
         #region Properties
+
 
         /// <summary>
         /// Gets the list of menu entries, so derived classes can add
@@ -33,29 +46,26 @@ namespace KenneyAsteroids.Engine.Screens
             get { return menuEntries; }
         }
 
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            _painter = ScreenManager.Container.GetService<IPainter>();
+        }
 
         #endregion
 
         #region Initialization
 
-
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MenuScreen(string menuTitle, IServiceProvider container)
-            : base (container)
+        public MenuScreen(string menuTitle)
         {
             this.menuTitle = menuTitle;
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            _font = Content.Load<SpriteFont>("Fonts/simxel.font");
         }
 
         #endregion
@@ -155,9 +165,9 @@ namespace KenneyAsteroids.Engine.Screens
             for (int i = 0; i < menuEntries.Count; i++)
             {
                 MenuEntry menuEntry = menuEntries[i];
-
+                
                 // each entry is to be centered horizontally
-                position.X = GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
+                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
 
                 if (ScreenState == ScreenState.TransitionOn)
                     position.X -= transitionOffset * 256;
@@ -176,16 +186,17 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Updates the menu.
         /// </summary>
-        public override void Update(float time, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
+                                                       bool coveredByOtherScreen)
         {
-            base.Update(time, otherScreenHasFocus, coveredByOtherScreen);
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
             // Update each nested MenuEntry object.
             for (int i = 0; i < menuEntries.Count; i++)
             {
                 bool isSelected = IsActive && (i == selectedEntry);
 
-                menuEntries[i].Update(this, isSelected, time);
+                menuEntries[i].Update(this, isSelected, gameTime);
             }
         }
 
@@ -193,12 +204,14 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Draws the menu.
         /// </summary>
-        public override void Draw(float time)
+        public override void Draw(GameTime gameTime)
         {
-            base.Draw(time);
-
             // make sure our entries are in the right place before we draw them
             UpdateMenuEntryLocations();
+
+            GraphicsDevice graphics = ScreenManager.GraphicsDevice;
+            var painter = ScreenManager.Painter;
+            SpriteFont font = ScreenManager.Font;
 
             // Draw each menu entry in turn.
             for (int i = 0; i < menuEntries.Count; i++)
@@ -207,7 +220,7 @@ namespace KenneyAsteroids.Engine.Screens
 
                 bool isSelected = IsActive && (i == selectedEntry);
 
-                menuEntry.Draw(this, isSelected, time);
+                menuEntry.Draw(this, isSelected, gameTime);
             }
 
             // Make the menu slide into place during transitions, using a
@@ -216,15 +229,17 @@ namespace KenneyAsteroids.Engine.Screens
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // Draw the menu title centered on the screen
-            Vector2 titlePosition = new Vector2(GraphicsDevice.Viewport.Width / 2, 80);
-            Vector2 titleOrigin = _font.MeasureString(menuTitle) / 2;
+            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
+            Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
             Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
             float titleScale = 1.25f;
 
             titlePosition.Y -= transitionOffset * 100;
 
-            DrawSystem.DrawString(_font, menuTitle, titlePosition, titleColor, 0, titleOrigin, titleScale, SpriteEffects.None, 0);
+            painter.DrawString(font, menuTitle, titlePosition, titleColor, 0,
+                                   titleOrigin, titleScale, SpriteEffects.None, 0);
         }
+
 
         #endregion
     }
