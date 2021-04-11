@@ -21,6 +21,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private readonly IEntitySystem _entities;
         private readonly ICollisionSystem _collisions;
 
+        private GamePlayHud _hud;
         private EnemySpawner _enemySpawner;
         private ShipPlayerKeyboardController _controller;
 
@@ -34,7 +35,12 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             {
                 new LazyRule<Ship, Asteroid>
                 (
-                    (_, __) => true,
+                    (_, __) => _hud.Lifes > 0,
+                    (ship, _) => _hud.Lifes--
+                ),
+                 new LazyRule<Ship, Asteroid>
+                (
+                    (_, __) => _hud.Lifes <= 0,
                     (ship, _) => _entities.Remove(ship)
                 ),
                 new LazyRule<Projectile, Asteroid>
@@ -51,17 +57,18 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             base.Initialize();
 
-            var draw = Container.GetService<IPainter>();
+            var painter = Container.GetService<IPainter>();
             var publisher = Container.GetService<IPublisher>();
             var spriteSheet = Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
-            var factory = new EntityFactory(spriteSheet, publisher, draw);
+            var factory = new EntityFactory(spriteSheet, publisher, painter);
 
             _enemySpawner = new EnemySpawner(GraphicsDevice.Viewport, factory, publisher);
 
             var ship = factory.CreateShip(new Vector2(GraphicsDevice.Viewport.Width / 2.0f, GraphicsDevice.Viewport.Height / 2.0f));
             _controller = new ShipPlayerKeyboardController(ship);
 
-            _entities.Add(ship, new GamePlayHud(Container));
+            _hud = new GamePlayHud(Container);
+            _entities.Add(ship, _hud);
         }
 
         public override void Free()
@@ -121,7 +128,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
         private void HandleOutOfScreenBodies(IBody body)
         {
-            switch(body)
+            switch (body)
             {
                 case Projectile projectile:
                     _entities.Remove(projectile);
