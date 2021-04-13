@@ -21,7 +21,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
         private GamePlayHud _hud;
         private EnemySpawner _enemySpawner;
-        private ShipPlayerKeyboardController _controller;
+        private ShipPlayerController _controller;
 
         public override void Initialize()
         {
@@ -59,7 +59,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _enemySpawner = new EnemySpawner(ScreenManager.Game.GraphicsDevice.Viewport, factory, publisher);
 
             var ship = factory.CreateShip(new Vector2(ScreenManager.Game.GraphicsDevice.Viewport.Width / 2.0f, ScreenManager.Game.GraphicsDevice.Viewport.Height / 2.0f));
-            _controller = new ShipPlayerKeyboardController(ship);
+            _controller = new ShipPlayerController(ship);
 
             _hud = new GamePlayHud(ScreenManager.Container);
             _entities.Add(ship, _hud);
@@ -76,7 +76,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             base.HandleInput(input);
 
-            if (input.IsNewKeyPress(Keys.Escape, null, out _))
+            if (input.IsNewKeyPress(Keys.Escape, null, out _) || input.IsNewButtonPress(Buttons.Start, null, out _))
             {
                 const string message = "Exit game?\nA button, Space, Enter = ok\nB button, Esc = cancel";
                 var confirmExitMessageBox = new MessageBoxScreen(message);
