@@ -81,7 +81,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                 const string message = "Exit game?\nA button, Space, Enter = ok\nB button, Esc = cancel";
                 var confirmExitMessageBox = new MessageBoxScreen(message);
 
-                confirmExitMessageBox.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, true, null, new MainMenuScreen());
+                confirmExitMessageBox.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new MainMenuScreen());
 
                 ScreenManager.AddScreen(confirmExitMessageBox, null);
             }
@@ -172,8 +172,8 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             const string message = "GAME OVER?\nA button, Space, Enter = Restart\nB button, Esc = Exit";
             var msg = new MessageBoxScreen(message);
 
-            msg.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, true, null, new GamePlayScreen());
-            msg.Cancelled += (_, __) => LoadingScreen.Load(ScreenManager, true, null, new MainMenuScreen());
+            msg.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new GamePlayScreen());
+            msg.Cancelled += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new MainMenuScreen());
 
             ScreenManager.AddScreen(msg, null);
         }

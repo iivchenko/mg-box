@@ -8,8 +8,6 @@ namespace KenneyAsteroids.Engine
     {
         private readonly ServiceCollection _container;
         private readonly GameConfiguration _configuration;
-        
-        private Type _initialScreen;
 
         private GameBuilder()
         {
@@ -36,22 +34,10 @@ namespace KenneyAsteroids.Engine
             return this;
         }
 
-        public GameBuilder WithInitialScreen<TScreen>()
-            where TScreen : GameScreen
+        public Game Build<TScreen>()
+            where TScreen : GameScreen, new()
         {
-            _initialScreen = typeof(TScreen);
-
-            return this;
-        }
-
-        public Game Build()
-        {
-            if (_initialScreen == null)
-            {
-                throw new InvalidOperationException($"Initial Screen was not set!");
-            }
-
-            return new Game(_container, _configuration, _initialScreen);
+            return new Game(_container, _configuration, new TScreen());
         }
     }
 }

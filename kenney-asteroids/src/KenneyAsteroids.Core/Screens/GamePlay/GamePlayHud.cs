@@ -30,7 +30,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             _view = device.Viewport;
             _painter = container.GetService<IPainter>();
-            _font = content.Load<SpriteFont>("Fonts/Default");
+            _font = content.Load<SpriteFont>("Fonts/simxel.font");
             
             _draws.Add(DrawLifes);
 

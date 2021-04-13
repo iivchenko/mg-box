@@ -50,8 +50,7 @@ namespace KenneyAsteroids.Desktop
                         config.ContentPath = "Content";
                         config.ScreenColor = Color.Black;
                     })
-                .WithInitialScreen<MainMenuScreen>()
-                .Build()
+                .Build<BootstrapScreen<MainMenuScreen>>()
                 .RunSafe();
         }
     }

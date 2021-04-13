@@ -66,7 +66,7 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GamePlayScreen());
+            LoadingScreen.Load(ScreenManager, false, e.PlayerIndex, new GamePlayScreen());
         }
 
         /// <summary>

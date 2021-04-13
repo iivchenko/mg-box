@@ -1,8 +1,6 @@
 ﻿using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace KenneyAsteroids.Core.Screens
 {

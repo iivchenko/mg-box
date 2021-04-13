@@ -10,7 +10,6 @@
   * Defeat screen
   * Implement SettingsScreen
     * Toggle on/off framerate during gameplay
-    * Screen resolution
   * Improve game play:
     * Improve enemy spawner
   * Add game pad support

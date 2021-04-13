@@ -15,16 +15,16 @@ namespace KenneyAsteroids.Engine
         private readonly GraphicsDeviceManager _graphics;
         private readonly GameConfiguration _configuration;
         private readonly IServiceCollection _services;
-        private readonly Type _initialScreen;
+        private readonly GameScreen _startScreen;
         
         private IServiceProvider _container;
         private Color _clearColor;
 
-        public Game(IServiceCollection services, GameConfiguration configuration, Type initialScreen)
+        public Game(IServiceCollection services, GameConfiguration configuration, GameScreen startScreen)
         {
             _services = services;
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            _initialScreen = initialScreen ?? throw new ArgumentNullException(nameof(initialScreen));
+            _startScreen = startScreen;
 
             _graphics = new GraphicsDeviceManager(this);
         }
@@ -57,10 +57,8 @@ namespace KenneyAsteroids.Engine
 #endif
             _graphics.ApplyChanges();
 
-            // TODO: Move Screens to the container and remove reflectrion
-            var screen = (GameScreen)Activator.CreateInstance(_initialScreen);
             var screenManager = new ScreenManager(this, _container);
-            screenManager.AddScreen(screen, null);
+            screenManager.AddScreen(_startScreen, null);
 
             Components.Add(screenManager);
 
