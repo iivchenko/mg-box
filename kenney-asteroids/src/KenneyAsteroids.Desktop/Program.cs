@@ -37,7 +37,7 @@ namespace KenneyAsteroids.Desktop
                 .WithConfiguration(config =>
                     {
                         config.FullScreen = false;
-                        config.IsMouseVisible = true;
+                        config.IsMouseVisible = false;
                         config.ContentPath = "Content";
                         config.ScreenColor = Color.Black;
                     })
