@@ -1,9 +1,5 @@
 ﻿using System.Xml.Serialization;
 
-// TODO: Improve sprite sheet processing
-// * Add release logging
-// * Add debug logging
-// * Think on how merge two input files (sprite and meta) into single one sprite-sheet.xnb (Samples can be found for Monogame font processor)
 namespace KenneyAsteroids.PipelineExtension.SpriteSheet
 {
     [XmlRoot("TextureAtlas")]
