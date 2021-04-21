@@ -9,7 +9,7 @@ Minimal Valuable Product, more polished version with with game menus, pause, gam
   * Implement Scoring system
     * Implement LeaderBoardsScreen
     * Add scores track to the HUD
-    * Add ability to put name after game over
+   * Add ability to put name after game over
   * Add background. Use existing elements form the sprite sheet like use starts to create starts sky
  
 * Improve asteroids
