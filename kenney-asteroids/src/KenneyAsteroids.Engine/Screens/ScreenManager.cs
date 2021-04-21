@@ -303,12 +303,12 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public void FadeBackBufferToBlack(float alpha)
         {
-            Viewport viewport = GraphicsDevice.Viewport;
+            var viewport = Container.GetService<IViewport>();
 
             spriteBatch.Begin();
 
             spriteBatch.Draw(blankTexture,
-                             new Rectangle(0, 0, viewport.Width, viewport.Height),
+                             new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height),
                              Color.Black * alpha);
 
             spriteBatch.End();

@@ -20,6 +20,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private IEventSystem _bus;
         private IEntitySystem _entities;
         private ICollisionSystem _collisions;
+        private IViewport _viewport;
 
         private GamePlayHud _hud;
         private EnemySpawner _enemySpawner;
@@ -31,6 +32,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             _entities = ScreenManager.Container.GetService<IEntitySystem>();
             _bus = ScreenManager.Container.GetService<IEventSystem>();
+            _viewport = ScreenManager.Container.GetService<IViewport>();
 
             var rules = new List<IRule>
             {
@@ -60,9 +62,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             var lazer = ScreenManager.Game.Content.Load<SoundEffect>("Sounds/laser.sound");
             var factory = new EntityFactory(spriteSheet, lazer, publisher, painter, player);
 
-            _enemySpawner = new EnemySpawner(ScreenManager.Game.GraphicsDevice.Viewport, factory, publisher);
+            _enemySpawner = new EnemySpawner(_viewport, factory, publisher);
 
-            var ship = factory.CreateShip(new Vector2(ScreenManager.Game.GraphicsDevice.Viewport.Width / 2.0f, ScreenManager.Game.GraphicsDevice.Viewport.Height / 2.0f));
+            var ship = factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
             _controller = new ShipPlayerController(ship);
 
             _hud = new GamePlayHud(ScreenManager.Container);
@@ -123,9 +125,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             return
                 entity.Position.X + entity.Width / 2.0 < 0 ||
-                entity.Position.X - entity.Width / 2.0 > ScreenManager.Game.GraphicsDevice.Viewport.Width ||
+                entity.Position.X - entity.Width / 2.0 > _viewport.Width ||
                 entity.Position.Y + entity.Height / 2.0 < 0 ||
-                entity.Position.Y - entity.Height / 2.0 > ScreenManager.Game.GraphicsDevice.Viewport.Height;
+                entity.Position.Y - entity.Height / 2.0 > _viewport.Height;
         }
 
         private void HandleOutOfScreenBodies(IBody body)
@@ -141,18 +143,18 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
                     if (body.Position.X + body.Width / 2.0f < 0)
                     {
-                        x = ScreenManager.Game.GraphicsDevice.Viewport.Width + body.Width / 2.0f;
+                        x = _viewport.Width + body.Width / 2.0f;
                     }
-                    else if (body.Position.X - body.Width / 2.0f > ScreenManager.Game.GraphicsDevice.Viewport.Width)
+                    else if (body.Position.X - body.Width / 2.0f > _viewport.Width)
                     {
                         x = 0 - body.Width / 2.0f;
                     }
 
                     if (body.Position.Y + body.Height / 2.0f < 0)
                     {
-                        y = ScreenManager.Game.GraphicsDevice.Viewport.Height + body.Height / 2.0f;
+                        y = _viewport.Height + body.Height / 2.0f;
                     }
-                    else if (body.Position.Y - body.Height / 2.0f > ScreenManager.Game.GraphicsDevice.Viewport.Height)
+                    else if (body.Position.Y - body.Height / 2.0f > _viewport.Height)
                     {
                         y = 0 - body.Height / 2.0f;
                     }
@@ -165,8 +167,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private void RestartShip(Ship ship)
         {
             _hud.Lifes--;
-            var view = ScreenManager.GraphicsDevice.Viewport;
-            ship.Position = new Vector2(view.Width / 2, view.Height / 2);
+            ship.Position = new Vector2(_viewport.Width / 2, _viewport.Height / 2);
         }
 
         private void GameOver(Ship ship)

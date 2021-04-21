@@ -32,7 +32,7 @@ namespace KenneyAsteroids.Core.Screens
             _font = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/simxel.font");
             _version = Version.Current;
 
-            var viewport = ScreenManager.Game.GraphicsDevice.Viewport;
+            var viewport = ScreenManager.Container.GetService<IViewport>();
             var size = _font.MeasureString(_version);
             _versionPosition = new Vector2(viewport.Width - size.X, viewport.Height - size.Y);
 

@@ -15,7 +15,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private readonly IRepository<GameSettings> _settingsRepository;
         private readonly IPainter _painter;
         private readonly SpriteFont _font;
-        private readonly Viewport _view;
+        private readonly IViewport _view;
         private readonly IList<Action<float>> _draws;
 
         public GamePlayHud(IServiceProvider container)
@@ -23,12 +23,11 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _draws = new List<Action<float>>();
 
             _settingsRepository = container.GetService<IRepository<GameSettings>>();
+            _view = container.GetService<IViewport>();
 
             var settings = _settingsRepository.Read();
-            var device = container.GetService<GraphicsDevice>();
             var content = container.GetService<ContentManager>();
 
-            _view = device.Viewport;
             _painter = container.GetService<IPainter>();
             _font = content.Load<SpriteFont>("Fonts/simxel.font");
             

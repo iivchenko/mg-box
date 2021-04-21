@@ -1,7 +1,7 @@
 ﻿using KenneyAsteroids.Core.Entities;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Eventing.Eventing;
-using Microsoft.Xna.Framework.Graphics;
+using KenneyAsteroids.Engine.Graphics;
 using System;
 
 using XVector = Microsoft.Xna.Framework.Vector2;
@@ -12,11 +12,11 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
     {
         private readonly Random _random;
         private readonly IUpdatable _timer;
-        private readonly Viewport _viewport;
+        private readonly IViewport _viewport;
         private readonly EntityFactory _factory;
         private readonly IPublisher _eventService;
 
-        public EnemySpawner(Viewport viewport, EntityFactory factory, IPublisher eventService)
+        public EnemySpawner(IViewport viewport, EntityFactory factory, IPublisher eventService)
         {
             _viewport = viewport;
             _factory = factory;
@@ -49,31 +49,31 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             switch (_random.Next(0, 4))
             {
                 case 0: // Up -> Down
-                    x = _random.Next(0, _viewport.Width);
+                    x = _random.Next(0, (int)_viewport.Width);
                     y = 0;
-                    dx = _random.Next(0, _viewport.Width);
-                    dy = _viewport.Height;
+                    dx = _random.Next(0, (int)_viewport.Width);
+                    dy = (int)_viewport.Height;
                     break;
 
                 case 1: // Right -> Left
-                    x = _viewport.Width;
-                    y = _random.Next(0, _viewport.Height);
+                    x = (int)_viewport.Width;
+                    y = _random.Next(0, (int)_viewport.Height);
                     dx = 0;
-                    dy = _random.Next(0, _viewport.Height);
+                    dy = _random.Next(0, (int)_viewport.Height);
                     break;
 
                 case 2: // Down -> UP
-                    x = _random.Next(0, _viewport.Width);
-                    y = _viewport.Height;
-                    dx = _random.Next(0, _viewport.Width);
+                    x = _random.Next(0, (int)_viewport.Width);
+                    y = (int)_viewport.Height;
+                    dx = _random.Next(0, (int)_viewport.Width);
                     dy = 0;
                     break;
 
                 case 3: // Left -> Right
                     x = 0;
-                    y = _random.Next(0, _viewport.Height);
-                    dx = _viewport.Width;
-                    dy = _random.Next(0, _viewport.Height);
+                    y = _random.Next(0, (int)_viewport.Height);
+                    dx = (int)_viewport.Width;
+                    dy = _random.Next(0, (int)_viewport.Height);
                     break;
             }
 

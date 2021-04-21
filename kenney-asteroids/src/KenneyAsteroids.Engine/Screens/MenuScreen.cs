@@ -165,9 +165,10 @@ namespace KenneyAsteroids.Engine.Screens
             for (int i = 0; i < menuEntries.Count; i++)
             {
                 MenuEntry menuEntry = menuEntries[i];
-                
+
                 // each entry is to be centered horizontally
-                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
+                var viewport = ScreenManager.Container.GetService<IViewport>();
+                position.X = viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
 
                 if (ScreenState == ScreenState.TransitionOn)
                     position.X -= transitionOffset * 256;
@@ -209,6 +210,7 @@ namespace KenneyAsteroids.Engine.Screens
             // make sure our entries are in the right place before we draw them
             UpdateMenuEntryLocations();
 
+            var viewport = ScreenManager.Container.GetService<IViewport>();
             GraphicsDevice graphics = ScreenManager.GraphicsDevice;
             var painter = ScreenManager.Painter;
             SpriteFont font = ScreenManager.Font;
@@ -229,7 +231,7 @@ namespace KenneyAsteroids.Engine.Screens
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // Draw the menu title centered on the screen
-            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
+            Vector2 titlePosition = new Vector2(viewport.Width / 2, 80);
             Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
             Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
             float titleScale = 1.25f;

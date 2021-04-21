@@ -9,8 +9,10 @@
 
 #region Using Statements
 using System;
+using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Extensions.DependencyInjection;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -144,7 +146,7 @@ namespace KenneyAsteroids.Engine.Screens
                 const string message = "Loading...";
 
                 // Center the text in the viewport.
-                Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+                var viewport = ScreenManager.Container.GetService<IViewport>();
                 Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
                 Vector2 textSize = font.MeasureString(message);
                 Vector2 textPosition = (viewportSize - textSize) / 2;

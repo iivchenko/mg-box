@@ -9,9 +9,11 @@
 
 #region Using Statements
 using System;
+using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Extensions.DependencyInjection;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -84,8 +86,8 @@ namespace KenneyAsteroids.Engine.Screens
         public override void Draw(GameTime gameTime)
         {
             var painter = ScreenManager.Painter;
-            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Rectangle fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
+            var viewport = ScreenManager.Container.GetService<IViewport>();
+            Rectangle fullscreen = new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height);
 
             painter.Draw(backgroundTexture, fullscreen, new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
         }
