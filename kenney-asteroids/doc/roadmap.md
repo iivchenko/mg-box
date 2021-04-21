@@ -1,68 +1,31 @@
 # Roadmap :
-* Proto v0.1
-Very basic implementation (clone) of (asteroids game)[https://en.wikipedia.org/wiki/Asteroids_(video_game)] to see how it feels.  
 
-* MVP v0.2
+## Kenney Asteroids v0.1 Proto
+Very basic implementation (clone) of [asteroids game](https://en.wikipedia.org/wiki/Asteroids_(video_game)) to see how it feels.  
+
+## Kenney Asteroids v0.2 MVP
 Minimal Valuable Product, more polished version with with game menus, pause, game over, sfx, music and controller support.
   
-* Scoring v0.3
-  * Implement Scoring system
-    * Implement LeaderBoardsScreen
-    * Add scores track to the HUD
-   * Add ability to put name after game over
-  * Add background. Use existing elements form the sprite sheet like use starts to create starts sky
- 
-* Improve asteroids
-    * Add all asteroids sizes
-    * Make big asteroids to fall apart into smaller one if shoot
-    * Adjust game balance
-    * Update screen shot of the game in the readme page
+## Kenney Asteroids v0.3 Leaders
+Deliver scoring system for killing enemies, provide Leader Board with max 10 leaders
 
-* New Threat v0.4
-  * Implement simple enemy ship AI system
-  * Add ufo
-  * Add attack aircraft
-  * Adjust game balance
-  * Update screen shot of the game in the readme page
-  
-* Bonus v0.5
-  * Implement bonus system (may be use battlecity bonus system rules?)
-    * unpicked bonus on the screen time out??
-    * picked bonus on th player buff time out??
-  * Add life bonus
-  * Add shipt speed bonuse ?? (+/-)
-  * Add wepon rechard speed bonus ??
-  * Add shield bonus
-  * Add bonus drops from enemies
-  * Add bonus that kills everyone on the map?? 
-  * Adjust game balance
-  * Update screen shot of the game in the readme page
+## Kenney Asteroids v0.4 More Asteroids
+Introduce all available asteroids on the Kenney's sprite sheet and some new complexity!
 
-* New Wepon v0.6
-  * Refine wepons system
-  * Add second wepon ??? may be not, may be on wepon so player should choose wisely  
-  * Add dual (from both ship shides) wepon
-  * Add mega blast (like single laser but much powerfull)
-  * Adjust game balance
-  * Update screen shot of the game in the readme page
+## Kenney Asteroids v0.5 New Threat
+The goal is to introduce enemy ships to make game more interesting and challenging!
 
-* Local multiplayer
-    * Local multiplayer for max 4 players
-    * Adjust game balance
-    * Update screen shot of the game in the readme page
+## Kenney Asteroids v0.6 Its a BONUS
+Introduce bonuses that drops from enemies after kill. Bonuses will add benefits to a player like a spare life, speed increase etc.
 
-* Go live v1.0
-    * Polish
-    * Adjust game balance
-    * Release activities 
-      * Update screen shot of the game in the readme page
+## Kenney Asteroids v0.x Play With Friends
+Local multiplayer for max 4 players
 
-* Port to Android v1.1
-	
-* Port to WEB v1.2
-  * Make game playeable from the readme.md
-  * Folow [official demo](https://www.monogame.net/webdemo/)
+## Kenney Asteroids v1.0 Go Live
+Polish unpolished stuff and go!
 
-* Unsorted
-  * Add screen shot of the game to the readme page  
-  * Improve life visualization in the hud: replace text with number of ships
+## Kenney Asteroids v1.1 Port to Android
+Refactor and port game to Android devices.
+
+## Kenney Asteroids v1.2 Port to Web
+Port game to web tech, make it playable from the readme.md, follow official monogame demo
