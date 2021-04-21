@@ -1,7 +1,9 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
+using KenneyAsteroids.Engine.Audio;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using System;
 
 namespace KenneyAsteroids.Core.Entities
@@ -9,17 +11,23 @@ namespace KenneyAsteroids.Core.Entities
     public sealed class EntityFactory : IProjectileFactory // TODO: Extract Projectile factory class
     {
         private readonly SpriteSheet _spriteSheet;
+        private readonly SoundEffect _lazer;
         private readonly IPublisher _eventService;
         private readonly IPainter _draw;
+        private readonly IAudioPlayer _player;
 
         public EntityFactory(
             SpriteSheet spriteSheet,
+            SoundEffect lazer,
             IPublisher eventService,
-            IPainter draw)
+            IPainter draw,
+            IAudioPlayer player)
         {
             _spriteSheet = spriteSheet;
+            _lazer = lazer;
             _eventService = eventService;
             _draw = draw;
+            _player = player;
         }
 
         public Ship CreateShip(Vector2 position)
@@ -30,7 +38,7 @@ namespace KenneyAsteroids.Core.Entities
 
             var sprite = _spriteSheet["playerShip1_blue"];
             var reload = TimeSpan.FromMilliseconds(500);
-            var weapon = new Weapon(new Vector2(0, -sprite.Width / 2), reload, this, _eventService);
+            var weapon = new Weapon(new Vector2(0, -sprite.Width / 2), reload, this, _eventService, _player, _lazer);
             return new Ship(_draw, sprite, weapon, MaxSpeed, Acceleration, MaxRotation.AsRadians())
             {
                 Position = position

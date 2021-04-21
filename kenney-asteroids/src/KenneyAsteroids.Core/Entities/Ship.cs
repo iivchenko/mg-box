@@ -1,9 +1,8 @@
-﻿using System;
-
-using KenneyAsteroids.Engine;
+﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace KenneyAsteroids.Core.Entities
 {

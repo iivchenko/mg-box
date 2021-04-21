@@ -1,5 +1,6 @@
 ﻿using KenneyAsteroids.Core.Entities;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Eventing.Eventing;
@@ -7,6 +8,7 @@ using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,9 +54,11 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _collisions = new CollisionSystem(rules);
 
             var painter = ScreenManager.Container.GetService<IPainter>();
+            var player = ScreenManager.Container.GetService<IAudioPlayer>();
             var publisher = ScreenManager.Container.GetService<IPublisher>();
             var spriteSheet = ScreenManager.Game.Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
-            var factory = new EntityFactory(spriteSheet, publisher, painter);
+            var lazer = ScreenManager.Game.Content.Load<SoundEffect>("Sounds/laser.sound");
+            var factory = new EntityFactory(spriteSheet, lazer, publisher, painter, player);
 
             _enemySpawner = new EnemySpawner(ScreenManager.Game.GraphicsDevice.Viewport, factory, publisher);
 

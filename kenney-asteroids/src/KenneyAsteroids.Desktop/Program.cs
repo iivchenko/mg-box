@@ -3,6 +3,7 @@ using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Eventing.Eventing;
+using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
@@ -40,6 +41,7 @@ namespace KenneyAsteroids.Desktop
                             .AddTransient<IRepository<GameSettings>>(_ => new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json"))) //TODO: think about Decorate and Scrutor
                             .AddSingleton<IEntitySystem, EntitySystem>()
                             .AddDrawSystem()
+                            .AddSingleton<IAudioPlayer, SoundSystem>()
                             .AddSingleton<IEventHandler<EntityCreatedEvent>, EntityCreatedEventHandler>()
                             .AddEventBus();
                     })

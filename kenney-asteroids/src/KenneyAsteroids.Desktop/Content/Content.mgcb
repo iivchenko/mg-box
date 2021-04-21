@@ -21,6 +21,12 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/simxel.font.spritefont
 
+#begin Sounds/laser.sound.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/laser.sound.ogg
+
 #begin Sprites/blank.sprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
