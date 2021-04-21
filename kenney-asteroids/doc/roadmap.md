@@ -1,6 +1,8 @@
 # Roadmap :
 
-### Kenney Asteroids v0.1 Proto [release v0.1](https://img.shields.io/badge/v0.1-Released-green) [notes](release-notes/v0.1.0.md)
+### Kenney Asteroids v0.1 Proto ![release v0.1](https://img.shields.io/badge/v0.1-Released-green)
+[release notes](release-notes/v0.1.0.md)
+
 Very basic implementation (clone) of [asteroids game](https://en.wikipedia.org/wiki/Asteroids_(video_game)) to see how it feels.  
 
 ### Kenney Asteroids v0.2 MVP
