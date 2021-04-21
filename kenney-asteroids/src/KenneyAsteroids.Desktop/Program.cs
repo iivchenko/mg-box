@@ -1,15 +1,15 @@
-﻿using KenneyAsteroids.Core.Screens;
+﻿using Comora;
+using KenneyAsteroids.Core.Screens;
 using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Eventing.Eventing;
-using KenneyAsteroids.Engine.Audio;
+using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using System;
-using KenneyAsteroids.Engine.Graphics;
-using Comora;
 
 namespace KenneyAsteroids.Desktop
 {
@@ -24,13 +24,14 @@ namespace KenneyAsteroids.Desktop
                     {
                         container
                             // TODO: Move file name to configuraiton or to some const
-                            .AddTransient<IRepository<GameSettings>>(_ => new DefaultInitializerRepositoryDecorator<GameSettings>(new JsonRepository<GameSettings>("game-settings.json")))
-                            .AddSingleton<IEntitySystem, EntitySystem>()
-                            .AddDrawSystem()
+                            .AddSingleton<IRepository<GameSettings>>(_ => new JsonRepository<GameSettings>("game-settings.json"))
+                            .Decorate<IRepository<GameSettings>, DefaultInitializerRepositoryDecorator<GameSettings>>()
+                            .AddSingleton<IEntitySystem, EntitySystem>()                            
                             .AddSingleton<IAudioPlayer, SoundSystem>()
                             .AddSingleton<IViewport, Viewport>(_ => new Viewport(0.0f, 0.0f, 3840.0f, 2160.0f))
                             .AddSingleton<ICamera, Camera>()
                             .AddSingleton<IEventHandler<EntityCreatedEvent>, EntityCreatedEventHandler>()
+                            .AddDrawSystem()
                             .AddEventBus();
                     })
                 .WithConfiguration(config =>
