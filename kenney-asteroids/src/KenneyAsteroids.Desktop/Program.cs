@@ -8,6 +8,8 @@ using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using System;
+using KenneyAsteroids.Engine.Graphics;
+using Comora;
 
 namespace KenneyAsteroids.Desktop
 {
@@ -26,6 +28,8 @@ namespace KenneyAsteroids.Desktop
                             .AddSingleton<IEntitySystem, EntitySystem>()
                             .AddDrawSystem()
                             .AddSingleton<IAudioPlayer, SoundSystem>()
+                            .AddSingleton<IViewport, Viewport>(_ => new Viewport(0.0f, 0.0f, 3840.0f, 2160.0f))
+                            .AddSingleton<ICamera, Camera>()
                             .AddSingleton<IEventHandler<EntityCreatedEvent>, EntityCreatedEventHandler>()
                             .AddEventBus();
                     })

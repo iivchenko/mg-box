@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Comora;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace KenneyAsteroids.Engine.Graphics
@@ -6,15 +7,17 @@ namespace KenneyAsteroids.Engine.Graphics
     public sealed class DrawSystem : IPainter, IDrawSystemBatcher
     {
         private readonly SpriteBatch _batch;
+        private readonly ICamera _camera;
 
-        public DrawSystem(SpriteBatch batch)
+        public DrawSystem(SpriteBatch batch, ICamera camera)
         {
             _batch = batch;
+            _camera = camera;
         }
 
         public void Begin()
         {
-            _batch.Begin();
+            _batch.Begin(_camera);
         }
 
         public void End()
