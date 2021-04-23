@@ -1,6 +1,7 @@
 ﻿using KenneyAsteroids.Core.Screens.GamePlay; // TODO: recursive dependencie!!
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
+using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Eventing.Eventing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;

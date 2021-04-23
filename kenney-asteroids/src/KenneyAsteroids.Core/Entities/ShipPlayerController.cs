@@ -1,4 +1,4 @@
-﻿using KenneyAsteroids.Engine;
+﻿using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Xna.Framework.Input;
 

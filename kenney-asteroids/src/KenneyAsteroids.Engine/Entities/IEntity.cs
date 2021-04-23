@@ -1,4 +1,4 @@
-﻿namespace KenneyAsteroids.Engine
+﻿namespace KenneyAsteroids.Engine.Entities
 {
     public interface IEntity<TId> : IEntity
     {

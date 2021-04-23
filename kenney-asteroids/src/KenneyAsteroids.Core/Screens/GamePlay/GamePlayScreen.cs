@@ -103,11 +103,22 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             if (!otherScreenHasFocus)
             {
-                _entities.SelectUpdatable().Iter(x => x.Update(time));
-                _collisions.ApplyCollisions(_entities.SelectBodies());
-                _entities.SelectBodies().Where(IsOutOfScreen).Iter(HandleOutOfScreenBodies);
+                _entities
+                    .Where(x => x is IUpdatable)
+                    .Cast<IUpdatable>()
+                    .Iter(x => x.Update(time));
+
+                var bodies = _entities.Where(x => x is IBody).Cast<IBody>();
+
+                _collisions.ApplyCollisions(bodies);
+
+                bodies
+                    .Where(IsOutOfScreen)
+                    .Iter(HandleOutOfScreenBodies);
+
                 _enemySpawner.Update(time);
                 _bus.Update(time);
+
                 _entities.Commit();
             }
         }
@@ -118,7 +129,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             var time = gameTime.ToDelta();
 
-            _entities.SelectDrawable().Iter(x => x.Draw(time));
+            _entities.Where(x => x is Engine.IDrawable).Cast<Engine.IDrawable>().Iter(x => x.Draw(time));
         }
 
         private bool IsOutOfScreen(IBody entity)

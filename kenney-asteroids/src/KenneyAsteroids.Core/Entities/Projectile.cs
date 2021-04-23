@@ -1,5 +1,6 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
+using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
 using System;

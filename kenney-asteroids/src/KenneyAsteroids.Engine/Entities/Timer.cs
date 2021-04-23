@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace KenneyAsteroids.Engine
+namespace KenneyAsteroids.Engine.Entities
 {
     public sealed class Timer : IEntity, IUpdatable
     {
