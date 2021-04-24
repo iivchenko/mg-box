@@ -2,8 +2,10 @@
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
 using System;
+using System.Numerics;
+
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Entities
 {

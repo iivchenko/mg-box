@@ -147,9 +147,9 @@ namespace KenneyAsteroids.Engine.Screens
 
                 // Center the text in the viewport.
                 var viewport = ScreenManager.Container.GetService<IViewport>();
-                Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-                Vector2 textSize = font.MeasureString(message);
-                Vector2 textPosition = (viewportSize - textSize) / 2;
+                System.Numerics.Vector2 viewportSize = new System.Numerics.Vector2(viewport.Width, viewport.Height);
+                System.Numerics.Vector2 textSize = font.MeasureString(message).ToVector();
+                System.Numerics.Vector2 textPosition = (viewportSize - textSize) / 2;
 
                 Color color = Color.White * TransitionAlpha;
 

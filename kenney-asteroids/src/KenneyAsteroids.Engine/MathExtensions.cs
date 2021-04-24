@@ -1,5 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
+using System.Numerics;
 
 namespace KenneyAsteroids.Engine
 {
@@ -9,19 +9,17 @@ namespace KenneyAsteroids.Engine
         {
             var direction = new Vector2(MathF.Sin(angle), -MathF.Cos(angle));
 
-            direction.Normalize();
-
-            return direction;
+            return Vector2.Normalize(direction);
         }
 
         public static float AsRadians(this float angle)
         {
-            return MathHelper.ToRadians(angle);
+            return Microsoft.Xna.Framework.MathHelper.ToRadians(angle);
         }
 
         public static float AsRadians(this int angle)
         {
-            return MathHelper.ToRadians(angle);
+            return Microsoft.Xna.Framework.MathHelper.ToRadians(angle);
         }
     }
 }

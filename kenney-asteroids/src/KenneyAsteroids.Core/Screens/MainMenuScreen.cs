@@ -1,11 +1,13 @@
 ﻿using KenneyAsteroids.Core.Screens.GamePlay;
+using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
-using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using KenneyAsteroids.Engine;
+using System.Numerics;
+
+using Color = Microsoft.Xna.Framework.Color;
+using XTime = Microsoft.Xna.Framework.GameTime;
 
 namespace KenneyAsteroids.Core.Screens
 {
@@ -52,7 +54,7 @@ namespace KenneyAsteroids.Core.Screens
             MenuEntries.Add(exitMenuEntry);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(XTime gameTime)
         {
             base.Draw(gameTime);
 

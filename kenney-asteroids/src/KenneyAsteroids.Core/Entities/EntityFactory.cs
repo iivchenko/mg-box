@@ -2,9 +2,9 @@
 using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Audio;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using System;
+using System.Numerics;
 
 namespace KenneyAsteroids.Core.Entities
 {

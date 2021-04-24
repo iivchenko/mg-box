@@ -1,10 +1,11 @@
 ﻿using Comora;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
-using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Xna.Framework;
 using System.IO;
+
+using XTime = Microsoft.Xna.Framework.GameTime;
+using XVector = Microsoft.Xna.Framework.Vector2;
 
 namespace KenneyAsteroids.Core.Screens
 {
@@ -19,7 +20,7 @@ namespace KenneyAsteroids.Core.Screens
             var view = ScreenManager.Container.GetService<IViewport>();
             var nativeView = ScreenManager.GraphicsDevice.Viewport;
             
-            camera.Position = new Vector2(view.Width / 2.0f, view.Height / 2.0f);
+            camera.Position = new XVector(view.Width / 2.0f, view.Height / 2.0f);
             camera.Width = view.Width;
             camera.Height = view.Height;
             camera.Zoom = nativeView.Width / view.Width;
@@ -36,7 +37,7 @@ namespace KenneyAsteroids.Core.Screens
             }
         }
 
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public override void Update(XTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 

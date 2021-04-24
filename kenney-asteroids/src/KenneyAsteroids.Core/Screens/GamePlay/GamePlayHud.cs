@@ -2,11 +2,13 @@
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
+
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {

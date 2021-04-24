@@ -4,8 +4,7 @@ using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
 using System;
-
-using XVector = Microsoft.Xna.Framework.Vector2;
+using System.Numerics;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
@@ -78,10 +77,10 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     break;
             }
 
-            var position = new XVector(x, y);
-            var direction = new XVector(dx - x, dy - y).ToNormalized();
+            var position = new Vector2(x, y);
+            var direction = Vector2.Normalize(new Vector2(dx - x, dy - y));
 
-            var velocity = direction * new XVector(_random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed), _random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed));
+            var velocity = direction * new Vector2(_random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed), _random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed));
             var rotationSpeed = _random.Next(BigAsteroidMinRotationSpeed, BigAsteroidMaxRotationSpeed).AsRadians() * _random.NextDouble() > 0.5 ? 1 : -1;
 
             var asteroid = _factory.CreateAsteroid(position, velocity, rotationSpeed);

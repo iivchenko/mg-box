@@ -2,12 +2,14 @@
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
 using System;
+using System.Numerics;
+
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class Ship : IEntity<Guid>, IUpdatable, Engine.IDrawable, IBody
+    public sealed class Ship : IEntity<Guid>, IUpdatable, IDrawable, IBody
     {
         private readonly IPainter _draw;
         private readonly Sprite _sprite;
@@ -73,7 +75,7 @@ namespace KenneyAsteroids.Core.Entities
             {
                 var velocity = _velocity + _rotation.ToDirection() * _maxAcceleration;
 
-                _velocity = velocity.Length() > _maxSpeed ? velocity.ToNormalized() * _maxSpeed : velocity;
+                _velocity = velocity.Length() > _maxSpeed ? Vector2.Normalize(velocity) * _maxSpeed : velocity;
             }
 
             Position += _velocity * time;
@@ -84,7 +86,7 @@ namespace KenneyAsteroids.Core.Entities
             _action = ShipAction.None;
         }
 
-        void Engine.IDrawable.Draw(float time)
+        void IDrawable.Draw(float time)
         {
             _draw
                 .Draw(

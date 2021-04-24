@@ -7,11 +7,13 @@ using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
+
+using XTime = Microsoft.Xna.Framework.GameTime;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
@@ -95,7 +97,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _controller.Handle(input);
         }
 
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public override void Update(XTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
@@ -123,7 +125,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             }
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(XTime gameTime)
         {
             base.Draw(gameTime);
 

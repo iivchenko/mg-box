@@ -141,7 +141,7 @@ namespace KenneyAsteroids.Engine.Screens
             painter.Draw(gradientTexture, backgroundRectangle, color);
 
             // Draw the message box text.
-            painter.DrawString(font, _message, textPosition, color);
+            painter.DrawString(font, _message, textPosition.ToVector(), color);
         }
 
 

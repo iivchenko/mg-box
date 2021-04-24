@@ -161,9 +161,9 @@ namespace KenneyAsteroids.Engine.Screens
             var painter = screenManager.Painter;
             SpriteFont font = screenManager.Font;
 
-            Vector2 origin = new Vector2(0, font.LineSpacing / 2);
+            System.Numerics.Vector2 origin = new System.Numerics.Vector2(0, font.LineSpacing / 2);
 
-            painter.DrawString(font, text, position, color, 0,
+            painter.DrawString(font, text, position.ToVector(), color, 0,
                                    origin, scale, SpriteEffects.None, 0);
         }
 

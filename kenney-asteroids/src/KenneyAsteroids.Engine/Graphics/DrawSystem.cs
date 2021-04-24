@@ -1,6 +1,9 @@
 ﻿using Comora;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Numerics;
+
+using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace KenneyAsteroids.Engine.Graphics
 {
@@ -30,12 +33,12 @@ namespace KenneyAsteroids.Engine.Graphics
             _batch
                 .Draw(
                     sprite.Texture,
-                    position,
+                    position.ToXnaVector(),
                     sprite.SourceRectangle,
                     color,
                     rotation,
-                    origin,
-                    scale,
+                    origin.ToXnaVector(),
+                    scale.ToXnaVector(),
                     SpriteEffects.None,
                     0);
         }
@@ -56,12 +59,12 @@ namespace KenneyAsteroids.Engine.Graphics
 
         public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color)
         {
-            _batch.DrawString(spriteFont, text, position, color);
+            _batch.DrawString(spriteFont, text, position.ToXnaVector(), color);
         }
         
         public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
         {
-            _batch.DrawString(spriteFont, text, position, color, rotation, origin, scale, effects, layerDepth);
+            _batch.DrawString(spriteFont, text, position.ToXnaVector(), color, rotation, origin.ToXnaVector(), scale, effects, layerDepth);
         }
     }
 }

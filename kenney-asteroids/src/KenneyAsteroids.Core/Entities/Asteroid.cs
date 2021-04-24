@@ -2,12 +2,14 @@
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
 using System;
+using System.Numerics;
+
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class Asteroid : IEntity<Guid>, IUpdatable, Engine.IDrawable, IBody
+    public sealed class Asteroid : IEntity<Guid>, IUpdatable, IDrawable, IBody
     {
         private readonly IPainter _draw;
 
@@ -51,7 +53,7 @@ namespace KenneyAsteroids.Core.Entities
             _rotation += _rotationSpeed * time;
         }
 
-        void Engine.IDrawable.Draw(float time)
+        void IDrawable.Draw(float time)
         {
             _draw
                 .Draw(
