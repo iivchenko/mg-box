@@ -2,7 +2,7 @@
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Entities;
-using KenneyAsteroids.Engine.Eventing.Eventing;
+using KenneyAsteroids.Engine.Messaging;
 using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Numerics;

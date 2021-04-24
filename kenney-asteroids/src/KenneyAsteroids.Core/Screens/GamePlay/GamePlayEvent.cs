@@ -1,9 +1,9 @@
-﻿using KenneyAsteroids.Engine.Eventing.Eventing;
+﻿using KenneyAsteroids.Engine.Messaging;
 using System;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
-    public abstract class GamePlayEvent : IEvent
+    public abstract class GamePlayEvent : IMessage
     {
         protected GamePlayEvent()
         {

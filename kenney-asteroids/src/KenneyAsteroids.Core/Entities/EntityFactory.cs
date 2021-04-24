@@ -1,5 +1,5 @@
 ﻿using KenneyAsteroids.Engine;
-using KenneyAsteroids.Engine.Eventing.Eventing;
+using KenneyAsteroids.Engine.Messaging;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Audio;
 using Microsoft.Xna.Framework.Audio;

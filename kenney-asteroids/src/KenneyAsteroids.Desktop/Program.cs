@@ -3,8 +3,8 @@ using KenneyAsteroids.Core.Screens;
 using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Entities;
-using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
+using KenneyAsteroids.Engine.Messaging;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,10 +39,10 @@ namespace KenneyAsteroids.Desktop
                             .AddSingleton<IEntitySystem, EntitySystem>()
                             .AddSingleton<IViewport, Viewport>(_ => new Viewport(0.0f, 0.0f, 3840.0f, 2160.0f))
                             .AddSingleton<ICamera, Camera>()
-                            .AddSingleton<IEventHandler<EntityCreatedEvent>, EntityCreatedEventHandler>()
+                            .AddSingleton<IMessageHandler<EntityCreatedEvent>, EntityCreatedEventHandler>()
                             .AddDrawSystem()
                             .AddAudio(configuration.GetSection("Audio"))
-                            .AddEventBus();
+                            .AddMessageBus();
                     })
                 .WithConfiguration(config => // TODO: This beast seems become redundant
                     {

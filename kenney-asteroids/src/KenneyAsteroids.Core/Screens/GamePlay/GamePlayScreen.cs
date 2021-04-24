@@ -3,8 +3,8 @@ using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Entities;
-using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
+using KenneyAsteroids.Engine.Messaging;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework.Audio;
@@ -12,14 +12,13 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-
 using XTime = Microsoft.Xna.Framework.GameTime;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
     public sealed class GamePlayScreen : GameScreen
     {
-        private IEventSystem _bus;
+        private IMessageSystem _bus;
         private IEntitySystem _entities;
         private ICollisionSystem _collisions;
         private IViewport _viewport;
@@ -33,7 +32,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             base.Initialize();
 
             _entities = ScreenManager.Container.GetService<IEntitySystem>();
-            _bus = ScreenManager.Container.GetService<IEventSystem>();
+            _bus = ScreenManager.Container.GetService<IMessageSystem>();
             _viewport = ScreenManager.Container.GetService<IViewport>();
 
             var rules = new List<IRule>
