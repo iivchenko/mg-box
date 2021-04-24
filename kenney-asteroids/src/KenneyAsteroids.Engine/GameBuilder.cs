@@ -20,7 +20,7 @@ namespace KenneyAsteroids.Engine
             return new GameBuilder();
         }
 
-        public GameBuilder WithServices(Action<ServiceCollection> configure)
+        public GameBuilder WithServices(Action<IServiceCollection> configure)
         {
             configure(_container);
 

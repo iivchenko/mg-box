@@ -1,7 +1,7 @@
-﻿using KenneyAsteroids.Engine;
+﻿using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,7 +12,8 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 {
     public sealed class GamePlayHud : IEntity, Engine.IDrawable
     {
-        private readonly IRepository<GameSettings> _settingsRepository;
+        private readonly IOptionsMonitor<GameSettings> _settings;
+
         private readonly IPainter _painter;
         private readonly SpriteFont _font;
         private readonly IViewport _view;
@@ -22,10 +23,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             _draws = new List<Action<float>>();
 
-            _settingsRepository = container.GetService<IRepository<GameSettings>>();
+            _settings = container.GetService<IOptionsMonitor<GameSettings>>();
             _view = container.GetService<IViewport>();
 
-            var settings = _settingsRepository.Read();
             var content = container.GetService<ContentManager>();
 
             _painter = container.GetService<IPainter>();
@@ -33,7 +33,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             
             _draws.Add(DrawLifes);
 
-            if (settings.ToggleFramerate.Toggle)
+            if (_settings.CurrentValue.ToggleFramerate.Toggle)
             {
                 _draws.Add(DrawFrameRate);
             }

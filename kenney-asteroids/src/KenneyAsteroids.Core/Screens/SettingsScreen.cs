@@ -1,4 +1,5 @@
-﻿using KenneyAsteroids.Engine.Screens;
+﻿using KenneyAsteroids.Engine.Audio;
+using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +14,11 @@ namespace KenneyAsteroids.Core.Screens
             {
                 Toggle = false
             };
+
+            Audio = new AudioSettings();
         }
+
+        public AudioSettings Audio { get; set; }
 
         public ToggleFramerate ToggleFramerate { get; set; }
     }
@@ -28,6 +33,8 @@ namespace KenneyAsteroids.Core.Screens
     {
         private IRepository<GameSettings> _settingsRepository;
         private MenuEntry _toggleFramerate;
+        private MenuEntry _sfxVolume;
+        private MenuEntry _musicVolume;
         private MenuEntry _back;
 
         public SettingsScreen()
@@ -53,10 +60,40 @@ namespace KenneyAsteroids.Core.Screens
                 _settingsRepository.Update(settings);
             };
 
+            _sfxVolume = new MenuEntry($"Sound Effect Volume: {(int)(settings.Audio.SfxVolume * 100)}%");
+            _sfxVolume.Selected += (_, __) =>
+            {
+                var settings = _settingsRepository.Read();
+                settings.Audio.SfxVolume = (float)System.Math.Round(settings.Audio.SfxVolume + 0.1f, 1);
+
+                if (settings.Audio.SfxVolume > 1.0f)
+                    settings.Audio.SfxVolume = 0.0f;
+
+                _sfxVolume.Text = $"Sound Effect Volume: {(int)(settings.Audio.SfxVolume * 100)}%";
+
+                _settingsRepository.Update(settings);
+            };
+
+            _musicVolume = new MenuEntry($"Music Volume: {(int)(settings.Audio.MusicVolume * 100)}%");
+            _musicVolume.Selected += (_, __) =>
+            {
+                var settings = _settingsRepository.Read();
+                settings.Audio.MusicVolume = (float)System.Math.Round(settings.Audio.MusicVolume + 0.1f, 1);
+
+                if (settings.Audio.MusicVolume > 1.0f)
+                    settings.Audio.MusicVolume = 0.0f;
+
+                _musicVolume.Text = $"Music Volume: {(int)(settings.Audio.MusicVolume * 100)}%";
+
+                _settingsRepository.Update(settings);
+            };
+
             _back = new MenuEntry("Back");
             _back.Selected += (_, e) => OnCancel(e.PlayerIndex);
 
             MenuEntries.Add(_toggleFramerate);
+            MenuEntries.Add(_sfxVolume);
+            MenuEntries.Add(_musicVolume);
             MenuEntries.Add(_back);
         }
 

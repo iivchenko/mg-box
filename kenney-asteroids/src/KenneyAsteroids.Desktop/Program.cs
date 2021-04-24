@@ -6,26 +6,35 @@ using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Eventing.Eventing;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Storage;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using System;
+using System.IO;
 
 namespace KenneyAsteroids.Desktop
 {
     public static class Program
     {
+        private const string ConfigFile = "game-settings.json";
+
         [STAThread]
         public static void Main()
         {
             GameBuilder
                 .CreateBuilder()
-                .WithServices((container, configuration) =>
+                .WithServices(container =>
                     {
+                        var configuration =
+                            new ConfigurationBuilder()
+                                .SetBasePath(Directory.GetCurrentDirectory())
+                                .AddJsonFile(ConfigFile, optional: true, reloadOnChange: true)
+                                .Build();
+
                         container
                             .AddOptions()
                             .Configure<GameSettings>(configuration)
-                            // TODO: Move file name to configuraiton or to some const
-                            .AddSingleton<IRepository<GameSettings>>(_ => new JsonRepository<GameSettings>("game-settings.json"))
+                            .AddSingleton<IRepository<GameSettings>>(_ => new JsonRepository<GameSettings>(ConfigFile))
                             .Decorate<IRepository<GameSettings>, DefaultInitializerRepositoryDecorator<GameSettings>>()
                             .AddSingleton<IEntitySystem, EntitySystem>()
                             .AddSingleton<IViewport, Viewport>(_ => new Viewport(0.0f, 0.0f, 3840.0f, 2160.0f))

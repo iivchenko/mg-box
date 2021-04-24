@@ -34,8 +34,6 @@ namespace KenneyAsteroids.Core.Screens
 
                 content.Load<object>(file);
             }
-
-            ScreenManager.Container.GetService<IRepository<GameSettings>>();
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
