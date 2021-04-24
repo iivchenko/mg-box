@@ -24,7 +24,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private IViewport _viewport;
 
         private GamePlayHud _hud;
-        private EnemySpawner _enemySpawner;
+        private GamePlayDirector _enemySpawner;
         private ShipPlayerController _controller;
 
         public override void Initialize()
@@ -63,7 +63,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             var lazer = ScreenManager.Game.Content.Load<SoundEffect>("Sounds/laser.sound");
             var factory = new EntityFactory(spriteSheet, lazer, publisher, painter, player);
 
-            _enemySpawner = new EnemySpawner(_viewport, factory, publisher);
+            _enemySpawner = new GamePlayDirector(_viewport, factory, publisher);
 
             var ship = factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
             _controller = new ShipPlayerController(ship);

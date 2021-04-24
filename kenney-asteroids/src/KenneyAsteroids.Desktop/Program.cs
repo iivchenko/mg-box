@@ -1,6 +1,6 @@
 ﻿using Comora;
+using KenneyAsteroids.Core.Events;
 using KenneyAsteroids.Core.Screens;
-using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;

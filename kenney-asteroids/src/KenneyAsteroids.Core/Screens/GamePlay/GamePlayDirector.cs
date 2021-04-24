@@ -1,4 +1,5 @@
 ﻿using KenneyAsteroids.Core.Entities;
+using KenneyAsteroids.Core.Events;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
@@ -8,7 +9,7 @@ using System.Numerics;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
-    public sealed class EnemySpawner : IUpdatable
+    public sealed class GamePlayDirector : IUpdatable
     {
         private readonly Random _random;
         private readonly IUpdatable _timer;
@@ -16,7 +17,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private readonly EntityFactory _factory;
         private readonly IPublisher _eventService;
 
-        public EnemySpawner(IViewport viewport, EntityFactory factory, IPublisher eventService)
+        public GamePlayDirector(IViewport viewport, EntityFactory factory, IPublisher eventService)
         {
             _viewport = viewport;
             _factory = factory;
