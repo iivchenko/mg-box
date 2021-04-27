@@ -21,6 +21,36 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/simxel.font.spritefont
 
+#begin Music/game1.song.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/game1.song.ogg
+
+#begin Music/game2.song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/game2.song.mp3
+
+#begin Music/game3.song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/game3.song.mp3
+
+#begin Music/game4.song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/game4.song.mp3
+
+#begin Music/menu.song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/menu.song.mp3
+
 #begin Sounds/laser.sound.ogg
 /importer:OggImporter
 /processor:SoundEffectProcessor
