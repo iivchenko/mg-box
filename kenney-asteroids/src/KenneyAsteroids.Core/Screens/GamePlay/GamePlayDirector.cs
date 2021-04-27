@@ -140,7 +140,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                 : base(director)
             {
                 _random = new Random();
-                MediaPlayer.Play(Next());
+                NextSong(null, null);
                 MediaPlayer.MediaStateChanged += NextSong;
             }
 
@@ -153,7 +153,11 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             {
                 if (MediaPlayer.State == MediaState.Stopped)
                 {
-                    MediaPlayer.Play(Next());
+                    var song = Next();
+                    while (song == MediaPlayer.Queue.ActiveSong)
+                        song = Next();
+
+                    MediaPlayer.Play(song);
                 }
             }
 
