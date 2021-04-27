@@ -17,19 +17,4 @@ namespace KenneyAsteroids.Core.Events
 
         public Guid Id { get; }
     }
-
-    public sealed class EntityCreatedEventHandler : IMessageHandler<EntityCreatedEvent>
-    {
-        private readonly IEntitySystem _entities;
-
-        public EntityCreatedEventHandler(IEntitySystem entities)
-        {
-            _entities = entities;
-        }
-
-        public void Handle(EntityCreatedEvent @event)
-        {
-            _entities.Add(@event.Entity);
-        }
-    }
 }

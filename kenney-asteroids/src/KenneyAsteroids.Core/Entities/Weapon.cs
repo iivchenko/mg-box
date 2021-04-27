@@ -89,9 +89,4 @@ namespace KenneyAsteroids.Core.Entities
             Reload
         }
     }
-
-    public interface IProjectileFactory
-    {
-        Projectile Create(Vector2 position, Vector2 direction);
-    }
 }
