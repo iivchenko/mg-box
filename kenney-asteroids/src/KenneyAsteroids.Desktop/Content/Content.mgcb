@@ -21,11 +21,11 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/simxel.font.spritefont
 
-#begin Music/game1.song.ogg
-/importer:OggImporter
+#begin Music/game1.song.mp3
+/importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Music/game1.song.ogg
+/build:Music/game1.song.mp3
 
 #begin Music/game2.song.mp3
 /importer:Mp3Importer

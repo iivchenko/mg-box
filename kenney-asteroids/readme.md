@@ -36,5 +36,5 @@ Classical implementation or the [Asteroids Game](https://en.wikipedia.org/wiki/A
       * [CC BY 4.0 License](https://creativecommons.org/licenses/by/4.0/)
     * [FREE Music Pack 4: Electronic 2](https://joshua-mclean.itch.io/free-music-pack-4)
       * Thank you Joshua McLean for the great assets!
-      * [Repo Asset](src/KenneyAsteroids.Desktop/Content/Music/game1.song.ogg)
+      * [Repo Asset](src/KenneyAsteroids.Desktop/Content/Music/game1.song.mp3)
       * [CC BY 4.0 License](https://creativecommons.org/licenses/by/4.0/)
