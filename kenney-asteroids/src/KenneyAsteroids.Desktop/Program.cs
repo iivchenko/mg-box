@@ -1,6 +1,8 @@
 ﻿using Comora;
+using KenneyAsteroids.Core.Entities;
 using KenneyAsteroids.Core.Events;
 using KenneyAsteroids.Core.Screens;
+using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
@@ -37,9 +39,13 @@ namespace KenneyAsteroids.Desktop
                             .AddSingleton<IRepository<GameSettings>>(_ => new JsonRepository<GameSettings>(ConfigFile))
                             .Decorate<IRepository<GameSettings>, DefaultInitializerRepositoryDecorator<GameSettings>>()
                             .AddSingleton<IEntitySystem, EntitySystem>()
+                            .AddSingleton<IEntityFactory, EntityFactory>()
+                            .AddSingleton<IProjectileFactory, ProjectileFactory>()
                             .AddSingleton<IViewport, Viewport>(_ => new Viewport(0.0f, 0.0f, 3840.0f, 2160.0f))
                             .AddSingleton<ICamera, Camera>()
-                            .AddSingleton<IMessageHandler<EntityCreatedEvent>, EntityCreatedEventHandler>()
+                            .AddSingleton<IMessageHandler<EntityCreatedEvent>, GamePlayEntityCreatedEventHandler>()
+                            .AddSingleton<IMessageHandler<EntityDestroyedEvent>, GamePlayEnemyDestroyedEventHandler>()
+                            .AddSingleton<IMessageHandler<CreateAsteroidCommand>, CreateAsteroidCommandHandler>()
                             .AddDrawSystem()
                             .AddAudio(configuration.GetSection("Audio"))
                             .AddMessageBus();

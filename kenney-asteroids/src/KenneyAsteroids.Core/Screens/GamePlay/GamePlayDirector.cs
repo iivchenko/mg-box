@@ -1,92 +1,171 @@
-﻿using KenneyAsteroids.Core.Entities;
-using KenneyAsteroids.Core.Events;
-using KenneyAsteroids.Engine;
+﻿using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Entities;
-using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Messaging;
+using Microsoft.Extensions.Options;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Media;
 using System;
-using System.Numerics;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
     public sealed class GamePlayDirector : IUpdatable
     {
-        private readonly Random _random;
-        private readonly IUpdatable _timer;
-        private readonly IViewport _viewport;
-        private readonly EntityFactory _factory;
-        private readonly IPublisher _eventService;
+        private readonly IPublisher _publisher;
+        private readonly IOptionsMonitor<AudioSettings> _settings;
 
-        public GamePlayDirector(IViewport viewport, EntityFactory factory, IPublisher eventService)
+        private ContentManager _content;
+
+        private Chapter _current;
+
+        public GamePlayDirector(
+            IPublisher publisher,
+            IOptionsMonitor<AudioSettings> settings,
+            ContentManager content)
         {
-            _viewport = viewport;
-            _factory = factory;
-            _eventService = eventService;
+            _publisher = publisher;
+            _settings = settings;
+            _content = content;
 
-            _random = new Random();
-            var timer = new Timer(TimeSpan.FromSeconds(5), SpawnAsteroid, true);
-            _timer = timer;
-
-            timer.Start();
+            _current = new ChapterBegining(this);
         }
 
         public void Update(float time)
         {
-            _timer.Update(time);
+            _current.Update(time);
         }
 
-        private void SpawnAsteroid(float time)
+        public void Free()
         {
-            const int BigAsteroidMinSpeed = 15;
-            const int BigAsteroidMaxSpeed = 100;
-            const int BigAsteroidMinRotationSpeed = 5;
-            const int BigAsteroidMaxRotationSpeed = 25;
+            _current.Free();
+        }
 
-            var x = 0;
-            var y = 0;
-            var dx = 0;
-            var dy = 0;
-
-            switch (_random.Next(0, 4))
+        private abstract class Chapter
+        {
+            public Chapter(GamePlayDirector director)
             {
-                case 0: // Up -> Down
-                    x = _random.Next(0, (int)_viewport.Width);
-                    y = 0;
-                    dx = _random.Next(0, (int)_viewport.Width);
-                    dy = (int)_viewport.Height;
-                    break;
-
-                case 1: // Right -> Left
-                    x = (int)_viewport.Width;
-                    y = _random.Next(0, (int)_viewport.Height);
-                    dx = 0;
-                    dy = _random.Next(0, (int)_viewport.Height);
-                    break;
-
-                case 2: // Down -> UP
-                    x = _random.Next(0, (int)_viewport.Width);
-                    y = (int)_viewport.Height;
-                    dx = _random.Next(0, (int)_viewport.Width);
-                    dy = 0;
-                    break;
-
-                case 3: // Left -> Right
-                    x = 0;
-                    y = _random.Next(0, (int)_viewport.Height);
-                    dx = (int)_viewport.Width;
-                    dy = _random.Next(0, (int)_viewport.Height);
-                    break;
+                Director = director;
             }
 
-            var position = new Vector2(x, y);
-            var direction = Vector2.Normalize(new Vector2(dx - x, dy - y));
+            protected GamePlayDirector Director { get; }
 
-            var velocity = direction * new Vector2(_random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed), _random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed));
-            var rotationSpeed = _random.Next(BigAsteroidMinRotationSpeed, BigAsteroidMaxRotationSpeed).AsRadians() * _random.NextDouble() > 0.5 ? 1 : -1;
+            public abstract void Update(float time);
 
-            var asteroid = _factory.CreateAsteroid(position, velocity, rotationSpeed);
+            public abstract void Free();
+        }
 
-            _eventService.Publish(new EntityCreatedEvent(asteroid));
+        private sealed class ChapterBegining : Chapter
+        {
+            private readonly Song _song;
+            private IUpdatable _timer;
+            private int _phase;
+            private int _maxAsteroids;
+
+            public ChapterBegining(GamePlayDirector director)
+                : base(director)
+            {
+                _phase = 0;
+                _maxAsteroids = 2;
+
+                var timer = new Timer(TimeSpan.FromSeconds(3), IncreaseDifficulty, true);
+                _song = Director._content.Load<Song>("Music/game1.song");
+
+                MediaPlayer.Volume = Director._settings.CurrentValue.MusicVolume;
+                MediaPlayer.Play(_song);
+                MediaPlayer.MediaStateChanged += ChapterFinished;
+
+                _timer = timer;
+                Director._publisher.Publish(new CreateAsteroidCommand());
+
+                timer.Start();
+            }
+
+            private void ChapterFinished(object sender, EventArgs e)
+            {
+                if (MediaPlayer.State == MediaState.Stopped)
+                {
+                    MediaPlayer.MediaStateChanged -= ChapterFinished;
+                    Director._current = new ChapterNext(Director);
+                }
+            }
+
+            private void IncreaseDifficulty(float time)
+            {
+                Director._publisher.Publish(new CreateAsteroidCommand());
+                _maxAsteroids--;
+
+                if (_maxAsteroids <= 0)
+                {
+                    _timer = new Timer(TimeSpan.FromSeconds(60), t => { }, true);
+                }
+            }
+
+            public override void Update(float time)
+            {
+                _timer.Update(time);
+                
+                if (_phase == 0)
+                {
+                    var delta = (MediaPlayer.PlayPosition - TimeSpan.FromSeconds(14 + 2)).TotalSeconds;
+
+                    if (delta >= 0.5 && delta <= 1)
+                    {
+                        _phase = 1;
+                        for (var i = 0; i < 10; i++) Director._publisher.Publish(new CreateAsteroidCommand());
+                    }
+                }
+                else if (_phase == 1)
+                {
+                    var delta = (MediaPlayer.PlayPosition - TimeSpan.FromSeconds(59 + 1)).TotalSeconds;
+
+                    if (delta >= 0.5 && delta <= 1)
+                    {
+                        _phase = 2;
+                        for (var i = 0; i < 10; i++) Director._publisher.Publish(new CreateAsteroidCommand());
+                    }
+                }
+            }
+
+            public override void Free()
+            {
+                MediaPlayer.MediaStateChanged -= ChapterFinished;
+            }
+        }
+
+        private sealed class ChapterNext : Chapter
+        {
+            private readonly Random _random;
+
+            public ChapterNext(GamePlayDirector director)
+                : base(director)
+            {
+                _random = new Random();
+                MediaPlayer.Play(Next());
+                MediaPlayer.MediaStateChanged += NextSong;
+            }
+
+            public override void Free()
+            {
+                MediaPlayer.MediaStateChanged -= NextSong;
+            }
+
+            private void NextSong(object sender, EventArgs e)
+            {
+                if (MediaPlayer.State == MediaState.Stopped)
+                {
+                    MediaPlayer.Play(Next());
+                }
+            }
+
+            private Song Next()
+            {
+                var next = _random.Next(4) + 1;
+                return Director._content.Load<Song>($"Music/game{next}.song");
+            }
+
+            public override void Update(float time)
+            {
+            }
         }
     }
 }

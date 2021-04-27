@@ -3,7 +3,9 @@ using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using System.Numerics;
 
 using Color = Microsoft.Xna.Framework.Color;
@@ -52,6 +54,13 @@ namespace KenneyAsteroids.Core.Screens
             MenuEntries.Add(playGameMenuEntry);
             MenuEntries.Add(settingsMenuEntry);
             MenuEntries.Add(exitMenuEntry);
+
+            if (MediaPlayer.State == MediaState.Stopped)
+            {
+                var song = ScreenManager.Container.GetService<ContentManager>().Load<Song>("Music/menu.song");
+                
+                MediaPlayer.Play(song);
+            }
         }
 
         public override void Draw(XTime gameTime)

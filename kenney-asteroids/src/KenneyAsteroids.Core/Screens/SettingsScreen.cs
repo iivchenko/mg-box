@@ -2,6 +2,7 @@
 using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xna.Framework.Media;
 
 namespace KenneyAsteroids.Core.Screens
 {
@@ -72,6 +73,8 @@ namespace KenneyAsteroids.Core.Screens
                 _sfxVolume.Text = $"Sound Effect Volume: {(int)(settings.Audio.SfxVolume * 100)}%";
 
                 _settingsRepository.Update(settings);
+
+                MediaPlayer.Volume = settings.Audio.MusicVolume;
             };
 
             _musicVolume = new MenuEntry($"Music Volume: {(int)(settings.Audio.MusicVolume * 100)}%");

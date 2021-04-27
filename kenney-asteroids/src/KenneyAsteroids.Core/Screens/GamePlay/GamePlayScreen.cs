@@ -1,4 +1,5 @@
 ﻿using KenneyAsteroids.Core.Entities;
+using KenneyAsteroids.Core.Events;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Collisions;
@@ -7,8 +8,10 @@ using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Messaging;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Xna.Framework.Audio;
+using Microsoft.Extensions.Options;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -24,7 +27,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private IViewport _viewport;
 
         private GamePlayHud _hud;
-        private GamePlayDirector _enemySpawner;
+        private GamePlayDirector _director;
         private ShipPlayerController _controller;
 
         public override void Initialize()
@@ -35,6 +38,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _bus = ScreenManager.Container.GetService<IMessageSystem>();
             _viewport = ScreenManager.Container.GetService<IViewport>();
 
+            var publisher = ScreenManager.Container.GetService<IPublisher>();
+            var factory = ScreenManager.Container.GetService<IEntityFactory>();
+
             var rules = new List<IRule>
             {
                 new LazyRule<Ship, Asteroid>
@@ -42,7 +48,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     (_, __) => _hud.Lifes > 0,
                     (ship, _) => RestartShip(ship)
                 ),
-                 new LazyRule<Ship, Asteroid>
+                new LazyRule<Ship, Asteroid>
                 (
                     (_, __) => _hud.Lifes <= 0,
                     (ship, _) => GameOver(ship)
@@ -50,31 +56,31 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                 new LazyRule<Projectile, Asteroid>
                 (
                     (_, __) => true,
-                    (projectile, asteroid) => _entities.Remove(projectile, asteroid)
+                    (projectile, asteroid) =>
+                    {
+                        _entities.Remove(projectile, asteroid);
+                        publisher.Publish(new EntityDestroyedEvent(asteroid));
+                    }
                 )
             };
 
-            _collisions = new CollisionSystem(rules);
-
-            var painter = ScreenManager.Container.GetService<IPainter>();
-            var player = ScreenManager.Container.GetService<IAudioPlayer>();
-            var publisher = ScreenManager.Container.GetService<IPublisher>();
-            var spriteSheet = ScreenManager.Game.Content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
-            var lazer = ScreenManager.Game.Content.Load<SoundEffect>("Sounds/laser.sound");
-            var factory = new EntityFactory(spriteSheet, lazer, publisher, painter, player);
-
-            _enemySpawner = new GamePlayDirector(_viewport, factory, publisher);
-
             var ship = factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
-            _controller = new ShipPlayerController(ship);
 
+            _collisions = new CollisionSystem(rules);
+            _director = new GamePlayDirector(publisher, ScreenManager.Container.GetService<IOptionsMonitor<AudioSettings>>(), ScreenManager.Container.GetService<ContentManager>());
+            _controller = new ShipPlayerController(ship);
             _hud = new GamePlayHud(ScreenManager.Container);
+
             _entities.Add(ship, _hud);
         }
 
         public override void Free()
         {
+            _director.Free();
             _entities.Remove(_entities.ToArray());
+            _entities.Commit();
+            
+            MediaPlayer.Stop();
 
             base.Free();
         }
@@ -85,10 +91,12 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             if (input.IsNewKeyPress(Keys.Escape, null, out _) || input.IsNewButtonPress(Buttons.Start, null, out _))
             {
+                MediaPlayer.Pause();
                 const string message = "Exit game?\nA button, Space, Enter = ok\nB button, Esc = cancel";
                 var confirmExitMessageBox = new MessageBoxScreen(message);
 
                 confirmExitMessageBox.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new MainMenuScreen());
+                confirmExitMessageBox.Cancelled += (_, __) => MediaPlayer.Resume();
 
                 ScreenManager.AddScreen(confirmExitMessageBox, null);
             }
@@ -117,7 +125,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     .Where(IsOutOfScreen)
                     .Iter(HandleOutOfScreenBodies);
 
-                _enemySpawner.Update(time);
+                _director.Update(time);
                 _bus.Update(time);
 
                 _entities.Commit();
@@ -130,7 +138,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             var time = gameTime.ToDelta();
 
-            _entities.Where(x => x is Engine.IDrawable).Cast<Engine.IDrawable>().Iter(x => x.Draw(time));
+            _entities.Where(x => x is IDrawable).Cast<IDrawable>().Iter(x => x.Draw(time));
         }
 
         private bool IsOutOfScreen(IBody entity)
