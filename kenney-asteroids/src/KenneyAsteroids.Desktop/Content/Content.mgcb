@@ -14,14 +14,50 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Fonts/Default.spritefont
+#begin Fonts/simxel.font.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Fonts/Default.spritefont
+/build:Fonts/simxel.font.spritefont
 
-#begin Sprites/Blank.png
+#begin Music/game1.song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/game1.song.mp3
+
+#begin Music/game2.song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/game2.song.mp3
+
+#begin Music/game3.song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/game3.song.mp3
+
+#begin Music/game4.song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/game4.song.mp3
+
+#begin Music/menu.song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/menu.song.mp3
+
+#begin Sounds/laser.sound.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/laser.sound.ogg
+
+#begin Sprites/blank.sprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -31,14 +67,26 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Blank.png
+/build:Sprites/blank.sprite.png
 
-#begin SpriteSheets/Asteroids.sheet.xml
+#begin Sprites/gradient.sprite.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/gradient.sprite.png
+
+#begin SpriteSheets/asteroids.sheet.xml
 /importer:SpriteSheetImporter
 /processor:SpriteSheetProcessor
-/build:SpriteSheets/Asteroids.sheet.xml
+/build:SpriteSheets/asteroids.sheet.xml
 
-#begin SpriteSheets/Asteroids.sprite.png
+#begin SpriteSheets/asteroids.sprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -48,5 +96,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Asteroids.sprite.png
+/build:SpriteSheets/asteroids.sprite.png
 

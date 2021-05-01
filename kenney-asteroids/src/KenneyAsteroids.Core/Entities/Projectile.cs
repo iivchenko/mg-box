@@ -1,28 +1,31 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
+using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Numerics;
+
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Entities
 {
     public sealed class Projectile : IEntity<Guid>, IBody, IUpdatable, Engine.IDrawable
     {
+        private readonly IPainter _draw;
+
         private readonly Sprite _sprite;
-        private readonly SpriteBatch _batch;
         private readonly float _rotation;
 
         private Vector2 _velocity;
 
         public Projectile(
+            IPainter draw,
             Sprite sprite,
-            SpriteBatch batch,
             float rotation,
             float speed)
         {
+            _draw = draw;
             _sprite = sprite;
-            _batch = batch;
             _rotation = rotation;
             _velocity = rotation.ToDirection() * speed;
 
@@ -39,22 +42,21 @@ namespace KenneyAsteroids.Core.Entities
         public float Width { get; set; }
         public float Height { get; set; }
 
-        void IUpdatable.Update(GameTime time)
+        void IUpdatable.Update(float time)
         {
-            Position += _velocity * time.ToDelta();
+            Position += _velocity * time;
         }
 
-        void Engine.IDrawable.Draw(GameTime time)
+        void Engine.IDrawable.Draw(float time)
         {
-            _batch
+            _draw
                 .Draw(
                     _sprite,
                     Position,
                     Origin,
                     Vector2.One,
                     _rotation,
-                    Color.White,
-                    SpriteEffects.None);
+                    Color.White);
         }
     }
 }

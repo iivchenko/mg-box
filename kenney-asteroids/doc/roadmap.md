@@ -1,46 +1,33 @@
 # Roadmap :
-* MVP v0.1
-  * Implement ship
-    * Implement World
-	* Implement Entity
-	* Implement Controller
-	* Implement Events (Created, Destroyed, .etc)
-  * Implement out of view/screen logic
-  * Implement asteroid
-    * Implement World physics
-  * Implement projectile
-  * Implement Wave Manager/System ??
-  * Provide versioning
 
-* Polish v0.2
-  * Implement HUD
-	* Lifes
-	* Implement Scores system
-	* Scores
-  * Add project to CI and make available to download game
-  * Add game pad support
-  * Implement MainMenuScreen
-  * Implement PauseScreen
-  * Implement LeaderBoardsScreen
-  * Implement SettingsScreen
+### Kenney Asteroids v0.1 Proto ![release v0.1](https://img.shields.io/badge/v0.1-Released-green)
+[release notes](release-notes/v0.1.0.md)
 
-* First release v1.0
+Very basic implementation (clone) of [asteroids game](https://en.wikipedia.org/wiki/Asteroids_(video_game)) to see how it feels.  
 
-* Port to Android v1.1
-  * Extract 'Content' project
-  * Implement onscreen game pad
-  * Implement simple enemy ship AI
-  * Implement ufo
-  * Add bonus drops from enemies
-	
-* Port to WEB v1.2
-  * Make game playeable from the readme.md
-  * Folow [official demo](https://www.monogame.net/webdemo/)
+### Kenney Asteroids v0.2 MVP
+Minimal Valuable Product, more polished version with with game menus, pause, game over, sfx, music and controller support.
+  
+### Kenney Asteroids v0.3 Leaders
+Deliver scoring system for killing enemies, provide Leader Board with max 10 leaders
 
-* Unsorted
-  * Add screen shot of the game to the readme page
-  * Unit editor??
-  * Local multiplayer for max 4 players
-  * DEBUG. Show body physics boundaries
-  * Introduce pixel collision
-  * Abastract game CORE from MonoGame so ENGINE has direct access to MonoGame
+### Kenney Asteroids v0.4 More Asteroids
+Introduce all available asteroids on the Kenney's sprite sheet and some new complexity!
+
+### Kenney Asteroids v0.5 New Threat
+The goal is to introduce enemy ships to make game more interesting and challenging!
+
+### Kenney Asteroids v0.6 Its a BONUS
+Introduce bonuses that drops from enemies after kill. Bonuses will add benefits to a player like a spare life, speed increase etc.
+
+### Kenney Asteroids v0.x Play With Friends
+Local multiplayer for max 4 players
+
+### Kenney Asteroids v1.0 Go Live
+Polish unpolished stuff and go!
+
+### Kenney Asteroids v1.1 Port to Android
+Refactor and port game to Android devices.
+
+### Kenney Asteroids v1.2 Port to Web
+Port game to web tech, make it playable from the readme.md, follow official monogame demo

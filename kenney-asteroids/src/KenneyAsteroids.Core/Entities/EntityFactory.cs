@@ -1,26 +1,36 @@
 ﻿using KenneyAsteroids.Engine;
-using KenneyAsteroids.Engine.Eventing.Eventing;
+using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using KenneyAsteroids.Engine.Messaging;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 using System;
+using System.Numerics;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class EntityFactory : IProjectileFactory // TODO: Extract Projectile factory class
+    public sealed class EntityFactory : IEntityFactory
     {
         private readonly SpriteSheet _spriteSheet;
-        private readonly SpriteBatch _spriteBatch;
-        private readonly IEventService _eventService;
+        private readonly SoundEffect _lazer;
+        private readonly IProjectileFactory _projectileFactory;
+        private readonly IPublisher _publisher;
+        private readonly IPainter _draw;
+        private readonly IAudioPlayer _player;
 
         public EntityFactory(
-            SpriteSheet spriteSheet, 
-            SpriteBatch spriteBatch,
-            IEventService eventService)
+            ContentManager content,
+            IProjectileFactory projectileFactory,
+            IPublisher eventService,
+            IPainter draw,
+            IAudioPlayer player)
         {
-            _spriteSheet = spriteSheet;
-            _spriteBatch = spriteBatch;
-            _eventService = eventService;
+            _spriteSheet = content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
+            _lazer = content.Load<SoundEffect>("Sounds/laser.sound");
+            _projectileFactory = projectileFactory;
+            _publisher = eventService;
+            _draw = draw;
+            _player = player;
         }
 
         public Ship CreateShip(Vector2 position)
@@ -31,8 +41,8 @@ namespace KenneyAsteroids.Core.Entities
 
             var sprite = _spriteSheet["playerShip1_blue"];
             var reload = TimeSpan.FromMilliseconds(500);
-            var weapon = new Weapon(new Vector2(0, -sprite.Width / 2), reload, this, _eventService);
-            return new Ship(sprite, _spriteBatch, weapon, MaxSpeed, Acceleration, MaxRotation.AsRadians())
+            var weapon = new Weapon(new Vector2(0, -sprite.Width / 2), reload, _projectileFactory, _publisher, _player, _lazer);
+            return new Ship(_draw, sprite, weapon, MaxSpeed, Acceleration, MaxRotation.AsRadians())
             {
                 Position = position
             };
@@ -41,20 +51,8 @@ namespace KenneyAsteroids.Core.Entities
         public Asteroid CreateAsteroid(Vector2 position, Vector2 velocity, float rotationSpeed)
         {
             var sprite = _spriteSheet["meteorBrown_big2"];
-            
-            return new Asteroid(sprite, _spriteBatch, velocity, rotationSpeed)
-            {
-                Position = position
-            };
-        }
 
-        public Projectile Create(Vector2 position, Vector2 direction)
-        {
-            const float Speed = 800.0f;
-            var sprite = _spriteSheet["laserBlue01"];
-            var rotation = direction.ToRotation();
-
-            return new Projectile(sprite, _spriteBatch, rotation, Speed)
+            return new Asteroid(_draw, sprite, velocity, rotationSpeed)
             {
                 Position = position
             };

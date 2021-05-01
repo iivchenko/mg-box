@@ -8,13 +8,15 @@
 #endregion
 
 #region Using Statements
-using System;
-using System.Diagnostics;
-using System.Collections.Generic;
+using KenneyAsteroids.Engine.Graphics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -28,6 +30,8 @@ namespace KenneyAsteroids.Engine.Screens
     public class ScreenManager : DrawableGameComponent
     {
         #region Fields
+
+        private readonly IDrawSystemBatcher _batch;
 
         List<GameScreen> screens = new List<GameScreen>();
         List<GameScreen> screensToUpdate = new List<GameScreen>();
@@ -46,22 +50,18 @@ namespace KenneyAsteroids.Engine.Screens
 
         #region Properties
 
-
-        /// <summary>
-        /// A default SpriteBatch shared by all the screens. This saves
-        /// each screen having to bother creating their own local instance.
-        /// </summary>
-        public SpriteBatch SpriteBatch
-        {
-            get { return spriteBatch; }
-        }
-
+        public IServiceProvider Container { get; }
+        public IPainter Painter { get; }
 
         /// <summary>
         /// A default font shared by all the screens. This saves
         /// each screen having to bother loading their own local copy.
         /// </summary>
-        public SpriteFont Font => font; // TODO: Remove it complitelly afte all screens are used
+        public SpriteFont Font
+        {
+            get { return font; }
+        }
+
 
         /// <summary>
         /// If true, the manager prints out a list of all the screens
@@ -79,12 +79,18 @@ namespace KenneyAsteroids.Engine.Screens
 
         #region Initialization
 
+
         /// <summary>
         /// Constructs a new screen manager component.
         /// </summary>
-        public ScreenManager(Game game)
+        public ScreenManager(Game game, IServiceProvider container)
             : base(game)
         {
+            Container = container;
+            Painter = Container.GetService<IPainter>();
+            
+            _batch = Container.GetService<IDrawSystemBatcher>();
+
             // we must set EnabledGestures before we can query for them, but
             // we don't assume the game wants to read them.
             TouchPanel.EnabledGestures = GestureType.None;
@@ -111,13 +117,13 @@ namespace KenneyAsteroids.Engine.Screens
             ContentManager content = Game.Content;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("Fonts/Default");  // TODO: Remove it complitelly afte all screens are used
-            blankTexture = content.Load<Texture2D>("Sprites/Blank"); // TOD: Replace with programatic one pixel black texture
+            font = content.Load<SpriteFont>("Fonts/simxel.font");
+            blankTexture = content.Load<Texture2D>("Sprites/blank.sprite");
 
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in screens)
             {
-                screen.LoadContent();
+                screen.Initialize();
             }
         }
 
@@ -130,7 +136,7 @@ namespace KenneyAsteroids.Engine.Screens
             // Tell each of the screens to unload their content.
             foreach (GameScreen screen in screens)
             {
-                screen.UnloadContent();
+                screen.Free();
             }
         }
 
@@ -213,6 +219,8 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
+            _batch.Begin();
+
             foreach (GameScreen screen in screens)
             {
                 if (screen.ScreenState == ScreenState.Hidden)
@@ -220,6 +228,8 @@ namespace KenneyAsteroids.Engine.Screens
 
                 screen.Draw(gameTime);
             }
+
+            _batch.End();
         }
 
 
@@ -240,7 +250,7 @@ namespace KenneyAsteroids.Engine.Screens
             // If we have a graphics device, tell the screen to load content.
             if (isInitialized)
             {
-                screen.LoadContent();
+                screen.Initialize();
             }
 
             screens.Add(screen);
@@ -261,7 +271,7 @@ namespace KenneyAsteroids.Engine.Screens
             // If we have a graphics device, tell the screen to unload content.
             if (isInitialized)
             {
-                screen.UnloadContent();
+                screen.Free();
             }
 
             screens.Remove(screen);
@@ -293,12 +303,12 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public void FadeBackBufferToBlack(float alpha)
         {
-            Viewport viewport = GraphicsDevice.Viewport;
+            var viewport = Container.GetService<IViewport>();
 
             spriteBatch.Begin();
 
             spriteBatch.Draw(blankTexture,
-                             new Rectangle(0, 0, viewport.Width, viewport.Height),
+                             new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height),
                              Color.Black * alpha);
 
             spriteBatch.End();

@@ -12,6 +12,8 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
 using System.IO;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -38,7 +40,6 @@ namespace KenneyAsteroids.Engine.Screens
     public abstract class GameScreen
     {
         #region Properties
-
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -212,18 +213,9 @@ namespace KenneyAsteroids.Engine.Screens
 
         #region Initialization
 
+        public virtual void Initialize() { }
 
-        /// <summary>
-        /// Load graphics content for the screen.
-        /// </summary>
-        public virtual void LoadContent() { }
-
-
-        /// <summary>
-        /// Unload content for the screen.
-        /// </summary>
-        public virtual void UnloadContent() { }
-
+        public virtual void Free() { }
 
         #endregion
 
@@ -303,7 +295,7 @@ namespace KenneyAsteroids.Engine.Screens
             if (((direction < 0) && (transitionPosition <= 0)) ||
                 ((direction > 0) && (transitionPosition >= 1)))
             {
-                transitionPosition = Math.Clamp(transitionPosition, 0, 1);
+                transitionPosition = MathHelper.Clamp(transitionPosition, 0, 1);
                 return false;
             }
 

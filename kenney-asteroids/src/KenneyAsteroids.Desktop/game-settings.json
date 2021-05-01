@@ -1,0 +1,9 @@
+﻿{
+  "ToggleFramerate": {
+    "Toggle": "false"
+  },
+  "Audio": {
+    "SfxVolume": "0.5",
+    "MusicVolume": "0.5"
+  }
+}

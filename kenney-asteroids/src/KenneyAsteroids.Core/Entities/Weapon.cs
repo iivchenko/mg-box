@@ -1,8 +1,14 @@
-﻿using KenneyAsteroids.Core.Screens.GamePlay; // TODO: recursive dependencie!!
+﻿using KenneyAsteroids.Core.Events;
 using KenneyAsteroids.Engine;
-using KenneyAsteroids.Engine.Eventing.Eventing;
-using Microsoft.Xna.Framework;
+using KenneyAsteroids.Engine.Audio;
+using KenneyAsteroids.Engine.Entities;
+using KenneyAsteroids.Engine.Messaging;
+using Microsoft.Xna.Framework.Audio;
 using System;
+using System.Numerics;
+
+using XMatrix = Microsoft.Xna.Framework.Matrix;
+using XVector = Microsoft.Xna.Framework.Vector2;
 
 namespace KenneyAsteroids.Core.Entities
 {
@@ -11,7 +17,10 @@ namespace KenneyAsteroids.Core.Entities
         private readonly Vector2 _offset;
         private readonly TimeSpan _reload;
         private readonly IProjectileFactory _factory;
-        private readonly IEventService _eventService;
+        private readonly IPublisher _eventService;
+        private readonly IAudioPlayer _player;
+
+        private readonly SoundEffect _lazer;
 
         private State _state;
         private double _reloading;
@@ -20,12 +29,17 @@ namespace KenneyAsteroids.Core.Entities
             Vector2 offset,
             TimeSpan reload,
             IProjectileFactory factory,
-            IEventService eventService)
+            IPublisher eventService,
+            IAudioPlayer player,
+            SoundEffect lazer)
         {
             _offset = offset;
             _reload = reload;
             _factory = factory;
             _eventService = eventService;
+            _player = player;
+
+            _lazer = lazer;
 
             _state = State.Idle;
 
@@ -34,14 +48,14 @@ namespace KenneyAsteroids.Core.Entities
 
         public Guid Id { get; }
 
-        public void Update(GameTime time)
+        public void Update(float time)
         {
             switch(_state)
             {
                 case State.Idle:
                     break;
                 case State.Reload:
-                    _reloading -= time.ToDelta();
+                    _reloading -= time;
 
                     if (_reloading <= 0)
                     {
@@ -57,11 +71,15 @@ namespace KenneyAsteroids.Core.Entities
             {
                 _state = State.Reload;
                 _reloading = _reload.TotalSeconds;
-                var position = Vector2.Transform(_offset, Matrix.CreateRotationZ(parentRotation)) + parentPosition;
+                var xnaOffset = new XVector(_offset.X, _offset.Y);
+                var xnaParentPos = new XVector(parentPosition.X, parentPosition.Y);
+                var xnaPosition = xnaOffset.Transform(XMatrix.CreateRotationZ(parentRotation)) + xnaParentPos;
+                var position = new Vector2(xnaPosition.X, xnaPosition.Y);
                 var direction = parentRotation.ToDirection();
                 var projectile = _factory.Create(position, direction);
 
                 _eventService.Publish(new EntityCreatedEvent(projectile));
+                _player.Play(_lazer);
             }
         }
 
@@ -70,10 +88,5 @@ namespace KenneyAsteroids.Core.Entities
             Idle,
             Reload
         }
-    }
-
-    public interface IProjectileFactory
-    {
-        Projectile Create(Vector2 position, Vector2 direction);
     }
 }

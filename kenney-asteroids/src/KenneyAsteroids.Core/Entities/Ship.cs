@@ -1,16 +1,18 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
+using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Numerics;
+
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class Ship : IEntity<Guid>, IUpdatable, Engine.IDrawable, IBody
+    public sealed class Ship : IEntity<Guid>, IUpdatable, IDrawable, IBody
     {
+        private readonly IPainter _draw;
         private readonly Sprite _sprite;
-        private readonly SpriteBatch _batch;
         private readonly Weapon _weapon;
         private readonly Vector2 _scale;
         private readonly float _maxSpeed;
@@ -22,15 +24,15 @@ namespace KenneyAsteroids.Core.Entities
         private ShipAction _action;
 
         public Ship(
-            Sprite sprite, 
-            SpriteBatch batch,
+            IPainter draw,
+            Sprite sprite,
             Weapon weapon,
             float maxSpeed,
             float maxAcceleration,
             float maxRotation)
         {
+            _draw = draw;
             _sprite = sprite;
-            _batch = batch;
             _weapon = weapon;
             _maxSpeed = maxSpeed;
             _maxAcceleration = maxAcceleration;
@@ -59,24 +61,24 @@ namespace KenneyAsteroids.Core.Entities
             _action = action;
         }
 
-        void IUpdatable.Update(GameTime time)
+        void IUpdatable.Update(float time)
         {
             _weapon.Update(time);
 
             if (_action.HasFlag(ShipAction.Left)) 
-                _rotation -= _maxRotation * time.ToDelta();
+                _rotation -= _maxRotation * time;
 
             if (_action.HasFlag(ShipAction.Right))
-                _rotation += _maxRotation * time.ToDelta();
+                _rotation += _maxRotation * time;
 
             if (_action.HasFlag(ShipAction.Accelerate))
             {
                 var velocity = _velocity + _rotation.ToDirection() * _maxAcceleration;
 
-                _velocity = velocity.Length() > _maxSpeed ? velocity.ToNormalized() * _maxSpeed : velocity;
+                _velocity = velocity.Length() > _maxSpeed ? Vector2.Normalize(velocity) * _maxSpeed : velocity;
             }
 
-            Position += _velocity * time.ToDelta();
+            Position += _velocity * time;
 
             if (_action.HasFlag(ShipAction.Fire))
                 _weapon.Fire(Position, _rotation);
@@ -84,17 +86,16 @@ namespace KenneyAsteroids.Core.Entities
             _action = ShipAction.None;
         }
 
-        void Engine.IDrawable.Draw(GameTime time)
+        void IDrawable.Draw(float time)
         {
-            _batch
+            _draw
                 .Draw(
                     _sprite,
                     Position,
                     Origin,
                     _scale,
                     _rotation,
-                    Color.White,
-                    SpriteEffects.None);
+                    Color.White);
         }
     }
 

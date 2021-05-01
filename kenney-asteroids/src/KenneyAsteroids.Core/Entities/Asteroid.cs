@@ -1,16 +1,19 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Collisions;
+using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Numerics;
+
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class Asteroid : IEntity<Guid>, IUpdatable, Engine.IDrawable, IBody
+    public sealed class Asteroid : IEntity<Guid>, IUpdatable, IDrawable, IBody
     {
+        private readonly IPainter _draw;
+
         private readonly Sprite _sprite;
-        private readonly SpriteBatch _batch;
         private readonly Vector2 _scale;
         private readonly float _rotationSpeed;
 
@@ -18,13 +21,13 @@ namespace KenneyAsteroids.Core.Entities
         private float _rotation;
 
         public Asteroid(
+            IPainter draw,
             Sprite sprite,
-            SpriteBatch batch,
             Vector2 velocity,
             float rotationSpeed)
         {
             _sprite = sprite;
-            _batch = batch;
+            _draw = draw;
             _velocity = velocity;
             _rotationSpeed = rotationSpeed;
 
@@ -44,23 +47,22 @@ namespace KenneyAsteroids.Core.Entities
         public float Width { get; set; }
         public float Height { get; set; }
 
-        void IUpdatable.Update(GameTime gameTime)
+        void IUpdatable.Update(float time)
         {
-            Position += _velocity * gameTime.ToDelta();
-            _rotation += _rotationSpeed * gameTime.ToDelta();
+            Position += _velocity * time;
+            _rotation += _rotationSpeed * time;
         }
 
-        void Engine.IDrawable.Draw(GameTime gameTime)
+        void IDrawable.Draw(float time)
         {
-            _batch
+            _draw
                 .Draw(
                     _sprite,
                     Position,
                     Origin,
                     _scale,
                     _rotation,
-                    Color.White,
-                    SpriteEffects.None);
+                    Color.White);
         }
     }
 }

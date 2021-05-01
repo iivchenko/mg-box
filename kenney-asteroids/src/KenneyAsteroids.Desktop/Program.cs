@@ -1,33 +1,64 @@
-﻿using KenneyAsteroids.Core.Screens.GamePlay;
+﻿using Comora;
+using KenneyAsteroids.Core.Entities;
+using KenneyAsteroids.Core.Events;
+using KenneyAsteroids.Core.Screens;
+using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Entities;
+using KenneyAsteroids.Engine.Graphics;
+using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Storage;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xna.Framework;
 using System;
+using System.IO;
 
 namespace KenneyAsteroids.Desktop
 {
-    /* TODO: Global tasks
-     * 
-     * Implement pipeline processor for Kenney's Sprite Sheets 
-     *  - http://rbwhitaker.wikidot.com/content-pipeline-extension-7
-     * Introduce content file conventions: 
-     *   Textures -> filename.texture
-     *   Spirtes -> filename.sprite
-     *   Audion -> filename.audio
-     *   Music -> filename.music
-     * Abstract MonoGame: Remove dependencier from the CORE, leave depedencie in the Engine
-    */
     public static class Program
     {
+        private const string ConfigFile = "game-settings.json";
+
         [STAThread]
         public static void Main()
         {
-            using (var game = new Game(new GamePlayScreen()))
-            {
-                game.IsMouseVisible = true;
-                game.Content.RootDirectory = "Content";
-                game.ScreenColor = Microsoft.Xna.Framework.Color.Black;
+            GameBuilder
+                .CreateBuilder()
+                .WithServices(container =>
+                    {
+                        var configuration =
+                            new ConfigurationBuilder()
+                                .SetBasePath(Directory.GetCurrentDirectory())
+                                .AddJsonFile(ConfigFile, optional: true, reloadOnChange: true)
+                                .Build();
 
-                game.Run();
-            }
+                        container
+                            .AddOptions()
+                            .Configure<GameSettings>(configuration)
+                            .AddSingleton<IRepository<GameSettings>>(_ => new JsonRepository<GameSettings>(ConfigFile))
+                            .Decorate<IRepository<GameSettings>, DefaultInitializerRepositoryDecorator<GameSettings>>()
+                            .AddSingleton<IEntitySystem, EntitySystem>()
+                            .AddSingleton<IEntityFactory, EntityFactory>()
+                            .AddSingleton<IProjectileFactory, ProjectileFactory>()
+                            .AddSingleton<IViewport, Viewport>(_ => new Viewport(0.0f, 0.0f, 3840.0f, 2160.0f))
+                            .AddSingleton<ICamera, Camera>()
+                            .AddSingleton<IMessageHandler<EntityCreatedEvent>, GamePlayEntityCreatedEventHandler>()
+                            .AddSingleton<IMessageHandler<EntityDestroyedEvent>, GamePlayEnemyDestroyedEventHandler>()
+                            .AddSingleton<IMessageHandler<CreateAsteroidCommand>, CreateAsteroidCommandHandler>()
+                            .AddDrawSystem()
+                            .AddAudio(configuration.GetSection("Audio"))
+                            .AddMessageBus();
+                    })
+                .WithConfiguration(config => // TODO: This beast seems become redundant
+                    {
+                        config.FullScreen = false; // TODO: Make as a part of graphics settings?
+                        config.IsMouseVisible = false; // TODO: Make as a part of input settings?
+                        config.ContentPath = "Content"; // TODO: Make as a part of content settings?
+                        config.ScreenColor = Color.Black; // TODO: Make as a part of graphics settings?
+                    })
+                .Build<BootstrapScreen<MainMenuScreen>>()
+                .RunSafe();
         }
     }
 }

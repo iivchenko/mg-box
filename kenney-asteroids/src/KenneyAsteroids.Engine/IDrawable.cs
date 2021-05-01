@@ -1,9 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace KenneyAsteroids.Engine
+﻿namespace KenneyAsteroids.Engine
 {
     public interface IDrawable
     {
-        void Draw(GameTime time);
+        void Draw(float time);
     }
 }
