@@ -20,5 +20,18 @@ namespace KenneyAsteroids.Core
             }
         }
 
+        public static string Configuration
+        {
+            get
+            {
+#if DEBUG
+                return "debug";
+#elif ALPHA
+                return "alpha";
+#else
+                return "release";
+#endif
+            }
+        }
     }
 }

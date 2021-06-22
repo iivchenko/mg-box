@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using QuakeConsole;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -29,10 +30,15 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private GamePlayHud _hud;
         private GamePlayDirector _director;
         private ShipPlayerController _controller;
+        private ConsoleComponent _console;
+
+        private bool _pause = false;
 
         public override void Initialize()
         {
             base.Initialize();
+
+            RegisterConsole();
 
             _entities = ScreenManager.Container.GetService<IEntitySystem>();
             _bus = ScreenManager.Container.GetService<IMessageSystem>();
@@ -87,6 +93,25 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
         public override void HandleInput(InputState input)
         {
+            if (_console != null)
+            {
+                if (input.IsNewKeyPress(Keys.OemTilde, null, out _))
+                {
+                    _console.ToggleOpenClose();
+                }
+                else if (!_console.IsVisible)
+                {
+                    HandleGameInput(input);
+                }
+            }
+            else
+            {
+                HandleGameInput(input);
+            }
+        }
+
+        private void HandleGameInput(InputState input)
+        {
             base.HandleInput(input);
 
             if (input.IsNewKeyPress(Keys.Escape, null, out _) || input.IsNewButtonPress(Buttons.Start, null, out _))
@@ -110,7 +135,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             var time = gameTime.ToDelta();
 
-            if (!otherScreenHasFocus)
+            if (!otherScreenHasFocus && !_pause)
             {
                 _entities
                     .Where(x => x is IUpdatable)
@@ -201,6 +226,23 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             msg.Cancelled += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new MainMenuScreen());
 
             ScreenManager.AddScreen(msg, null);
+        }
+
+        private void RegisterConsole()
+        {
+            _console = ScreenManager.Container.GetService<ConsoleComponent>();
+
+            if (_console != null)
+            {
+                var interpreter = new ManualInterpreter();
+                interpreter.RegisterCommand("pause", args => _pause = !_pause);
+                interpreter.RegisterCommand("about", _ =>
+                {
+                    var message = $"Kenney Asteroids v{Version.Current}-{Version.Configuration}";
+                    _console.Output.Append(message);
+                });
+                _console.Interpreter = interpreter;
+            }
         }
     }
 }
