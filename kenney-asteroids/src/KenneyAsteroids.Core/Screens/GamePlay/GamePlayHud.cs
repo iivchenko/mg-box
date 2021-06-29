@@ -43,6 +43,8 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             Lifes = 3;
         }
 
+        public int Scores { get; set; }
+
         public int Lifes { get; set; }
 
         public void Draw(float time)
@@ -52,7 +54,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
         private void DrawLifes(float time)
         {
-            var text = $"HP: {Lifes}";
+            var text = $"HP: {Lifes}\nScores: {Scores}";
             var size = _font.MeasureString(text);
             var position = new Vector2(0, size.Y); // TODO: Fix the bug. When I set Y = 0 the simxel font partialy out of screen!
 

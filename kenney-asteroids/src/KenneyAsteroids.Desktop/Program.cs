@@ -1,6 +1,7 @@
 ﻿using Comora;
 using KenneyAsteroids.Core.Entities;
 using KenneyAsteroids.Core.Events;
+using KenneyAsteroids.Core.Leaderboards;
 using KenneyAsteroids.Core.Screens;
 using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
@@ -12,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace KenneyAsteroids.Desktop
@@ -19,6 +22,7 @@ namespace KenneyAsteroids.Desktop
     public static class Program
     {
         private const string ConfigFile = "game-settings.json";
+        private const string LeaderBoardsFile = "leaders.json";
 
         [STAThread]
         public static void Main()
@@ -38,6 +42,8 @@ namespace KenneyAsteroids.Desktop
                             .Configure<GameSettings>(configuration)
                             .AddSingleton<IRepository<GameSettings>>(_ => new JsonRepository<GameSettings>(ConfigFile))
                             .Decorate<IRepository<GameSettings>, DefaultInitializerRepositoryDecorator<GameSettings>>()
+                            .AddSingleton<IRepository<Collection<LeaderboardItem>>>(_ => new JsonRepository<Collection<LeaderboardItem>>(LeaderBoardsFile))
+                            .Decorate<IRepository<Collection<LeaderboardItem>>, DefaultInitializerRepositoryDecorator<Collection<LeaderboardItem>>>()
                             .AddSingleton<IEntitySystem, EntitySystem>()
                             .AddSingleton<IEntityFactory, EntityFactory>()
                             .AddSingleton<IProjectileFactory, ProjectileFactory>()
@@ -48,7 +54,8 @@ namespace KenneyAsteroids.Desktop
                             .AddSingleton<IMessageHandler<CreateAsteroidCommand>, CreateAsteroidCommandHandler>()
                             .AddDrawSystem()
                             .AddAudio(configuration.GetSection("Audio"))
-                            .AddMessageBus();
+                            .AddMessageBus()
+                            .AddSingleton<LeaderboardsManager>();
                     })
                 .WithConfiguration(config => // TODO: This beast seems become redundant
                     {

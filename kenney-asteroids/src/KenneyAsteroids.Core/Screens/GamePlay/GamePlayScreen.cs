@@ -1,5 +1,6 @@
 ﻿using KenneyAsteroids.Core.Entities;
 using KenneyAsteroids.Core.Events;
+using KenneyAsteroids.Core.Leaderboards;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Collisions;
@@ -13,9 +14,11 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using QuakeConsole;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using XTime = Microsoft.Xna.Framework.GameTime;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
@@ -28,11 +31,14 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private IViewport _viewport;
 
         private GamePlayHud _hud;
+        private GamePlayScoreManager _scores;
+        private LeaderboardsManager _leaderBoard;
         private GamePlayDirector _director;
         private ShipPlayerController _controller;
         private ConsoleComponent _console;
 
         private bool _pause = false;
+        private DateTime _startTime;
 
         public override void Initialize()
         {
@@ -43,7 +49,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _entities = ScreenManager.Container.GetService<IEntitySystem>();
             _bus = ScreenManager.Container.GetService<IMessageSystem>();
             _viewport = ScreenManager.Container.GetService<IViewport>();
-
+            _leaderBoard = ScreenManager.Container.GetService<LeaderboardsManager>();
             var publisher = ScreenManager.Container.GetService<IPublisher>();
             var factory = ScreenManager.Container.GetService<IEntityFactory>();
 
@@ -65,6 +71,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     (projectile, asteroid) =>
                     {
                         _entities.Remove(projectile, asteroid);
+                        _hud.Scores += _scores.GetScore(asteroid);
                         publisher.Publish(new EntityDestroyedEvent(asteroid));
                     }
                 )
@@ -76,8 +83,11 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _director = new GamePlayDirector(publisher, ScreenManager.Container.GetService<IOptionsMonitor<AudioSettings>>(), ScreenManager.Container.GetService<ContentManager>());
             _controller = new ShipPlayerController(ship);
             _hud = new GamePlayHud(ScreenManager.Container);
+            _scores = new GamePlayScoreManager();
 
             _entities.Add(ship, _hud);
+
+            _startTime = DateTime.Now;
         }
 
         public override void Free()
@@ -219,6 +229,14 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             _entities.Remove(ship);
 
+            var playedTime = DateTime.Now - _startTime;
+
+            if (_leaderBoard.CanAddLeader(_hud.Scores))
+            {
+                _leaderBoard.AddLeader("test", _hud.Scores, playedTime);
+                // todo: ADD name typing
+            }
+
             const string message = "GAME OVER?\nA button, Space, Enter = Restart\nB button, Esc = Exit";
             var msg = new MessageBoxScreen(message);
 
@@ -240,6 +258,15 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                 {
                     var message = $"Kenney Asteroids v{Version.Current}-{Version.Configuration}";
                     _console.Output.Append(message);
+                });
+                interpreter.RegisterCommand("scores", _ =>
+                {
+                    _console.Output.Append("Name\tScores\tTime played\tDate");
+                    _leaderBoard
+                        .GetLeaders()
+                        .Select(leader => $"{leader.Name}\t{leader.Score}\t{leader.PlayedTime}\t{leader.ScoreDate}")
+                        .ToList()
+                        .ForEach(x => _console.Output.Append(x));
                 });
                 _console.Interpreter = interpreter;
             }
