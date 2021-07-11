@@ -96,6 +96,40 @@ namespace UserInterfaceSample
                 OnCancel(player);
             }
 
+            // Move to the previous menu entry?
+            if (input.IsMenuUp(ControllingPlayer))
+            {
+                selectedEntry--;
+
+                if (selectedEntry < 0)
+                    selectedEntry = menuEntries.Count - 1;
+            }
+
+            // Move to the next menu entry?
+            if (input.IsMenuDown(ControllingPlayer))
+            {
+                selectedEntry++;
+
+                if (selectedEntry >= menuEntries.Count)
+                    selectedEntry = 0;
+            }
+
+            // Accept or cancel the menu? We pass in our ControllingPlayer, which may
+            // either be null (to accept input from any player) or a specific index.
+            // If we pass a null controlling player, the InputState helper returns to
+            // us which player actually provided the input. We pass that through to
+            // OnSelectEntry and OnCancel, so they can tell which player triggered them.
+            PlayerIndex playerIndex;
+
+            if (input.IsMenuSelect(ControllingPlayer, out playerIndex))
+            {
+                OnSelectEntry(selectedEntry, playerIndex);
+            }
+            else if (input.IsMenuCancel(ControllingPlayer, out playerIndex))
+            {
+                OnCancel(playerIndex);
+            }
+
             // look for any taps that occurred and select any entries that were tapped
             foreach (GestureSample gesture in input.Gestures)
             {
