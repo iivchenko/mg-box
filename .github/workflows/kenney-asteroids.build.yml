@@ -1,4 +1,4 @@
-name: build
+name: Kenny Asteroids Build
 
 on:
   push:
