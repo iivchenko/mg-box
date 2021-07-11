@@ -41,17 +41,20 @@ namespace KenneyAsteroids.Core.Screens
             _versionPosition = new Vector2(viewport.Width - size.X, viewport.Height - size.Y);
 
             // Create our menu entries.
-            MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
-            MenuEntry settingsMenuEntry = new MenuEntry("Settings");
-            MenuEntry exitMenuEntry = new MenuEntry("Exit");
+            var playGameMenuEntry = new MenuEntry("Play Game");
+            var leaderboardMenuEntry = new MenuEntry("Leaderboard");
+            var settingsMenuEntry = new MenuEntry("Settings");
+            var exitMenuEntry = new MenuEntry("Exit");
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
+            leaderboardMenuEntry.Selected += LeaderboardMenuEntrySelected;
             settingsMenuEntry.Selected += SettingsMenuEntrySelected;
             exitMenuEntry.Selected += OnCancel;
 
             // Add entries to the menu.
             MenuEntries.Add(playGameMenuEntry);
+            MenuEntries.Add(leaderboardMenuEntry);
             MenuEntries.Add(settingsMenuEntry);
             MenuEntries.Add(exitMenuEntry);
 
@@ -78,6 +81,11 @@ namespace KenneyAsteroids.Core.Screens
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, false, e.PlayerIndex, new GamePlayScreen());
+        }
+
+        void LeaderboardMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, false, e.PlayerIndex, new LeaderBoardsScreen());
         }
 
         /// <summary>
