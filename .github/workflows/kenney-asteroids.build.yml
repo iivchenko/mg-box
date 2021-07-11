@@ -37,7 +37,7 @@ jobs:
         Invoke-WebRequest -Uri $url -Headers $headers -OutFile $file
     - name: Set alpha or release suffix
       id: suffix
-      if:  ${{ github.ref == 'refs/heads/master' }}
+      if:  ${{ github.ref == 'refs/heads/kenney-asteroids-develop' }}
       run: echo '::set-output name=suffix::-alpha'
     - name: Read version
       id: version
