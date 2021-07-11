@@ -85,7 +85,7 @@ namespace KenneyAsteroids.Core.Screens
 
         private Control CreateBoard()
         {
-            const int colWidth = 200;
+            const int colWidth = 400;
             PanelControl newList = new PanelControl();
 
             var header = new PanelControl();

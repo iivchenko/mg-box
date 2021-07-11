@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 using XTime = Microsoft.Xna.Framework.GameTime;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
@@ -233,10 +232,25 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             if (_leaderBoard.CanAddLeader(_hud.Scores))
             {
-                _leaderBoard.AddLeader("test", _hud.Scores, playedTime);
-                // todo: ADD name typing
-            }
+                var newHigthScorePrompt = new PromptScreen("Congratulations, you made new high score!\nEnter you name:");
 
+                newHigthScorePrompt.Accepted += (_, __) =>
+                {
+                    _leaderBoard.AddLeader(newHigthScorePrompt.Text, _hud.Scores, playedTime);
+                    GameOverMessage();
+                };
+                newHigthScorePrompt.Cancelled += (_, __) => GameOverMessage();
+
+                ScreenManager.AddScreen(newHigthScorePrompt, null);
+            }
+            else
+            {
+                GameOverMessage();
+            }
+        }
+
+        private void GameOverMessage()
+        {
             const string message = "GAME OVER?\nA button, Space, Enter = Restart\nB button, Esc = Exit";
             var msg = new MessageBoxScreen(message);
 
@@ -265,8 +279,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     _leaderBoard
                         .GetLeaders()
                         .Select(leader => $"{leader.Name}\t{leader.Score}\t{leader.PlayedTime}\t{leader.ScoreDate}")
-                        .ToList()
-                        .ForEach(x => _console.Output.Append(x));
+                        .Iter(x => _console.Output.Append(x));
                 });
                 _console.Interpreter = interpreter;
             }
