@@ -2,7 +2,7 @@ name: Kenny Asteroids Benchmark
 
 on:
   push:
-    branches: [ * ]
+    branches: [ kenney-asteroids-develop ]
 
 jobs:
   build:
