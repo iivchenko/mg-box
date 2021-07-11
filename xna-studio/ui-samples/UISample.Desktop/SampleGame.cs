@@ -7,7 +7,6 @@
 
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 
 
@@ -27,7 +26,7 @@ namespace UserInterfaceSample
             TargetElapsedTime = TimeSpan.FromTicks(333333);
 
             // Disable the status bar
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
 
             screenManager = new ScreenManager(this);
             Components.Add(screenManager);
