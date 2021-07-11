@@ -35,6 +35,10 @@ jobs:
         $headers = @{ Authorization = "token ${{ secrets.ASSET_STORAGE }}"; Accept = "application/vnd.github.v3.raw" }
         $file = "kenney-asteroids/src/KenneyAsteroids.Desktop/Content/Music/game4.song.mp3"
         Invoke-WebRequest -Uri $url -Headers $headers -OutFile $file
+    - name: Set alpha or release suffix
+      id: suffix
+      if:  ${{ github.ref == 'refs/heads/master' }}
+      run: echo '::set-output name=suffix::-alpha'
     - name: Read version
       id: version
       uses: juliangruber/read-file-action@v1
@@ -53,5 +57,5 @@ jobs:
     - name: Artifacts
       uses: actions/upload-artifact@v1
       with:
-       name: ${{ format('kenney-asteroids-win-x64-v{0}.{1}', steps.version.outputs.content, github.run_number) }}
+       name: ${{ format('kenney-asteroids-win-x64-v{0}.{1}{2}', steps.version.outputs.content, github.run_number, steps.suffix.outputs.suffix) }}
        path: publish/kenney-asteroids/win-x64
