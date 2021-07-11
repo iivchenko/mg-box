@@ -22,7 +22,7 @@ jobs:
       with:
         dotnet-version: 3.1.200
     - name: Run Benchmark
-      run: dotnet run ./kenney-asteroids/KenneyAsteroids.Engine.Benchmark --configuration Release -- --filter * --exporters HTML --artifacts .\benchmark-report
+      run: dotnet run --project ./kenney-asteroids/src/KenneyAsteroids.Engine.Benchmark/KenneyAsteroids.Engine.Benchmark.csproj --configuration Release -- --filter * --exporters HTML --artifacts .\benchmark-report
     - name: Artifacts
       uses: actions/upload-artifact@v1
       with:
