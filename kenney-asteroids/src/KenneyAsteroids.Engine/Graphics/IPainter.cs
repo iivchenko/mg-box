@@ -6,6 +6,7 @@ namespace KenneyAsteroids.Engine.Graphics
     public interface IPainter
     {
         void Draw(Texture2D texture, Rectangle target, Color color);
+        void Draw(Texture2D texture, Rectangle target, Rectangle source, Color color);
         void Draw(Sprite sprite, System.Numerics.Vector2 position, System.Numerics.Vector2 origin, System.Numerics.Vector2 scale, float rotation, Color color);
         void Draw(Sprite sprite, Rectangle rectagle, Color color);
         void DrawString(SpriteFont spriteFont, string text, System.Numerics.Vector2 position, Color color);

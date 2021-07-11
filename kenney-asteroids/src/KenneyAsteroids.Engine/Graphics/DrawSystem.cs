@@ -52,6 +52,16 @@ namespace KenneyAsteroids.Engine.Graphics
                     color);
         }
 
+        public void Draw(Texture2D texture, Rectangle target, Rectangle source, Color color)
+        {
+            _batch
+                .Draw(
+                    texture,
+                    target,
+                    source,
+                    color);
+        }
+
         public void Draw(Texture2D texture, Rectangle target, Color color)
         {
             _batch.Draw(texture, target, color);
