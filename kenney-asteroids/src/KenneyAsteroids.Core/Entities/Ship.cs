@@ -14,13 +14,11 @@ namespace KenneyAsteroids.Core.Entities
         private readonly IPainter _draw;
         private readonly Sprite _sprite;
         private readonly Weapon _weapon;
-        private readonly Vector2 _scale;
         private readonly float _maxSpeed;
         private readonly float _maxAcceleration;
         private readonly float _maxRotation;
 
         private Vector2 _velocity;
-        private float _rotation;
         private ShipAction _action;
 
         public Ship(
@@ -39,22 +37,26 @@ namespace KenneyAsteroids.Core.Entities
             _maxRotation = maxRotation;
 
             _velocity = Vector2.Zero;
-            _scale = Vector2.One;
-            _rotation = 0.0f;
             _action = ShipAction.None;
 
             Id = Guid.NewGuid();
             Origin = new Vector2(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
             Position = Vector2.Zero;
+            Rotation = 0.0f;
+            Scale = Vector2.One;
             Width = _sprite.Width;
             Height = _sprite.Height;
+            Data = _sprite.ReadData();
         }
         
         public Guid Id { get; }
         public Vector2 Position { get; set; }
         public Vector2 Origin { get; set; }
+        public Vector2 Scale { get; set; }
+        public float Rotation { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
+        public Color[] Data { get; set; }
 
         public void Apply(ShipAction action)
         {
@@ -66,14 +68,14 @@ namespace KenneyAsteroids.Core.Entities
             _weapon.Update(time);
 
             if (_action.HasFlag(ShipAction.Left)) 
-                _rotation -= _maxRotation * time;
+                Rotation -= _maxRotation * time;
 
             if (_action.HasFlag(ShipAction.Right))
-                _rotation += _maxRotation * time;
+                Rotation += _maxRotation * time;
 
             if (_action.HasFlag(ShipAction.Accelerate))
             {
-                var velocity = _velocity + _rotation.ToDirection() * _maxAcceleration;
+                var velocity = _velocity + Rotation.ToDirection() * _maxAcceleration;
 
                 _velocity = velocity.Length() > _maxSpeed ? Vector2.Normalize(velocity) * _maxSpeed : velocity;
             }
@@ -81,7 +83,7 @@ namespace KenneyAsteroids.Core.Entities
             Position += _velocity * time;
 
             if (_action.HasFlag(ShipAction.Fire))
-                _weapon.Fire(Position, _rotation);
+                _weapon.Fire(Position, Rotation);
 
             _action = ShipAction.None;
         }
@@ -93,8 +95,8 @@ namespace KenneyAsteroids.Core.Entities
                     _sprite,
                     Position,
                     Origin,
-                    _scale,
-                    _rotation,
+                    Scale,
+                    Rotation,
                     Color.White);
         }
     }

@@ -4,6 +4,8 @@ using System;
 using System.Linq;
 using System.Numerics;
 
+using Color = Microsoft.Xna.Framework.Color;
+
 namespace KenneyAsteroids.Engine.Benchmark.Collisions
 {
     public class CollisionSystemBenchmark
@@ -72,12 +74,23 @@ namespace KenneyAsteroids.Engine.Benchmark.Collisions
 
         private IBody CreateRandomBody()
         {
+            var width = _random.Next(1, 100);
+            var height = _random.Next(1, 100);
+            var data = new Color[unchecked(width * height)];
+            for(var i = 0; i < width * height; i++)
+            {
+                data[i] = new Color(_random.Next(), _random.Next(), _random.Next(), _random.Next());
+            }
+
             return new Body
             {
-                Width = _random.Next(0, int.MaxValue),
-                Height = _random.Next(0, int.MaxValue),
+                Width = width,
+                Height = height,
                 Position = new Vector2((float)_random.NextDouble(), (float)_random.NextDouble()),
-                Origin = Vector2.Zero
+                Scale = new Vector2((float)_random.NextDouble(), (float)_random.NextDouble()),
+                Rotation = (float)_random.NextDouble(),
+                Origin = Vector2.Zero,
+                Data = data
             };
         }
 
@@ -85,8 +98,11 @@ namespace KenneyAsteroids.Engine.Benchmark.Collisions
         {
             public Vector2 Position { get; set; }
             public Vector2 Origin { get; set; }
+            public Vector2 Scale { get; set; }
             public float Width { get; set; }
             public float Height { get; set; }
+            public float Rotation { get; set; }
+            public Color[] Data { get; set; }
         }
     }
 }
