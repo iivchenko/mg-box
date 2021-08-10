@@ -34,5 +34,13 @@ namespace KenneyAsteroids.Engine.Graphics
         public float Width { get; }
         internal Texture2D Texture => _texture;
         internal Rectangle? SourceRectangle => _sourceRectangle;
+
+        public Color[] ReadData()
+        {
+            var data = new Color[(int)Width * (int)Height];
+            _texture.GetData(0, _sourceRectangle, data, 0, data.Length);
+
+            return data;
+        }
     }
 }

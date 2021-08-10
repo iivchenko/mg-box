@@ -14,11 +14,9 @@ namespace KenneyAsteroids.Core.Entities
         private readonly IPainter _draw;
 
         private readonly Sprite _sprite;
-        private readonly Vector2 _scale;
         private readonly float _rotationSpeed;
 
         private Vector2 _velocity;
-        private float _rotation;
 
         public Asteroid(
             IPainter draw,
@@ -31,26 +29,29 @@ namespace KenneyAsteroids.Core.Entities
             _velocity = velocity;
             _rotationSpeed = rotationSpeed;
 
-            _scale = Vector2.One;
-            _rotation = 0.0f;
-
             Id = Guid.NewGuid();
             Origin = new Vector2(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
+            Rotation = 0.0f;
             Position = Vector2.Zero;
             Width = _sprite.Width;
             Height = _sprite.Height;
+            Scale = Vector2.One;
+            Data = sprite.ReadData();
         }
 
         public Guid Id { get; }
         public Vector2 Position { get; set; }
         public Vector2 Origin { get; set; }
+        public Vector2 Scale { get; set; }
+        public float Rotation { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
+        public Color[] Data { get; set; }
 
         void IUpdatable.Update(float time)
         {
             Position += _velocity * time;
-            _rotation += _rotationSpeed * time;
+            Rotation += _rotationSpeed * time;
         }
 
         void IDrawable.Draw(float time)
@@ -60,8 +61,8 @@ namespace KenneyAsteroids.Core.Entities
                     _sprite,
                     Position,
                     Origin,
-                    _scale,
-                    _rotation,
+                    Scale,
+                    Rotation,
                     Color.White);
         }
     }
