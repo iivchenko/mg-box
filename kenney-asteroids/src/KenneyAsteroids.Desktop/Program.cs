@@ -62,7 +62,7 @@ namespace KenneyAsteroids.Desktop
                         config.FullScreen = false; // TODO: Make as a part of graphics settings?
                         config.IsMouseVisible = false; // TODO: Make as a part of input settings?
                         config.ContentPath = "Content"; // TODO: Make as a part of content settings?
-                        config.ScreenColor = Color.Black; // TODO: Make as a part of graphics settings?
+                        config.ScreenColor = Colors.Black; // TODO: Make as a part of graphics settings?
                     })
                 .Build<BootstrapScreen<MainMenuScreen>>()
                 .RunSafe();

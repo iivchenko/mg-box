@@ -233,7 +233,7 @@ namespace KenneyAsteroids.Engine.Screens
             // Draw the menu title centered on the screen
             System.Numerics.Vector2 titlePosition = new System.Numerics.Vector2(viewport.Width / 2, 80);
             System.Numerics.Vector2 titleOrigin = (font.MeasureString(menuTitle) / 2).ToVector();
-            Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
+            Color titleColor = new Color(192, 192, 192, 255) * TransitionAlpha;
             float titleScale = 1.25f;
 
             titlePosition.Y -= transitionOffset * 100;

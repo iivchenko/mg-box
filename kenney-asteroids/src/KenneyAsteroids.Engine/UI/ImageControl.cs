@@ -54,7 +54,7 @@ namespace KenneyAsteroids.Engine.UI
         {
             this.texture = texture;
             this.Position = position;
-            this.Color = Color.White;
+            this.Color = Colors.White;
         }
 
         public override void Draw(DrawContext context)

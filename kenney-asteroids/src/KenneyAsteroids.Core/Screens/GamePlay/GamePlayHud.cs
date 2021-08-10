@@ -1,4 +1,5 @@
-﻿using KenneyAsteroids.Engine.Entities;
+﻿using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -7,8 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-
-using Color = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
@@ -58,7 +57,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             var size = _font.MeasureString(text);
             var position = new Vector2(0, size.Y); // TODO: Fix the bug. When I set Y = 0 the simxel font partialy out of screen!
 
-            _painter.DrawString(_font, text, position, Color.White);
+            _painter.DrawString(_font, text, position, Colors.White);
         }
 
         private void DrawFrameRate(float time)
@@ -67,7 +66,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             var size = _font.MeasureString(rate);
             var position = new Vector2(_view.Width - size.X, size.Y); // TODO: Fix the bug. When I set Y = 0 the simxel font partialy out of screen!
 
-            _painter.DrawString(_font, rate, position, Color.White);
+            _painter.DrawString(_font, rate, position, Colors.White);
         }
     }
 }

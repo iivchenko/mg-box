@@ -5,8 +5,6 @@ using KenneyAsteroids.Engine.Graphics;
 using System;
 using System.Numerics;
 
-using Color = Microsoft.Xna.Framework.Color;
-
 namespace KenneyAsteroids.Core.Entities
 {
     public sealed class Ship : IEntity<Guid>, IUpdatable, IDrawable, IBody
@@ -97,7 +95,7 @@ namespace KenneyAsteroids.Core.Entities
                     Origin,
                     Scale,
                     Rotation,
-                    Color.White);
+                    Colors.White);
         }
     }
 

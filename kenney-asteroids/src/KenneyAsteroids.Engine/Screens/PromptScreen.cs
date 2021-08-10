@@ -36,7 +36,7 @@ namespace KenneyAsteroids.Engine.Screens
             ContentManager content = ScreenManager.Game.Content;
 
             _gradientTexture = content.Load<Texture2D>("Sprites/gradient.sprite");
-            _text = new TextControl(string.Empty, ScreenManager.Font, Color.Yellow);
+            _text = new TextControl(string.Empty, ScreenManager.Font, Colors.Yellow);
         }
 
         public override void HandleInput(InputState input)
@@ -109,7 +109,7 @@ namespace KenneyAsteroids.Engine.Screens
                                                           (int)textSize.Y + vPad * 2);
 
             // Fade the popup alpha during transitions.
-            Color color = Color.White * TransitionAlpha;
+            Color color = Colors.White * TransitionAlpha;
             // Draw the background rectangle.
             painter.Draw(_gradientTexture, backgroundRectangle, color);
 

@@ -79,7 +79,7 @@ namespace KenneyAsteroids.Engine.Benchmark.Collisions
             var data = new Color[unchecked(width * height)];
             for(var i = 0; i < width * height; i++)
             {
-                data[i] = new Color(_random.Next(), _random.Next(), _random.Next(), _random.Next());
+                data[i] = new Color((byte)_random.Next(), (byte)_random.Next(), (byte)_random.Next(), (byte)_random.Next());
             }
 
             return new Body

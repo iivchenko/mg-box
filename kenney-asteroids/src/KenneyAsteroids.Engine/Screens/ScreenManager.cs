@@ -309,7 +309,7 @@ namespace KenneyAsteroids.Engine.Screens
 
             spriteBatch.Draw(blankTexture,
                              new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height),
-                             Color.Black * alpha);
+                             Colors.Black.ToXna() * alpha);
 
             spriteBatch.End();
         }

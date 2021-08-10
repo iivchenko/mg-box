@@ -107,7 +107,7 @@ namespace KenneyAsteroids.Engine.Collisions
                         Color colorB = body2.Data[xB + yB * (int)body2.Width];
 
                         // If both pixels are not completely transparent,
-                        if (colorA.A != 0 && colorB.A != 0)
+                        if (colorA.Alpha != 0 && colorB.Alpha != 0)
                         {
                             // then an intersection has been found
                             return true;

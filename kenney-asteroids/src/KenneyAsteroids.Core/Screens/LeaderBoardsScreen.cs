@@ -80,7 +80,7 @@ namespace KenneyAsteroids.Core.Screens
         {
             var text = "Leaderboard";
             var x = _viewport.Width / 2 - _titleFont.MeasureString(text).X / 2;
-            return new TextControl(text, _titleFont, Color.Blue, new Vector2(x, 30));
+            return new TextControl(text, _titleFont, Colors.Blue, new Vector2(x, 30));
         }
 
         private Control CreateBoard()
@@ -89,17 +89,17 @@ namespace KenneyAsteroids.Core.Screens
             PanelControl newList = new PanelControl();
 
             var header = new PanelControl();
-            header.AddChild(new TextControl("Name", _headerFont, Color.Turquoise, new Vector2(colWidth * 0, 0)));
-            header.AddChild(new TextControl("Score", _headerFont, Color.Turquoise, new Vector2(colWidth * 1, 0)));
-            header.AddChild(new TextControl("Time", _headerFont, Color.Turquoise, new Vector2(colWidth * 2, 0)));
-            header.AddChild(new TextControl("Date", _headerFont, Color.Turquoise, new Vector2(colWidth * 3, 0)));
+            header.AddChild(new TextControl("Name", _headerFont, Colors.Turquoise, new Vector2(colWidth * 0, 0)));
+            header.AddChild(new TextControl("Score", _headerFont, Colors.Turquoise, new Vector2(colWidth * 1, 0)));
+            header.AddChild(new TextControl("Time", _headerFont, Colors.Turquoise, new Vector2(colWidth * 2, 0)));
+            header.AddChild(new TextControl("Date", _headerFont, Colors.Turquoise, new Vector2(colWidth * 3, 0)));
             newList.AddChild(header);
 
             _magager
                 .GetLeaders()
                 .Select(x =>
                 {
-                    var textColor = Color.White;
+                    var textColor = Colors.White;
 
                     var panel = new PanelControl();
 
