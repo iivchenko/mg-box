@@ -79,12 +79,12 @@ namespace KenneyAsteroids.Engine
             var console = new ConsoleComponent(this)
             {
                 Padding = 10.0f,
-                FontColor = Color.White,
-                InputPrefixColor = Color.White,
-                BackgroundColor = Color.DarkGray,
+                FontColor = Colors.White.ToXna(),
+                InputPrefixColor = Colors.White.ToXna(),
+                BackgroundColor = Colors.DarkGray.ToXna(),
                 BottomBorderThickness = 4.0f,
-                BottomBorderColor = Color.Red,
-                SelectionColor = Color.DarkGray,
+                BottomBorderColor = Colors.Red.ToXna(),
+                SelectionColor = Colors.DarkGray.ToXna(),
                 LogInput = cmd => Debug.WriteLine(cmd) // Logs input commands to VS output window.
             };
             Components.Add(console);
