@@ -10,6 +10,7 @@ Classical implementation or the [Asteroids Game](https://en.wikipedia.org/wiki/A
 
 
 ## Releases
+* [v0.3.0](doc/release-notes/v0.3.0.md)
 * [v0.2.0](doc/release-notes/v0.2.0.md)
 * [v0.1.0](doc/release-notes/v0.1.0.md)
 
@@ -19,8 +20,10 @@ Classical implementation or the [Asteroids Game](https://en.wikipedia.org/wiki/A
 * [Scrutor](https://github.com/khellang/Scrutor)
 * [Comora](https://github.com/dotnet-ad/Comora)
 * [Newton.Json](https://www.newtonsoft.com/json)
+* [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet)
+* [Quake Console](https://github.com/discosultan/quake-console)
 
-[Roadmap](doc/roadmap.md)
+[Roadmap](https://github.com/iivchenko/mg-box/milestones)
 
 # License
 * Source Code
