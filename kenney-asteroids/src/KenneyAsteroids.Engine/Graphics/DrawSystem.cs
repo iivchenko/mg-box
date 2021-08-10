@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Numerics;
 
-using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace KenneyAsteroids.Engine.Graphics
@@ -35,7 +34,7 @@ namespace KenneyAsteroids.Engine.Graphics
                     sprite.Texture,
                     position.ToXnaVector(),
                     sprite.SourceRectangle,
-                    color,
+                    color.ToXna(),
                     rotation,
                     origin.ToXnaVector(),
                     scale.ToXnaVector(),
@@ -49,7 +48,7 @@ namespace KenneyAsteroids.Engine.Graphics
                 .Draw(
                     sprite.Texture,
                     rectagle,
-                    color);
+                    color.ToXna());
         }
 
         public void Draw(Texture2D texture, Rectangle target, Rectangle source, Color color)
@@ -59,22 +58,22 @@ namespace KenneyAsteroids.Engine.Graphics
                     texture,
                     target,
                     source,
-                    color);
+                    color.ToXna());
         }
 
         public void Draw(Texture2D texture, Rectangle target, Color color)
         {
-            _batch.Draw(texture, target, color);
+            _batch.Draw(texture, target, color.ToXna());
         }
 
         public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color)
         {
-            _batch.DrawString(spriteFont, text, position.ToXnaVector(), color);
+            _batch.DrawString(spriteFont, text, position.ToXnaVector(), color.ToXna());
         }
         
         public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
         {
-            _batch.DrawString(spriteFont, text, position.ToXnaVector(), color, rotation, origin.ToXnaVector(), scale, effects, layerDepth);
+            _batch.DrawString(spriteFont, text, position.ToXnaVector(), color.ToXna(), rotation, origin.ToXnaVector(), scale, effects, layerDepth);
         }
     }
 }

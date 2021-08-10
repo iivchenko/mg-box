@@ -144,7 +144,7 @@ namespace KenneyAsteroids.Engine.Screens
 #endif
 
             // Draw the selected entry in yellow, otherwise white.
-            Color color = isSelected ? Color.Yellow : Color.White;
+            Color color = isSelected ? Colors.Yellow : Colors.White;
 
             // Pulsate the size of the selected menu entry.
             double time = gameTime.TotalGameTime.TotalSeconds;

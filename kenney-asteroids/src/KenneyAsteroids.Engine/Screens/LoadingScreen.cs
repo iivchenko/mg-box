@@ -151,7 +151,7 @@ namespace KenneyAsteroids.Engine.Screens
                 System.Numerics.Vector2 textSize = font.MeasureString(message).ToVector();
                 System.Numerics.Vector2 textPosition = (viewportSize - textSize) / 2;
 
-                Color color = Color.White * TransitionAlpha;
+                Color color = Colors.White * TransitionAlpha;
 
                 painter.DrawString(font, message, textPosition, color);
             }

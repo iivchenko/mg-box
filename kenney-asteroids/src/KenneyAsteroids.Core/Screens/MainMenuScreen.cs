@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using System.Numerics;
 
-using Color = Microsoft.Xna.Framework.Color;
 using XTime = Microsoft.Xna.Framework.GameTime;
 
 namespace KenneyAsteroids.Core.Screens
@@ -72,7 +71,7 @@ namespace KenneyAsteroids.Core.Screens
 
             var time = gameTime.ToDelta();
 
-            _painter.DrawString(_font, _version, _versionPosition, Color.White);
+            _painter.DrawString(_font, _version, _versionPosition, Colors.White);
         }
 
         /// <summary>

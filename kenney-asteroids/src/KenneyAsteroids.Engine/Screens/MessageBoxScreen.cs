@@ -136,7 +136,7 @@ namespace KenneyAsteroids.Engine.Screens
                                                           (int)textSize.Y + vPad * 2);
 
             // Fade the popup alpha during transitions.
-            Color color = Color.White * TransitionAlpha;
+            Color color = Colors.White * TransitionAlpha;
             // Draw the background rectangle.
             painter.Draw(gradientTexture, backgroundRectangle, color);
 

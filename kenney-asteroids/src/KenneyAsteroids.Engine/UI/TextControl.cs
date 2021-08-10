@@ -51,12 +51,12 @@ namespace KenneyAsteroids.Engine.UI
         }
 
         public TextControl()
-            : this(string.Empty, null, Color.White, Vector2.Zero)
+            : this(string.Empty, null, Colors.White, Vector2.Zero)
         {
         }
 
         public TextControl(string text, SpriteFont font)
-            : this(text, font, Color.White, Vector2.Zero)
+            : this(text, font, Colors.White, Vector2.Zero)
         {
         }
 

@@ -5,8 +5,6 @@ using KenneyAsteroids.Engine.Graphics;
 using System;
 using System.Numerics;
 
-using Color = Microsoft.Xna.Framework.Color;
-
 namespace KenneyAsteroids.Core.Entities
 {
     public sealed class Projectile : IEntity<Guid>, IBody, IUpdatable, Engine.IDrawable
@@ -52,7 +50,7 @@ namespace KenneyAsteroids.Core.Entities
             Position += _velocity * time;
         }
 
-        void Engine.IDrawable.Draw(float time)
+        void IDrawable.Draw(float time)
         {
             _draw
                 .Draw(
@@ -61,7 +59,7 @@ namespace KenneyAsteroids.Core.Entities
                     Origin,
                     Scale,
                     Rotation,
-                    Color.White);
+                    Colors.White);
         }
     }
 }

@@ -89,7 +89,7 @@ namespace KenneyAsteroids.Engine.Screens
             var viewport = ScreenManager.Container.GetService<IViewport>();
             Rectangle fullscreen = new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height);
 
-            painter.Draw(backgroundTexture, fullscreen, new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
+            painter.Draw(backgroundTexture, fullscreen, new Color((byte)TransitionAlpha, (byte)TransitionAlpha, (byte)TransitionAlpha, 255));
         }
 
 

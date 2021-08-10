@@ -64,8 +64,8 @@ namespace KenneyAsteroids.Engine.UI
         {
             PanelControl panel = new PanelControl();
 
-            panel.AddChild(new TextControl("Player", _headerFont, Color.Turquoise, new Vector2(0, 0)));
-            panel.AddChild(new TextControl("Score", _headerFont, Color.Turquoise, new Vector2(200, 0)));
+            panel.AddChild(new TextControl("Player", _headerFont, Colors.Turquoise, new Vector2(0, 0)));
+            panel.AddChild(new TextControl("Score", _headerFont, Colors.Turquoise, new Vector2(200, 0)));
 
             return panel;
         }
@@ -78,7 +78,7 @@ namespace KenneyAsteroids.Engine.UI
         // or microfortnights. If that is the case, adjust this function to display appropriately.
         protected Control CreateLeaderboardEntryControl(string player, long rating, TimeSpan time)
         {
-            Color textColor = Color.White;
+            Color textColor = Colors.White;
 
             var panel = new PanelControl();
 

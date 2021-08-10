@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 
 namespace KenneyAsteroids.Engine.Graphics
 {
@@ -37,10 +38,10 @@ namespace KenneyAsteroids.Engine.Graphics
 
         public Color[] ReadData()
         {
-            var data = new Color[(int)Width * (int)Height];
+            var data = new Microsoft.Xna.Framework.Color[(int)Width * (int)Height];
             _texture.GetData(0, _sourceRectangle, data, 0, data.Length);
 
-            return data;
+            return data.Select(x => x.ToEngine()).ToArray();
         }
     }
 }
