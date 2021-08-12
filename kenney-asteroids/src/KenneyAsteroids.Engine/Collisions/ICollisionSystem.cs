@@ -4,6 +4,6 @@ namespace KenneyAsteroids.Engine.Collisions
 {
     public interface ICollisionSystem
     {
-        void ApplyCollisions(IEnumerable<IBody> bodies);
+        IEnumerable<Collision> EvaluateCollisions(IEnumerable<IBody> bodies);
     }
 }

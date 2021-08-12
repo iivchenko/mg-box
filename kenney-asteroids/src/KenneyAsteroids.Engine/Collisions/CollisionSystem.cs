@@ -8,19 +8,13 @@ using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace KenneyAsteroids.Engine.Collisions
 {
+    // TODO: Improve with body type registration.
     public sealed class CollisionSystem : ICollisionSystem
     {
-        private readonly IReadOnlyList<IRule> _rules;
-
-        public CollisionSystem(IEnumerable<IRule> rules)
-        {
-            _rules = rules.ToList();
-        }
-
-        public void ApplyCollisions(IEnumerable<IBody> bodies)
+        public IEnumerable<Collision> EvaluateCollisions(IEnumerable<IBody> bodies)
         {
             var array = bodies.ToArray();
-            var collisions = new List<(IBody, IBody)>();
+            var collisions = new List<Collision>();
 
             for (var i = 0; i < array.Length; i++)
                 for (var j = i + 1; j < array.Length; j++)
@@ -43,16 +37,11 @@ namespace KenneyAsteroids.Engine.Collisions
                         top1 < bottom2 && top2 < bottom1 &&
                         IntersectPixels(body1, body2))
                     {
-                        collisions.Add((body1, body2));
+                        collisions.Add(new Collision(body1, body2));
                     }
                 }
 
-            foreach (var (body1, body2) in collisions)
-            {
-                _rules
-                    .Where(x => x.Match(body1, body2))
-                    .Iter(x => x.Action(body1, body2));
-            }
+            return collisions;
         }
 
         private static bool IntersectPixels(IBody body1, IBody body2)

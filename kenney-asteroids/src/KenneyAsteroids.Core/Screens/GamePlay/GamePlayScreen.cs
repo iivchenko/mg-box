@@ -1,6 +1,4 @@
 ﻿using KenneyAsteroids.Core.Entities;
-using KenneyAsteroids.Core.Events;
-using KenneyAsteroids.Core.Leaderboards;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Collisions;
@@ -13,149 +11,19 @@ using Microsoft.Extensions.Options;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using XTime = Microsoft.Xna.Framework.GameTime;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
-    public sealed class CollsionEvent<TBody1, TBody2> : IMessage
-    {
-        public CollsionEvent(TBody1 body1, TBody2 body2)
-        {
-            Id = Guid.NewGuid();
-            Body1 = body1;
-            Body2 = body2;
-        }
-
-        public Guid Id { get; }
-        public TBody1 Body1 { get; }
-        public TBody2 Body2 { get; }
-    }
-
-    public sealed class ShipAsteroidCollideEventHandler :
-        IMessageHandler<CollsionEvent<Ship, Asteroid>>,
-        IMessageHandler<CollsionEvent<Asteroid, Ship>>
-    {
-        private readonly GamePlayHud _hud;
-        private readonly IViewport _viewport;
-        private readonly IEntitySystem _entities;
-        private readonly LeaderboardsManager _leaderBoard;
-
-        public ShipAsteroidCollideEventHandler(
-            GamePlayHud hud,
-            IViewport viewport,
-            IEntitySystem entities,
-            LeaderboardsManager leaderBoard)
-        {
-            _hud = hud;
-            _viewport = viewport;
-            _entities = entities;
-            _leaderBoard = leaderBoard;
-        }
-
-        public void Handle(CollsionEvent<Ship, Asteroid> message)
-        {
-            Handle(message.Body1, message.Body2);
-        }
-
-        public void Handle(CollsionEvent<Asteroid, Ship> message)
-        {
-            Handle(message.Body2, message.Body1);
-        }
-
-        private void Handle(Ship ship, Asteroid asteroid)
-        {
-            if (_hud.Lifes > 0)
-            {
-                _hud.Lifes--;
-                ship.Position = new Vector2(_viewport.Width / 2, _viewport.Height / 2);
-            }
-            else
-            {
-                _entities.Remove(ship);
-
-                var playedTime = DateTime.Now - _hud.StartTime;
-
-                if (_leaderBoard.CanAddLeader(_hud.Scores))
-                {
-                    var newHigthScorePrompt = new PromptScreen("Congratulations, you made new high score!\nEnter you name:");
-
-                    newHigthScorePrompt.Accepted += (_, __) =>
-                    {
-                        _leaderBoard.AddLeader(newHigthScorePrompt.Text, _hud.Scores, playedTime);
-                        GameOverMessage();
-                    };
-                    newHigthScorePrompt.Cancelled += (_, __) => GameOverMessage();
-
-                    Game.ScreenManager.AddScreen(newHigthScorePrompt, null);
-                }
-                else
-                {
-                    GameOverMessage();
-                }
-            }
-        }
-
-        private void GameOverMessage()
-        {
-            const string message = "GAME OVER?\nA button, Space, Enter = Restart\nB button, Esc = Exit";
-            var msg = new MessageBoxScreen(message);
-
-            msg.Accepted += (_, __) => LoadingScreen.Load(Game.ScreenManager, false, null, new GamePlayScreen());
-            msg.Cancelled += (_, __) => LoadingScreen.Load(Game.ScreenManager, false, null, new MainMenuScreen());
-
-            Game.ScreenManager.AddScreen(msg, null);
-        }
-    }
-
-    public sealed class ProjectileAsteroidCollideEventHandler :
-       IMessageHandler<CollsionEvent<Projectile, Asteroid>>,
-       IMessageHandler<CollsionEvent<Asteroid, Projectile>>
-    {
-        private readonly GamePlayHud _hud;
-        private readonly IEntitySystem _entities;
-        private readonly IPublisher _publisher;
-        private readonly GamePlayScoreManager _scores;
-
-        public ProjectileAsteroidCollideEventHandler(
-           GamePlayHud hud,
-           IEntitySystem entities,
-           IPublisher publisher)
-        {
-            _hud = hud;
-            _entities = entities;
-            _publisher = publisher;
-
-            _scores = new GamePlayScoreManager();
-        }
-
-        public void Handle(CollsionEvent<Projectile, Asteroid> message)
-        {
-            Handle(message.Body1, message.Body2);
-        }
-
-        public void Handle(CollsionEvent<Asteroid, Projectile> message)
-        {
-            Handle(message.Body2, message.Body1);
-        }
-
-        private void Handle(Projectile projectile, Asteroid asteroid)
-        {
-            _entities.Remove(projectile, asteroid);
-            _hud.Scores += _scores.GetScore(asteroid);
-            _publisher.Publish(new EntityDestroyedEvent(asteroid));
-        }
-    }
-
     public sealed class GamePlayScreen : GameScreen
     {
         private IMessageSystem _bus;
         private IEntitySystem _entities;
         private ICollisionSystem _collisions;
         private IViewport _viewport;
+        private IPublisher _publisher;
 
         private GamePlayHud _hud;
         private GamePlayDirector _director;
@@ -169,28 +37,13 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _bus = ScreenManager.Container.GetService<IMessageSystem>();
             _viewport = ScreenManager.Container.GetService<IViewport>();
             _hud = ScreenManager.Container.GetService<GamePlayHud>();
+            _publisher = ScreenManager.Container.GetService<IPublisher>();
 
-            var publisher = ScreenManager.Container.GetService<IPublisher>();
             var factory = ScreenManager.Container.GetService<IEntityFactory>();
-
-            var rules = new List<IRule>
-            {
-                new LazyRule<Ship, Asteroid>
-                (
-                    (_, __) => true,
-                    (ship, asteroid) => publisher.Publish(new CollsionEvent<Ship, Asteroid>(ship, asteroid))
-                ),
-                new LazyRule<Projectile, Asteroid>
-                (
-                    (_, __) => true,
-                    (projectile, asteroid) => publisher.Publish(new CollsionEvent<Projectile, Asteroid>(projectile, asteroid))
-                )
-            };
-
             var ship = factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
 
-            _collisions = new CollisionSystem(rules);
-            _director = new GamePlayDirector(publisher, ScreenManager.Container.GetService<IOptionsMonitor<AudioSettings>>(), ScreenManager.Container.GetService<ContentManager>());
+            _collisions = new CollisionSystem();
+            _director = new GamePlayDirector(_publisher, ScreenManager.Container.GetService<IOptionsMonitor<AudioSettings>>(), ScreenManager.Container.GetService<ContentManager>());
             _controller = new ShipPlayerController(ship);
 
             _entities.Add(ship, _hud);
@@ -243,7 +96,27 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
                 var bodies = _entities.Where(x => x is IBody).Cast<IBody>();
 
-                _collisions.ApplyCollisions(bodies);
+                foreach(var collision in _collisions.EvaluateCollisions(bodies))
+                {
+                    switch((collision.Body1, collision.Body2))
+                    {
+                        case (Ship ship, Asteroid asteroid):
+                            _publisher.Publish(new GamePlayEntitiesCollideEvent<Ship, Asteroid>(ship, asteroid));
+                            break;
+
+                        case (Asteroid asteroid, Ship ship):
+                            _publisher.Publish(new GamePlayEntitiesCollideEvent<Ship, Asteroid>(ship, asteroid));
+                            break;
+
+                        case (Projectile projectile, Asteroid asteroid):
+                            _publisher.Publish(new GamePlayEntitiesCollideEvent<Projectile, Asteroid>(projectile, asteroid));
+                            break;
+
+                        case (Asteroid asteroid, Projectile projectile):
+                            _publisher.Publish(new GamePlayEntitiesCollideEvent<Projectile, Asteroid>(projectile, asteroid));
+                            break;
+                    }
+                }
 
                 bodies
                     .Where(IsOutOfScreen)
