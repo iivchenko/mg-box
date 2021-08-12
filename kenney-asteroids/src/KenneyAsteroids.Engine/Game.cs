@@ -2,9 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using QuakeConsole;
 using System;
-using System.Diagnostics;
 
 namespace KenneyAsteroids.Engine
 {
@@ -52,44 +50,10 @@ namespace KenneyAsteroids.Engine
             Graphics.PreferredBackBufferWidth = (int)(GraphicsDevice.DisplayMode.Width * (2.0 / 3.0));
             Graphics.PreferredBackBufferHeight = (int)(GraphicsDevice.DisplayMode.Height * (2.0 / 3.0));
 
-            var console = new ConsoleComponent(this)
-            {
-                Padding = 10.0f,
-                FontColor = Colors.White.ToXna(),
-                InputPrefixColor = Colors.White.ToXna(),
-                BackgroundColor = Colors.DarkGray.ToXna(),
-                BottomBorderThickness = 4.0f,
-                BottomBorderColor = Colors.Red.ToXna(),
-                SelectionColor = Colors.DarkGray.ToXna(),
-                LogInput = cmd => Debug.WriteLine(cmd) // Logs input commands to VS output window.
-            };
-            Components.Add(console);
-
-            _services.AddSingleton(console);
-
 #elif RELEASE
             Graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
             Graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             Graphics.IsFullScreen = true;
-#elif ALPHA
-            Graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-            Graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-            Graphics.IsFullScreen = true;
-
-            var console = new ConsoleComponent(this)
-            {
-                Padding = 10.0f,
-                FontColor = Colors.White.ToXna(),
-                InputPrefixColor = Colors.White.ToXna(),
-                BackgroundColor = Colors.DarkGray.ToXna(),
-                BottomBorderThickness = 4.0f,
-                BottomBorderColor = Colors.Red.ToXna(),
-                SelectionColor = Colors.DarkGray.ToXna(),
-                LogInput = cmd => Debug.WriteLine(cmd) // Logs input commands to VS output window.
-            };
-            Components.Add(console);
-
-            _services.AddSingleton(console);
 #endif
             Graphics.ApplyChanges();
 

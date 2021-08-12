@@ -13,7 +13,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using QuakeConsole;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -159,25 +158,17 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private IViewport _viewport;
 
         private GamePlayHud _hud;
-        private GamePlayScoreManager _scores;
-        private LeaderboardsManager _leaderBoard;
         private GamePlayDirector _director;
         private ShipPlayerController _controller;
-        private ConsoleComponent _console;
-
-        private bool _pause = false;
 
         public override void Initialize()
         {
             base.Initialize();
 
-            RegisterConsole();
-
             _entities = ScreenManager.Container.GetService<IEntitySystem>();
             _bus = ScreenManager.Container.GetService<IMessageSystem>();
             _viewport = ScreenManager.Container.GetService<IViewport>();
             _hud = ScreenManager.Container.GetService<GamePlayHud>();
-            _leaderBoard = ScreenManager.Container.GetService<LeaderboardsManager>();
 
             var publisher = ScreenManager.Container.GetService<IPublisher>();
             var factory = ScreenManager.Container.GetService<IEntityFactory>();
@@ -201,7 +192,6 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _collisions = new CollisionSystem(rules);
             _director = new GamePlayDirector(publisher, ScreenManager.Container.GetService<IOptionsMonitor<AudioSettings>>(), ScreenManager.Container.GetService<ContentManager>());
             _controller = new ShipPlayerController(ship);
-            _scores = new GamePlayScoreManager();
 
             _entities.Add(ship, _hud);
 
@@ -220,25 +210,6 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         }
 
         public override void HandleInput(InputState input)
-        {
-            if (_console != null)
-            {
-                if (input.IsNewKeyPress(Keys.OemTilde, null, out _))
-                {
-                    _console.ToggleOpenClose();
-                }
-                else if (!_console.IsVisible)
-                {
-                    HandleGameInput(input);
-                }
-            }
-            else
-            {
-                HandleGameInput(input);
-            }
-        }
-
-        private void HandleGameInput(InputState input)
         {
             base.HandleInput(input);
 
@@ -263,7 +234,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             var time = gameTime.ToDelta();
 
-            if (!otherScreenHasFocus && !_pause)
+            if (!otherScreenHasFocus)
             {
                 _entities
                     .Where(x => x is IUpdatable)
@@ -334,31 +305,6 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
                     body.Position = new Vector2(x, y);
                     break;
-            }
-        }
-
-        private void RegisterConsole()
-        {
-            _console = ScreenManager.Container.GetService<ConsoleComponent>();
-
-            if (_console != null)
-            {
-                var interpreter = new ManualInterpreter();
-                interpreter.RegisterCommand("pause", args => _pause = !_pause);
-                interpreter.RegisterCommand("about", _ =>
-                {
-                    var message = $"Kenney Asteroids v{Version.Current}-{Version.Configuration}";
-                    _console.Output.Append(message);
-                });
-                interpreter.RegisterCommand("scores", _ =>
-                {
-                    _console.Output.Append("Name\tScores\tTime played\tDate");
-                    _leaderBoard
-                        .GetLeaders()
-                        .Select(leader => $"{leader.Name}\t{leader.Score}\t{leader.PlayedTime}\t{leader.ScoreDate}")
-                        .Iter(x => _console.Output.Append(x));
-                });
-                _console.Interpreter = interpreter;
             }
         }
     }
