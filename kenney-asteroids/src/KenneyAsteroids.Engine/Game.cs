@@ -95,13 +95,15 @@ namespace KenneyAsteroids.Engine
 
             _container = _services.BuildServiceProvider(options);
 
-            var screenManager = new ScreenManager(this, _container);
-            screenManager.AddScreen(_startScreen, null);
+            ScreenManager = new ScreenManager(this, _container);
+            ScreenManager.AddScreen(_startScreen, null);
 
-            Components.Add(screenManager);
+            Components.Add(ScreenManager);
 
             base.Initialize();
         }
+
+        public static ScreenManager ScreenManager { get; private set; }
 
         protected override void Update(GameTime gameTime)
         {

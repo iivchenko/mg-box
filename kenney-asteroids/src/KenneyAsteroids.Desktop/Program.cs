@@ -51,11 +51,16 @@ namespace KenneyAsteroids.Desktop
                             .AddSingleton<ICamera, Camera>()
                             .AddSingleton<IMessageHandler<EntityCreatedEvent>, GamePlayEntityCreatedEventHandler>()
                             .AddSingleton<IMessageHandler<EntityDestroyedEvent>, GamePlayEnemyDestroyedEventHandler>()
-                            .AddSingleton<IMessageHandler<CreateAsteroidCommand>, CreateAsteroidCommandHandler>()
+                            .AddSingleton<IMessageHandler<CollsionEvent<Ship, Asteroid>>, ShipAsteroidCollideEventHandler>()
+                            .AddSingleton<IMessageHandler<CollsionEvent<Asteroid, Ship>>, ShipAsteroidCollideEventHandler>()
+                            .AddSingleton<IMessageHandler<CollsionEvent<Projectile, Asteroid>>, ProjectileAsteroidCollideEventHandler>()
+                            .AddSingleton<IMessageHandler<CollsionEvent<Asteroid, Projectile>>, ProjectileAsteroidCollideEventHandler>()
+                            .AddSingleton<IMessageHandler<GamePlayCreateAsteroidCommand>, GamePlayCreateAsteroidCommandHandler>()
                             .AddDrawSystem()
                             .AddAudio(configuration.GetSection("Audio"))
                             .AddMessageBus()
-                            .AddSingleton<LeaderboardsManager>();
+                            .AddSingleton<LeaderboardsManager>()
+                            .AddSingleton<GamePlayHud>();
                     })
                 .WithConfiguration(config => // TODO: This beast seems become redundant
                     {

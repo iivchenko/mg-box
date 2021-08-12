@@ -8,9 +8,9 @@ using System.Numerics;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
-    public sealed class CreateAsteroidCommand : IMessage
+    public sealed class GamePlayCreateAsteroidCommand : IMessage
     {
-        public CreateAsteroidCommand()
+        public GamePlayCreateAsteroidCommand()
         {
             Id = Guid.NewGuid();
         }
@@ -18,14 +18,14 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         public Guid Id { get; }
     }
 
-    public sealed class CreateAsteroidCommandHandler : IMessageHandler<CreateAsteroidCommand>
+    public sealed class GamePlayCreateAsteroidCommandHandler : IMessageHandler<GamePlayCreateAsteroidCommand>
     {
         private readonly Random _random;
         private readonly IViewport _viewport;
         private readonly IEntityFactory _factory;
         private readonly IPublisher _publisher;
 
-        public CreateAsteroidCommandHandler(IViewport viewport, IEntityFactory factory, IPublisher eventService)
+        public GamePlayCreateAsteroidCommandHandler(IViewport viewport, IEntityFactory factory, IPublisher eventService)
         {
             _viewport = viewport;
             _factory = factory;
@@ -34,7 +34,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _random = new Random();
         }
 
-        public void Handle(CreateAsteroidCommand message)
+        public void Handle(GamePlayCreateAsteroidCommand message)
         {
             const int BigAsteroidMinSpeed = 15;
             const int BigAsteroidMaxSpeed = 100;

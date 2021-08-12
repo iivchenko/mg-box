@@ -75,7 +75,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                 MediaPlayer.MediaStateChanged += ChapterFinished;
 
                 _timer = timer;
-                Director._publisher.Publish(new CreateAsteroidCommand());
+                Director._publisher.Publish(new GamePlayCreateAsteroidCommand());
 
                 timer.Start();
             }
@@ -91,7 +91,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             private void IncreaseDifficulty(float time)
             {
-                Director._publisher.Publish(new CreateAsteroidCommand());
+                Director._publisher.Publish(new GamePlayCreateAsteroidCommand());
                 _maxAsteroids--;
 
                 if (_maxAsteroids <= 0)
@@ -111,7 +111,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     if (delta >= 0.5 && delta <= 1)
                     {
                         _phase = 1;
-                        for (var i = 0; i < 10; i++) Director._publisher.Publish(new CreateAsteroidCommand());
+                        for (var i = 0; i < 10; i++) Director._publisher.Publish(new GamePlayCreateAsteroidCommand());
                     }
                 }
                 else if (_phase == 1)
@@ -121,7 +121,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     if (delta >= 0.5 && delta <= 1)
                     {
                         _phase = 2;
-                        for (var i = 0; i < 10; i++) Director._publisher.Publish(new CreateAsteroidCommand());
+                        for (var i = 0; i < 10; i++) Director._publisher.Publish(new GamePlayCreateAsteroidCommand());
                     }
                 }
             }

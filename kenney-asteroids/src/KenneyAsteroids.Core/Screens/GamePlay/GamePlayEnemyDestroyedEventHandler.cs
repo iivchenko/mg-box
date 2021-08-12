@@ -17,7 +17,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             if (@event.Entity is Asteroid)
             {
-                _publisher.Publish(new CreateAsteroidCommand());
+                _publisher.Publish(new GamePlayCreateAsteroidCommand());
             }
         }
     }

@@ -5,7 +5,6 @@ using System.Linq;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
-using Color = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Engine.Collisions
 {

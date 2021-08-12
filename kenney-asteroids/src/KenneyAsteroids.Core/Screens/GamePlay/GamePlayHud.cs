@@ -11,7 +11,7 @@ using System.Numerics;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
-    public sealed class GamePlayHud : IEntity, Engine.IDrawable
+    public sealed class GamePlayHud : IEntity, IDrawable
     {
         private readonly IOptionsMonitor<GameSettings> _settings;
 
@@ -20,18 +20,30 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private readonly IViewport _view;
         private readonly IList<Action<float>> _draws;
 
-        public GamePlayHud(IServiceProvider container)
+        public GamePlayHud(
+            IOptionsMonitor<GameSettings> settings,
+            IViewport viewport,
+            IPainter painter,
+            ContentManager content)
         {
             _draws = new List<Action<float>>();
 
-            _settings = container.GetService<IOptionsMonitor<GameSettings>>();
-            _view = container.GetService<IViewport>();
+            _settings = settings;
+            _view = viewport;
+            _painter = painter;
 
-            var content = container.GetService<ContentManager>();
-
-            _painter = container.GetService<IPainter>();
             _font = content.Load<SpriteFont>("Fonts/simxel.font");
-            
+        }
+
+        public int Scores { get; set; }
+
+        public int Lifes { get; set; }
+
+        public DateTime StartTime { get; private set; }
+
+        public void Initialize()
+        {
+            _draws.Clear();
             _draws.Add(DrawLifes);
 
             if (_settings.CurrentValue.ToggleFramerate.Toggle)
@@ -40,11 +52,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             }
 
             Lifes = 3;
+
+            StartTime = DateTime.Now;
         }
-
-        public int Scores { get; set; }
-
-        public int Lifes { get; set; }
 
         public void Draw(float time)
         {
