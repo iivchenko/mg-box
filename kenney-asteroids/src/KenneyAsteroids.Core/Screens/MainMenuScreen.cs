@@ -1,9 +1,9 @@
 ﻿using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using System.Numerics;
@@ -59,7 +59,7 @@ namespace KenneyAsteroids.Core.Screens
 
             if (MediaPlayer.State == MediaState.Stopped)
             {
-                var song = ScreenManager.Container.GetService<ContentManager>().Load<Song>("Music/menu.song");
+                var song = ScreenManager.Container.GetService<IContentProvider>().Load<Song>("Music/menu.song");
                 
                 MediaPlayer.Play(song);
             }

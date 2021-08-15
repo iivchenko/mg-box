@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenneyAsteroids.PipelineExt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenneyAsteroids.Engine.Benchmark", "src\KenneyAsteroids.Engine.Benchmark\KenneyAsteroids.Engine.Benchmark.csproj", "{AC74FD08-CE6E-478B-B76E-3221BCA31F30}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KenneyAsteroids.Engine.MonoGame", "src\KenneyAsteroids.Engine.MonoGame\KenneyAsteroids.Engine.MonoGame.csproj", "{62993E35-0259-47AA-9A6F-369E0494C1F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{AC74FD08-CE6E-478B-B76E-3221BCA31F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC74FD08-CE6E-478B-B76E-3221BCA31F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC74FD08-CE6E-478B-B76E-3221BCA31F30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62993E35-0259-47AA-9A6F-369E0494C1F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62993E35-0259-47AA-9A6F-369E0494C1F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62993E35-0259-47AA-9A6F-369E0494C1F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62993E35-0259-47AA-9A6F-369E0494C1F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

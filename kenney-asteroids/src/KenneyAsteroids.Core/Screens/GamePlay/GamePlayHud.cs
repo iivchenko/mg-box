@@ -1,9 +1,8 @@
 ﻿using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -24,7 +23,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             IOptionsMonitor<GameSettings> settings,
             IViewport viewport,
             IPainter painter,
-            ContentManager content)
+            IContentProvider content)
         {
             _draws = new List<Action<float>>();
 

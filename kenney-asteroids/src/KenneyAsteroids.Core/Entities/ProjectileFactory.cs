@@ -1,6 +1,6 @@
 ﻿using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework.Content;
 using System.Numerics;
 
 namespace KenneyAsteroids.Core.Entities
@@ -11,7 +11,7 @@ namespace KenneyAsteroids.Core.Entities
         private readonly IPainter _draw;
 
         public ProjectileFactory(
-            ContentManager content,            
+            IContentProvider content,
             IPainter draw)
         {
             _spriteSheet = content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");

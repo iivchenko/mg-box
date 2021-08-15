@@ -5,15 +5,15 @@ using KenneyAsteroids.Core.Leaderboards;
 using KenneyAsteroids.Core.Screens;
 using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.MonoGame.Content;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 
@@ -55,6 +55,7 @@ namespace KenneyAsteroids.Desktop
                             .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>, GamePlayProjectileAsteroidCollideEventHandler>()
                             .AddSingleton<IMessageHandler<GamePlayCreateAsteroidCommand>, GamePlayCreateAsteroidCommandHandler>()
                             .AddDrawSystem()
+                            .AddSingleton<IContentProvider, MonoGameContentProvider>()
                             .AddAudio(configuration.GetSection("Audio"))
                             .AddMessageBus()
                             .AddSingleton<LeaderboardsManager>()

@@ -1,9 +1,9 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
+using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Messaging;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
 using System;
 using System.Numerics;
 
@@ -19,7 +19,7 @@ namespace KenneyAsteroids.Core.Entities
         private readonly IAudioPlayer _player;
 
         public EntityFactory(
-            ContentManager content,
+            IContentProvider content,
             IProjectileFactory projectileFactory,
             IPublisher eventService,
             IPainter draw,

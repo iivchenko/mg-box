@@ -1,11 +1,11 @@
 ﻿using KenneyAsteroids.Core.Leaderboards;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Globalization;
@@ -34,7 +34,7 @@ namespace KenneyAsteroids.Core.Screens
             _viewport = ScreenManager.Container.GetService<IViewport>();
             _magager = ScreenManager.Container.GetService<LeaderboardsManager>();
 
-            var content = ScreenManager.Container.GetService<ContentManager>();
+            var content = ScreenManager.Container.GetService<IContentProvider>();
             var font = content.Load<SpriteFont>("Fonts/simxel.font");
 
             _titleFont = font;

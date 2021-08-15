@@ -1,9 +1,9 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
+using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Messaging;
 using Microsoft.Extensions.Options;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
 using System;
 
@@ -14,14 +14,14 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private readonly IPublisher _publisher;
         private readonly IOptionsMonitor<AudioSettings> _settings;
 
-        private ContentManager _content;
+        private IContentProvider _content;
 
         private Chapter _current;
 
         public GamePlayDirector(
             IPublisher publisher,
             IOptionsMonitor<AudioSettings> settings,
-            ContentManager content)
+            IContentProvider content)
         {
             _publisher = publisher;
             _settings = settings;
