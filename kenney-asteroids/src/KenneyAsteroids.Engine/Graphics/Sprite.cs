@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Linq;
 
 namespace KenneyAsteroids.Engine.Graphics
@@ -11,6 +12,7 @@ namespace KenneyAsteroids.Engine.Graphics
 
         public Sprite(Texture2D texture, Rectangle? sourceRectangle)
         {
+            Id = Guid.NewGuid();
             _texture = texture;
             _sourceRectangle = sourceRectangle;
 
@@ -31,6 +33,7 @@ namespace KenneyAsteroids.Engine.Graphics
         {
         }
 
+        public Guid Id { get; }
         public float Height { get; }
         public float Width { get; }
         public Texture2D Texture => _texture;

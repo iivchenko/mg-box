@@ -3,7 +3,6 @@ using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Messaging;
-using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Numerics;
 
@@ -12,7 +11,7 @@ namespace KenneyAsteroids.Core.Entities
     public sealed class EntityFactory : IEntityFactory
     {
         private readonly SpriteSheet _spriteSheet;
-        private readonly SoundEffect _lazer;
+        private readonly Sound _lazer;
         private readonly IProjectileFactory _projectileFactory;
         private readonly IPublisher _publisher;
         private readonly IPainter _draw;
@@ -26,7 +25,7 @@ namespace KenneyAsteroids.Core.Entities
             IAudioPlayer player)
         {
             _spriteSheet = content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
-            _lazer = content.Load<SoundEffect>("Sounds/laser.sound");
+            _lazer = content.Load<Sound>("Sounds/laser.sound");
             _projectileFactory = projectileFactory;
             _publisher = eventService;
             _draw = draw;

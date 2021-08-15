@@ -3,7 +3,6 @@ using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Messaging;
-using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Numerics;
 
@@ -20,7 +19,7 @@ namespace KenneyAsteroids.Core.Entities
         private readonly IPublisher _eventService;
         private readonly IAudioPlayer _player;
 
-        private readonly SoundEffect _lazer;
+        private readonly Sound _lazer;
 
         private State _state;
         private double _reloading;
@@ -31,7 +30,7 @@ namespace KenneyAsteroids.Core.Entities
             IProjectileFactory factory,
             IPublisher eventService,
             IAudioPlayer player,
-            SoundEffect lazer)
+            Sound lazer)
         {
             _offset = offset;
             _reload = reload;

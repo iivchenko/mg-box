@@ -54,9 +54,9 @@ namespace KenneyAsteroids.Desktop
                             .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Ship, Asteroid>>, GamePlayShipAsteroidCollideEventHandler>()
                             .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>, GamePlayProjectileAsteroidCollideEventHandler>()
                             .AddSingleton<IMessageHandler<GamePlayCreateAsteroidCommand>, GamePlayCreateAsteroidCommandHandler>()
+                            .AddMonoGameContentSystem()
                             .AddMonoGameDrawSystem()
-                            .AddSingleton<IContentProvider, MonoGameContentProvider>()
-                            .AddAudio(configuration.GetSection("Audio"))
+                            .AddMonoGameAudioSystem(configuration.GetSection("Audio"))
                             .AddMessageBus()
                             .AddSingleton<LeaderboardsManager>()
                             .AddSingleton<GamePlayHud>();

@@ -1,19 +1,24 @@
-﻿using KenneyAsteroids.Engine.Content;
+﻿using KenneyAsteroids.Engine.Audio;
+using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
+using System;
+using System.Collections.Generic;
 
 namespace KenneyAsteroids.Engine.MonoGame
 {
     public sealed class MonoGameContentProvider : IContentProvider
     {
         private readonly ContentManager _content;
+        private readonly IDictionary<Guid, string> _map;
 
         public MonoGameContentProvider(ContentManager content)
         {
             _content = content;
+            _map = new Dictionary<Guid, string>();
         }
 
         public TContent Load<TContent>(string path)
@@ -25,15 +30,25 @@ namespace KenneyAsteroids.Engine.MonoGame
             {
                 var texture =_content.Load<Texture2D>(path);
 
-                return new Sprite(texture) as TContent;
+                var sprite = new Sprite(texture);
+
+                _map.Add(sprite.Id, path);
+
+                return sprite as TContent;
             }
             else if (type == typeof(SpriteSheet))
             {
                 return _content.Load<SpriteSheet>(path) as TContent;
             }
-            else if (type == typeof(SoundEffect))
+            else if (type == typeof(Sound))
             {
-                return _content.Load<SoundEffect>(path) as TContent;
+                var sound = new Sound();
+
+                _content.Load<SoundEffect>(path);
+
+                _map.Add(sound.Id, path);
+
+                return sound as TContent;
             }
             else if (type == typeof(SpriteFont))
             {
@@ -47,6 +62,16 @@ namespace KenneyAsteroids.Engine.MonoGame
             {
                 throw new System.Exception($"Unknown content type {type.Name}!!");
             }
+        }
+
+        internal TContent Load<TContent>(Guid id)
+        {
+            if (_map.TryGetValue(id, out var path))
+            {
+                return _content.Load<TContent>(path);
+            }
+
+            throw new InvalidOperationException($"Specified id doesn't exist '{id}'!");
         }
     }
 }
