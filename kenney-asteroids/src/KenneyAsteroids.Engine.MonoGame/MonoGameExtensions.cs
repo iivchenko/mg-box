@@ -3,6 +3,7 @@ using System.Numerics;
 
 using XVector = Microsoft.Xna.Framework.Vector2;
 using XMatrix = Microsoft.Xna.Framework.Matrix;
+using XRect = Microsoft.Xna.Framework.Rectangle;
 using XColor = Microsoft.Xna.Framework.Color;
 using XGameTime = Microsoft.Xna.Framework.GameTime;
 
@@ -18,6 +19,18 @@ namespace KenneyAsteroids.Engine.MonoGame
         public static XColor ToXna(this Color color)
         {
             return new XColor(color.Red, color.Green, color.Blue, color.Alpha);
+        }
+
+        public static XRect ToXna(this Rectangle rect)
+        {
+            return new XRect(rect.X, rect.Y, rect.Width, rect.Height);
+        }
+
+        public static XRect? ToXna(this Rectangle? rect)
+        {
+            return rect.HasValue
+                ? new XRect(rect.Value.X, rect.Value.Y, rect.Value.Width, rect.Value.Height)
+                : new XRect?();
         }
 
         public static Color ToEngine(this XColor color)

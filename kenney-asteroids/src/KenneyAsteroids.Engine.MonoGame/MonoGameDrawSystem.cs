@@ -34,7 +34,7 @@ namespace KenneyAsteroids.Engine.MonoGame
                 .Draw(
                     sprite.Texture,
                     position.ToXnaVector(),
-                    sprite.SourceRectangle,
+                    sprite.SourceRectangle.ToXna(),
                     color.ToXna(),
                     rotation,
                     origin.ToXnaVector(),
@@ -48,7 +48,7 @@ namespace KenneyAsteroids.Engine.MonoGame
             _batch
                 .Draw(
                     sprite.Texture,
-                    rectagle,
+                    rectagle.ToXna(),
                     color.ToXna());
         }
 
@@ -64,7 +64,7 @@ namespace KenneyAsteroids.Engine.MonoGame
 
         public void Draw(Sprite sprite, Rectangle destination, Rectangle source, Color color)
         {
-            _batch.Draw(sprite.Texture, destination, source, color.ToXna());
+            _batch.Draw(sprite.Texture, destination.ToXna(), source.ToXna(), color.ToXna());
         }
     }
 }

@@ -17,8 +17,7 @@ namespace KenneyAsteroids.Engine.UI
         public override void Update(GameTime gametime)
         {
             Vector2 size = ComputeSize();
-            scrollTracker.CanvasRect.Width = (int)size.X;
-            scrollTracker.CanvasRect.Height = (int)size.Y;
+            scrollTracker.CanvasRect = new Rectangle(scrollTracker.CanvasRect.X, scrollTracker.CanvasRect.Y, (int)size.X, (int)size.Y);
             scrollTracker.Update(gametime);
 
             base.Update(gametime);

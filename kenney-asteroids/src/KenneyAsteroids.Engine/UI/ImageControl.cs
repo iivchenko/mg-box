@@ -63,19 +63,19 @@ namespace KenneyAsteroids.Engine.UI
 
             Vector2 actualSourceSize = SourceSize ?? Size;
             Rectangle sourceRectangle = new Rectangle
-            {
-                X = (int)origin.X,
-                Y = (int)origin.Y,
-                Width = (int)actualSourceSize.X,
-                Height = (int)actualSourceSize.Y,
-            };
+            (
+                (int)origin.X,
+                (int)origin.Y,
+                (int)actualSourceSize.X,
+                (int)actualSourceSize.Y
+            );
             Rectangle destRectangle = new Rectangle
-            {
-                X = (int)context.DrawOffset.X,
-                Y = (int)context.DrawOffset.Y,
-                Width = (int)Size.X,
-                Height = (int)Size.Y
-            };
+            (
+                (int)context.DrawOffset.X,
+                (int)context.DrawOffset.Y,
+                (int)Size.X,
+                (int)Size.Y
+            );
             context.Painter.Draw(drawSprite, destRectangle, sourceRectangle, Color);
         }
 
