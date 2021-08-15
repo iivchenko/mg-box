@@ -5,11 +5,9 @@ using KenneyAsteroids.Core.Leaderboards;
 using KenneyAsteroids.Core.Screens;
 using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
-using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Messaging;
-using KenneyAsteroids.Engine.MonoGame;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,8 +66,8 @@ namespace KenneyAsteroids.Desktop
                         config.ContentPath = "Content"; // TODO: Make as a part of content settings?
                         config.ScreenColor = Colors.Black; // TODO: Make as a part of graphics settings?
                     })
-                .Build<BootstrapScreen<MainMenuScreen>>()
-                .RunSafe();
+                .Build((services, config) => new MonoGameGame(services, config, new BootstrapScreen<MainMenuScreen>()))
+                .Run();
         }
     }
 }

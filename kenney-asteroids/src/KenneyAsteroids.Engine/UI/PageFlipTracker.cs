@@ -7,10 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework.Input.Touch;
-using Microsoft.Xna.Framework;
-using System.Diagnostics;
 using KenneyAsteroids.Engine.Screens;
 
 namespace KenneyAsteroids.Engine.UI

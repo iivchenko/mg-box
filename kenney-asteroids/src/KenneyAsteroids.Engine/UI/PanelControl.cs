@@ -7,7 +7,6 @@
 
 using Microsoft.Xna.Framework;
 
-
 namespace KenneyAsteroids.Engine.UI
 {
     public class PanelControl : Control

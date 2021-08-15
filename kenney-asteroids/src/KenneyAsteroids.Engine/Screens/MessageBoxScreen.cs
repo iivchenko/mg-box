@@ -11,7 +11,6 @@
 using System;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 using KenneyAsteroids.Engine.Content;

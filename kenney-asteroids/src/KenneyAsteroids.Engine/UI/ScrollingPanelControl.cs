@@ -8,7 +8,6 @@
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Xna.Framework;
 
-
 namespace KenneyAsteroids.Engine.UI
 {
     public class ScrollingPanelControl : PanelControl

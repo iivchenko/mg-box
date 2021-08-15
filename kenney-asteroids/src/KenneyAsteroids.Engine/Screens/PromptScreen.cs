@@ -1,12 +1,12 @@
 ﻿using System;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 using KenneyAsteroids.Engine.UI;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
+using KenneyAsteroids.Engine.Content;
 
 namespace KenneyAsteroids.Engine.Screens
 {
@@ -33,7 +33,7 @@ namespace KenneyAsteroids.Engine.Screens
 
         public override void Initialize()
         {
-            ContentManager content = ScreenManager.Game.Content;
+            var content = ScreenManager.Container.GetService<IContentProvider>();
 
             _gradientSprite = content.Load<Sprite>("Sprites/gradient.sprite");
             _text = new TextControl(string.Empty, ScreenManager.Font, Colors.Yellow);

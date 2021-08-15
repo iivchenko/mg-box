@@ -6,7 +6,7 @@ using System;
 
 namespace KenneyAsteroids.Engine
 {
-    public sealed class MonoGameGame : Game
+    public sealed class MonoGameGame : Game, IGame
     {
         private readonly GameConfiguration _configuration;
         private readonly IServiceCollection _services;
@@ -59,15 +59,13 @@ namespace KenneyAsteroids.Engine
 
             _container = _services.BuildServiceProvider(options);
 
-            ScreenManager = new ScreenManager(this, _container);
-            ScreenManager.AddScreen(_startScreen, null);
+            var screenManager = new ScreenManager(this, _container);
+            screenManager.AddScreen(_startScreen, null);
 
-            Components.Add(ScreenManager);
+            Components.Add(screenManager);
 
             base.Initialize();
         }
-
-        public static ScreenManager ScreenManager { get; private set; }
 
         protected override void Update(GameTime gameTime)
         {

@@ -85,7 +85,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            var time = gameTime.ToDelta();
+            var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (!otherScreenHasFocus)
             {
@@ -133,7 +133,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             base.Draw(gameTime);
 
-            var time = gameTime.ToDelta();
+            var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _entities.Where(x => x is IDrawable).Cast<IDrawable>().Iter(x => x.Draw(time));
         }

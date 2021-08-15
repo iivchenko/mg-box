@@ -12,7 +12,6 @@ using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
@@ -84,7 +83,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Constructs a new screen manager component.
         /// </summary>
-        public ScreenManager(MonoGameGame game, IServiceProvider container)
+        public ScreenManager(Game game, IServiceProvider container)
             : base(game)
         {
             Container = container;

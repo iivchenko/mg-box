@@ -11,9 +11,8 @@
 using System;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Extensions.DependencyInjection;
+using KenneyAsteroids.Engine.Content;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -27,7 +26,6 @@ namespace KenneyAsteroids.Engine.Screens
     {
         #region Fields
 
-        ContentManager content;
         private Sprite _backgroundSprite;
 
         #endregion
@@ -55,8 +53,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public override void Initialize()
         {
-            if (content == null)
-                content = new ContentManager(ScreenManager.Game.Services, "Content");
+            var content = ScreenManager.Container.GetService<IContentProvider>();
 
             _backgroundSprite = content.Load<Sprite>("background");
         }

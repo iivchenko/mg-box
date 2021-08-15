@@ -10,7 +10,6 @@ using KenneyAsteroids.Engine.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
 
-
 namespace KenneyAsteroids.Engine.UI
 {
     /// <remarks>

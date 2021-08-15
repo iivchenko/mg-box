@@ -11,9 +11,6 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
-using System.IO;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens

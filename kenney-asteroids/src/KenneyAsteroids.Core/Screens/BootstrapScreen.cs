@@ -15,6 +15,8 @@ namespace KenneyAsteroids.Core.Screens
         public override void Initialize()
         {
             base.Initialize();
+            
+            GameRoot.ScreenManager = ScreenManager;
 
             var camera = ScreenManager.Container.GetService<ICamera>();
             var view = ScreenManager.Container.GetService<IViewport>();

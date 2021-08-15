@@ -69,8 +69,6 @@ namespace KenneyAsteroids.Core.Screens
         {
             base.Draw(gameTime);
 
-            var time = gameTime.ToDelta();
-
             _painter.DrawString(_font, _version, _versionPosition, Colors.White);
         }
 
