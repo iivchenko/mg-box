@@ -6,7 +6,7 @@ using System;
 
 namespace KenneyAsteroids.Engine
 {
-    public sealed class Game : Microsoft.Xna.Framework.Game
+    public sealed class MonoGameGame : Game
     {
         private readonly GameConfiguration _configuration;
         private readonly IServiceCollection _services;
@@ -15,7 +15,7 @@ namespace KenneyAsteroids.Engine
         private IServiceProvider _container;
         private Color _clearColor;
 
-        public Game(
+        public MonoGameGame(
             IServiceCollection services, 
             GameConfiguration configuration, 
             GameScreen startScreen)
@@ -76,7 +76,7 @@ namespace KenneyAsteroids.Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(_clearColor.ToXna());
+            GraphicsDevice.Clear(new Microsoft.Xna.Framework.Color(_clearColor.Red, _clearColor.Green, _clearColor.Blue, _clearColor.Alpha));
 
             base.Draw(gameTime);
         }

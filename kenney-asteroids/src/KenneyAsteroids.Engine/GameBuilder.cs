@@ -34,10 +34,10 @@ namespace KenneyAsteroids.Engine
             return this;
         }
 
-        public Game Build<TScreen>()
+        public MonoGameGame Build<TScreen>()
             where TScreen : GameScreen, new()
         {
-            return new Game(_container, _configuration, new TScreen());
+            return new MonoGameGame(_container, _configuration, new TScreen());
         }
     }
 }

@@ -57,7 +57,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     };
                     newHigthScorePrompt.Cancelled += (_, __) => GameOverMessage();
 
-                    Game.ScreenManager.AddScreen(newHigthScorePrompt, null);
+                    MonoGameGame.ScreenManager.AddScreen(newHigthScorePrompt, null);
                 }
                 else
                 {
@@ -71,10 +71,10 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             const string message = "GAME OVER?\nA button, Space, Enter = Restart\nB button, Esc = Exit";
             var msg = new MessageBoxScreen(message);
 
-            msg.Accepted += (_, __) => LoadingScreen.Load(Game.ScreenManager, false, null, new GamePlayScreen());
-            msg.Cancelled += (_, __) => LoadingScreen.Load(Game.ScreenManager, false, null, new MainMenuScreen());
+            msg.Accepted += (_, __) => LoadingScreen.Load(MonoGameGame.ScreenManager, false, null, new GamePlayScreen());
+            msg.Cancelled += (_, __) => LoadingScreen.Load(MonoGameGame.ScreenManager, false, null, new MainMenuScreen());
 
-            Game.ScreenManager.AddScreen(msg, null);
+            MonoGameGame.ScreenManager.AddScreen(msg, null);
         }
     }
 }

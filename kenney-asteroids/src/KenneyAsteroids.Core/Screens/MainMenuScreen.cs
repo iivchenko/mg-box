@@ -30,9 +30,9 @@ namespace KenneyAsteroids.Core.Screens
         public override void Initialize()
         {
             base.Initialize();
-
+            var content = ScreenManager.Container.GetService<IContentProvider>();
             _painter = ScreenManager.Container.GetService<IPainter>();
-            _font = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/simxel.font");
+            _font = content.Load<SpriteFont>("Fonts/simxel.font");
             _version = Version.Current;
 
             var viewport = ScreenManager.Container.GetService<IViewport>();
@@ -59,7 +59,7 @@ namespace KenneyAsteroids.Core.Screens
 
             if (MediaPlayer.State == MediaState.Stopped)
             {
-                var song = ScreenManager.Container.GetService<IContentProvider>().Load<Song>("Music/menu.song");
+                var song = content.Load<Song>("Music/menu.song");
                 
                 MediaPlayer.Play(song);
             }

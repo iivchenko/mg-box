@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Extensions.DependencyInjection;
+using KenneyAsteroids.Engine.Content;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -62,11 +63,10 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public override void Initialize()
         {
-            ContentManager content = ScreenManager.Game.Content;
+            var content = ScreenManager.Container.GetService<IContentProvider>();
 
             _gradientSprite = content.Load<Sprite>("Sprites/gradient.sprite");
         }
-
 
         #endregion
 

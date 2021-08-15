@@ -41,7 +41,7 @@ namespace KenneyAsteroids.Engine.Graphics
             var data = new Microsoft.Xna.Framework.Color[(int)Width * (int)Height];
             _texture.GetData(0, _sourceRectangle, data, 0, data.Length);
 
-            return data.Select(x => x.ToEngine()).ToArray();
+            return data.Select(color => new Color(color.R, color.G, color.B, color.A)).ToArray();
         }
     }
 }
