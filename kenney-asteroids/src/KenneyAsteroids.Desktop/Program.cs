@@ -9,7 +9,7 @@ using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Messaging;
-using KenneyAsteroids.Engine.MonoGame.Content;
+using KenneyAsteroids.Engine.MonoGame;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,7 +54,7 @@ namespace KenneyAsteroids.Desktop
                             .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Ship, Asteroid>>, GamePlayShipAsteroidCollideEventHandler>()
                             .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>, GamePlayProjectileAsteroidCollideEventHandler>()
                             .AddSingleton<IMessageHandler<GamePlayCreateAsteroidCommand>, GamePlayCreateAsteroidCommandHandler>()
-                            .AddDrawSystem()
+                            .AddMonoGameDrawSystem()
                             .AddSingleton<IContentProvider, MonoGameContentProvider>()
                             .AddAudio(configuration.GetSection("Audio"))
                             .AddMessageBus()

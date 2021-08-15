@@ -13,7 +13,7 @@ namespace KenneyAsteroids.Engine.Screens
     public sealed class PromptScreen : GameScreen
     {
         private readonly string _message;
-        private Texture2D _gradientTexture;
+        private Sprite _gradientSprite;
         private TextControl _text;
 
         public event EventHandler<PlayerIndexEventArgs> Accepted;
@@ -35,7 +35,7 @@ namespace KenneyAsteroids.Engine.Screens
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            _gradientTexture = content.Load<Texture2D>("Sprites/gradient.sprite");
+            _gradientSprite = content.Load<Sprite>("Sprites/gradient.sprite");
             _text = new TextControl(string.Empty, ScreenManager.Font, Colors.Yellow);
         }
 
@@ -111,7 +111,7 @@ namespace KenneyAsteroids.Engine.Screens
             // Fade the popup alpha during transitions.
             Color color = Colors.White * TransitionAlpha;
             // Draw the background rectangle.
-            painter.Draw(_gradientTexture, backgroundRectangle, color);
+            painter.Draw(_gradientSprite, backgroundRectangle, color);
 
             // Draw the message box text.
             painter.DrawString(font, _message, textPosition.ToVector(), color);

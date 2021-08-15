@@ -28,7 +28,7 @@ namespace KenneyAsteroids.Engine.Screens
         #region Fields
 
         ContentManager content;
-        Texture2D backgroundTexture;
+        private Sprite _backgroundSprite;
 
         #endregion
 
@@ -58,7 +58,7 @@ namespace KenneyAsteroids.Engine.Screens
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            backgroundTexture = content.Load<Texture2D>("background");
+            _backgroundSprite = content.Load<Sprite>("background");
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace KenneyAsteroids.Engine.Screens
             var viewport = ScreenManager.Container.GetService<IViewport>();
             Rectangle fullscreen = new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height);
 
-            painter.Draw(backgroundTexture, fullscreen, new Color((byte)TransitionAlpha, (byte)TransitionAlpha, (byte)TransitionAlpha, 255));
+            painter.Draw(_backgroundSprite, fullscreen, new Color((byte)TransitionAlpha, (byte)TransitionAlpha, (byte)TransitionAlpha, 255));
         }
 
 

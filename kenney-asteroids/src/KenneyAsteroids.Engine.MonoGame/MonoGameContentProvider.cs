@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 
-namespace KenneyAsteroids.Engine.MonoGame.Content
+namespace KenneyAsteroids.Engine.MonoGame
 {
     public sealed class MonoGameContentProvider : IContentProvider
     {

@@ -1,17 +1,18 @@
 ﻿using Comora;
+using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using System.Numerics;
 
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
-namespace KenneyAsteroids.Engine.Graphics
+namespace KenneyAsteroids.Engine.MonoGame
 {
-    public sealed class DrawSystem : IPainter, IDrawSystemBatcher
+    public sealed class MonoGameDrawSystem : IPainter, IDrawSystemBatcher
     {
         private readonly SpriteBatch _batch;
         private readonly ICamera _camera;
 
-        public DrawSystem(SpriteBatch batch, ICamera camera)
+        public MonoGameDrawSystem(SpriteBatch batch, ICamera camera)
         {
             _batch = batch;
             _camera = camera;
@@ -51,21 +52,6 @@ namespace KenneyAsteroids.Engine.Graphics
                     color.ToXna());
         }
 
-        public void Draw(Texture2D texture, Rectangle target, Rectangle source, Color color)
-        {
-            _batch
-                .Draw(
-                    texture,
-                    target,
-                    source,
-                    color.ToXna());
-        }
-
-        public void Draw(Texture2D texture, Rectangle target, Color color)
-        {
-            _batch.Draw(texture, target, color.ToXna());
-        }
-
         public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color)
         {
             _batch.DrawString(spriteFont, text, position.ToXnaVector(), color.ToXna());
@@ -74,6 +60,11 @@ namespace KenneyAsteroids.Engine.Graphics
         public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
         {
             _batch.DrawString(spriteFont, text, position.ToXnaVector(), color.ToXna(), rotation, origin.ToXnaVector(), scale, effects, layerDepth);
+        }
+
+        public void Draw(Sprite sprite, Rectangle destination, Rectangle source, Color color)
+        {
+            _batch.Draw(sprite.Texture, destination, source, color.ToXna());
         }
     }
 }

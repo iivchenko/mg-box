@@ -27,7 +27,7 @@ namespace KenneyAsteroids.Engine.Screens
         #region Fields
 
         private string _message;
-        Texture2D gradientTexture;
+        private Sprite _gradientSprite;
 
         #endregion
 
@@ -64,7 +64,7 @@ namespace KenneyAsteroids.Engine.Screens
         {
             ContentManager content = ScreenManager.Game.Content;
 
-            gradientTexture = content.Load<Texture2D>("Sprites/gradient.sprite");
+            _gradientSprite = content.Load<Sprite>("Sprites/gradient.sprite");
         }
 
 
@@ -138,7 +138,7 @@ namespace KenneyAsteroids.Engine.Screens
             // Fade the popup alpha during transitions.
             Color color = Colors.White * TransitionAlpha;
             // Draw the background rectangle.
-            painter.Draw(gradientTexture, backgroundRectangle, color);
+            painter.Draw(_gradientSprite, backgroundRectangle, color);
 
             // Draw the message box text.
             painter.DrawString(font, _message, textPosition.ToVector(), color);

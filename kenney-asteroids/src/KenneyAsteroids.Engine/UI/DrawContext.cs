@@ -32,7 +32,7 @@ namespace KenneyAsteroids.Engine.UI
         /// <summary>
         /// A single-pixel white texture, useful for drawing boxes and lines within a SpriteBatch.
         /// </summary>
-        public Texture2D BlankTexture;
+        public Sprite BlankSprite;
 
         /// <summary>
         /// Positional offset to draw at. Note that this is a simple positional offset rather

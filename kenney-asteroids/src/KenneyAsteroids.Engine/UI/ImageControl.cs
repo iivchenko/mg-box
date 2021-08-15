@@ -5,6 +5,7 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 
+using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -19,7 +20,7 @@ namespace KenneyAsteroids.Engine.UI
     /// </summary>
     public class ImageControl : Control
     {
-        private Texture2D texture;
+        private Sprite _sprite;
 
         // Position within the source texture, in texels. Default is (0,0) for the upper-left corner.
         public Vector2 origin;
@@ -33,14 +34,14 @@ namespace KenneyAsteroids.Engine.UI
         public Color Color;
 
         // Texture to draw
-        public Texture2D Texture
+        public Sprite Texture
         {
-            get { return texture; }
+            get { return _sprite; }
             set
             {
-                if (texture != value)
+                if (_sprite != value)
                 {
-                    texture = value;
+                    _sprite = value;
                     InvalidateAutoSize();
                 }
             }
@@ -50,17 +51,17 @@ namespace KenneyAsteroids.Engine.UI
         {
         }
 
-        public ImageControl(Texture2D texture, Vector2 position)
+        public ImageControl(Sprite sprite, Vector2 position)
         {
-            this.texture = texture;
-            this.Position = position;
-            this.Color = Colors.White;
+            _sprite = sprite;
+            Position = position;
+            Color = Colors.White;
         }
 
         public override void Draw(DrawContext context)
         {
             base.Draw(context);
-            Texture2D drawTexture = texture ?? context.BlankTexture;
+            var drawSprite = _sprite ?? context.BlankSprite;
 
             Vector2 actualSourceSize = SourceSize ?? Size;
             Rectangle sourceRectangle = new Rectangle
@@ -77,14 +78,14 @@ namespace KenneyAsteroids.Engine.UI
                 Width = (int)Size.X,
                 Height = (int)Size.Y
             };
-            context.Painter.Draw(drawTexture, destRectangle, sourceRectangle, Color);
+            context.Painter.Draw(drawSprite, destRectangle, sourceRectangle, Color);
         }
 
         override public Vector2 ComputeSize()
         {
-            if(texture!=null)
+            if(_sprite!=null)
             {
-                return new Vector2(texture.Width, texture.Height);
+                return new Vector2(_sprite.Width, _sprite.Height);
             }
             return Vector2.Zero;
         }
