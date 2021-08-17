@@ -18,8 +18,10 @@ namespace KenneyAsteroids.Core.Entities
 
         public Asteroid(
             IPainter draw,
+            AsteroidType type,
             Sprite sprite,
             Vector2 velocity,
+            Vector2 scale,
             float rotationSpeed)
         {
             _sprite = sprite;
@@ -28,12 +30,13 @@ namespace KenneyAsteroids.Core.Entities
             _rotationSpeed = rotationSpeed;
 
             Id = Guid.NewGuid();
+            Type = type;
             Origin = new Vector2(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
             Rotation = 0.0f;
             Position = Vector2.Zero;
+            Scale = scale;
             Width = _sprite.Width;
             Height = _sprite.Height;
-            Scale = Vector2.One;
             Data = sprite.ReadData();
         }
 
@@ -45,6 +48,7 @@ namespace KenneyAsteroids.Core.Entities
         public float Width { get; set; }
         public float Height { get; set; }
         public Color[] Data { get; set; }
+        public AsteroidType Type { get; set; }
 
         void IUpdatable.Update(float time)
         {
@@ -63,5 +67,13 @@ namespace KenneyAsteroids.Core.Entities
                     Rotation,
                     Colors.White);
         }
+    }
+
+    public enum AsteroidType
+    {
+        Tiny, 
+        Small, 
+        Medium, 
+        Big
     }
 }

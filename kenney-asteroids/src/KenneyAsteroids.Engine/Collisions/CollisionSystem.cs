@@ -22,15 +22,15 @@ namespace KenneyAsteroids.Engine.Collisions
                     var body1 = array[i];
                     var body2 = array[j];
 
-                    var left1 = body1.Position.X - body1.Origin.X;
-                    var right1 = body1.Position.X - body1.Origin.X + body1.Width;
-                    var top1 = body1.Position.Y - body1.Origin.Y;
-                    var bottom1 = body1.Position.Y - body1.Origin.Y + body1.Height;
+                    var left1 = body1.Position.X - body1.Origin.X * body1.Scale.X;
+                    var right1 = body1.Position.X - body1.Origin.X * body1.Scale.X + body1.Width * body1.Scale.X;
+                    var top1 = body1.Position.Y - body1.Origin.Y * body1.Scale.X;
+                    var bottom1 = body1.Position.Y - body1.Origin.Y * body1.Scale.X + body1.Height * body1.Scale.X;
 
-                    var left2 = body2.Position.X - body2.Origin.X;
-                    var right2 = body2.Position.X - body2.Origin.X + body2.Width;
-                    var top2 = body2.Position.Y - body2.Origin.Y;
-                    var bottom2 = body2.Position.Y - body2.Origin.Y + body2.Height;
+                    var left2 = body2.Position.X - body2.Origin.X * body2.Scale.X;
+                    var right2 = body2.Position.X - body2.Origin.X * body2.Scale.X + body2.Width * body2.Scale.X;
+                    var top2 = body2.Position.Y - body2.Origin.Y * body2.Scale.X;
+                    var bottom2 = body2.Position.Y - body2.Origin.Y * body2.Scale.X + body2.Height * body2.Scale.X;
 
                     if (
                         left1 < right2 && left2 < right1 && 

@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class Projectile : IEntity<Guid>, IBody, IUpdatable, Engine.IDrawable
+    public sealed class Projectile : IEntity<Guid>, IBody, IUpdatable, IDrawable
     {
         private readonly IPainter _draw;
 
@@ -43,7 +43,6 @@ namespace KenneyAsteroids.Core.Entities
         public float Width { get; set; }
         public float Height { get; set; }
         public Color[] Data { get; set; }
-
 
         void IUpdatable.Update(float time)
         {

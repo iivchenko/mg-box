@@ -4,7 +4,7 @@ namespace KenneyAsteroids.Core.Entities
 {
     public interface IEntityFactory
     {
-        Asteroid CreateAsteroid(Vector2 position, Vector2 velocity, float rotationSpeed);
+        Asteroid CreateAsteroid(AsteroidType type, Vector2 position, float direction);
         Ship CreateShip(Vector2 position);
     }
 }

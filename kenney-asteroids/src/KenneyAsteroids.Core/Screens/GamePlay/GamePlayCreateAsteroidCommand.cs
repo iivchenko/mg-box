@@ -36,54 +36,36 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
         public void Handle(GamePlayCreateAsteroidCommand message)
         {
-            const int BigAsteroidMinSpeed = 15;
-            const int BigAsteroidMaxSpeed = 100;
-            const int BigAsteroidMinRotationSpeed = 5;
-            const int BigAsteroidMaxRotationSpeed = 25;
-
             var x = 0;
             var y = 0;
-            var dx = 0;
-            var dy = 0;
 
             switch (_random.Next(0, 4))
             {
                 case 0: // Up -> Down
                     x = _random.Next(0, (int)_viewport.Width);
                     y = 0;
-                    dx = _random.Next(0, (int)_viewport.Width);
-                    dy = (int)_viewport.Height;
                     break;
 
                 case 1: // Right -> Left
                     x = (int)_viewport.Width;
                     y = _random.Next(0, (int)_viewport.Height);
-                    dx = 0;
-                    dy = _random.Next(0, (int)_viewport.Height);
                     break;
 
                 case 2: // Down -> UP
                     x = _random.Next(0, (int)_viewport.Width);
                     y = (int)_viewport.Height;
-                    dx = _random.Next(0, (int)_viewport.Width);
-                    dy = 0;
                     break;
 
                 case 3: // Left -> Right
                     x = 0;
                     y = _random.Next(0, (int)_viewport.Height);
-                    dx = (int)_viewport.Width;
-                    dy = _random.Next(0, (int)_viewport.Height);
                     break;
             }
 
             var position = new Vector2(x, y);
-            var direction = Vector2.Normalize(new Vector2(dx - x, dy - y));
-
-            var velocity = direction * new Vector2(_random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed), _random.Next(BigAsteroidMinSpeed, BigAsteroidMaxSpeed));
-            var rotationSpeed = _random.Next(BigAsteroidMinRotationSpeed, BigAsteroidMaxRotationSpeed).AsRadians() * _random.NextDouble() > 0.5 ? 1 : -1;
-
-            var asteroid = _factory.CreateAsteroid(position, velocity, rotationSpeed);
+            var direction = _random.Next(0, 360).AsRadians();
+            var type = new[] { AsteroidType.Tiny, AsteroidType.Small, AsteroidType.Medium, AsteroidType.Big }.RandomPick();
+            var asteroid = _factory.CreateAsteroid(type, position, direction);
 
             _publisher.Publish(new EntityCreatedEvent(asteroid));
         }
