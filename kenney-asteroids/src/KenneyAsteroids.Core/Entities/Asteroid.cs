@@ -49,6 +49,7 @@ namespace KenneyAsteroids.Core.Entities
         public float Height { get; set; }
         public Color[] Data { get; set; }
         public AsteroidType Type { get; set; }
+        public Vector2 Velocity => _velocity;
 
         void IUpdatable.Update(float time)
         {
