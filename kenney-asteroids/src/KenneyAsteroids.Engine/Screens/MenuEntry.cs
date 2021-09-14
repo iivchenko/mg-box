@@ -23,6 +23,8 @@ namespace KenneyAsteroids.Engine.Screens
     /// </summary>
     public class MenuEntry
     {
+        private readonly SpriteFont _font;
+
         #region Fields
 
         /// <summary>
@@ -98,9 +100,10 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
-        public MenuEntry(string text)
+        public MenuEntry(string text, SpriteFont font)
         {
             this.text = text;
+            _font = font;
         }
 
 
@@ -159,11 +162,10 @@ namespace KenneyAsteroids.Engine.Screens
             // Draw text, centered on the middle of each line.
             ScreenManager screenManager = screen.ScreenManager;
             var painter = screenManager.Painter;
-            SpriteFont font = screenManager.Font;
+   
+            System.Numerics.Vector2 origin = new System.Numerics.Vector2(0, _font.LineSpacing / 2);
 
-            System.Numerics.Vector2 origin = new System.Numerics.Vector2(0, font.LineSpacing / 2);
-
-            painter.DrawString(font, text, position.ToVector(), color, 0,
+            painter.DrawString(_font, text, position.ToVector(), color, 0,
                                    origin, scale, SpriteEffects.None, 0);
         }
 
@@ -173,7 +175,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public virtual int GetHeight(MenuScreen screen)
         {
-            return screen.ScreenManager.Font.LineSpacing;
+            return _font.LineSpacing;
         }
 
 
@@ -182,7 +184,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public virtual int GetWidth(MenuScreen screen)
         {
-            return (int)screen.ScreenManager.Font.MeasureString(Text).X;
+            return (int)_font.MeasureString(Text).X;
         }
 
 

@@ -114,7 +114,8 @@ namespace KenneyAsteroids.Engine.Screens
         public override void Draw(GameTime gameTime)
         {
             var painter = ScreenManager.Painter;
-            SpriteFont font = ScreenManager.Font;
+            var content = ScreenManager.Container.GetService<IContentProvider>();
+            var font = content.Load<SpriteFont>("Fonts/kenney-future.h3.font");
 
             // Darken down any other screens that were drawn beneath the popup.
             ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);

@@ -26,8 +26,6 @@ namespace KenneyAsteroids.Engine.Screens
     {
         #region Fields
 
-        private IPainter _painter;
-
         List<MenuEntry> menuEntries = new List<MenuEntry>();
         int selectedEntry = 0;
         string menuTitle;
@@ -49,8 +47,6 @@ namespace KenneyAsteroids.Engine.Screens
         public override void Initialize()
         {
             base.Initialize();
-
-            _painter = ScreenManager.Container.GetService<IPainter>();
         }
 
         #endregion
@@ -159,7 +155,7 @@ namespace KenneyAsteroids.Engine.Screens
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // start at Y = 175; each X value is generated per entry
-            Vector2 position = new Vector2(0f, 175f);
+            Vector2 position = new Vector2(0f, 700f);
 
             // update each menu entry's location in turn
             for (int i = 0; i < menuEntries.Count; i++)
@@ -211,7 +207,6 @@ namespace KenneyAsteroids.Engine.Screens
             UpdateMenuEntryLocations();
 
             var viewport = ScreenManager.Container.GetService<IViewport>();
-            GraphicsDevice graphics = ScreenManager.GraphicsDevice;
             var painter = ScreenManager.Painter;
             SpriteFont font = ScreenManager.Font;
 

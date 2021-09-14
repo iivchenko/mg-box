@@ -32,8 +32,13 @@ Classical implementation or the [Asteroids Game](https://en.wikipedia.org/wiki/A
 * Graphics
   * [Space Shooter Redux](https://kenney.nl/assets/space-shooter-redux) 
     * Thank you Kenney for the great assets!
-    * [Repo Asset](src/KenneyAsteroids.Desktop/Content/SpriteSheets/asteroids.sprite.png)
+    * [Repo Asset](src/KenneyAsteroids.Desktop/Content/SpriteSheets/Asteroids.sprite.png)
     * [CC0 1.0 License](https://creativecommons.org/publicdomain/zero/1.0/)
+* Fonts
+  * [Kenney Fonts](https://kenney.nl/assets/kenney-fonts)
+    * Thank you Kenney for the great assets!
+    * [Repo Asset](src/KenneyAsteroids.Desktop/Content/Fonts/kenney-future.font.ttf)
+	* [CC0 1.0 License](https://creativecommons.org/publicdomain/zero/1.0/)
 * Sfx
   * [Space Shooter Redux](https://kenney.nl/assets/space-shooter-redux)
     * Thank you Kenney for the great assets!

@@ -15,7 +15,9 @@ namespace KenneyAsteroids.Core.Screens
     public sealed class MainMenuScreen : MenuScreen
     {
         private IPainter _painter;
-        private SpriteFont _font;
+        private SpriteFont _h1;
+        private SpriteFont _h2;
+        private SpriteFont _h4;
         private string _version;
         private Vector2 _versionPosition;
 
@@ -32,18 +34,20 @@ namespace KenneyAsteroids.Core.Screens
             base.Initialize();
             var content = ScreenManager.Container.GetService<IContentProvider>();
             _painter = ScreenManager.Container.GetService<IPainter>();
-            _font = content.Load<SpriteFont>("Fonts/simxel.font");
+            _h1 = content.Load<SpriteFont>("Fonts/kenney-future.h1.font");
+            _h2 = content.Load<SpriteFont>("Fonts/kenney-future.h2.font");
+            _h4 = content.Load<SpriteFont>("Fonts/kenney-future.h4.font");
             _version = Version.Current;
 
             var viewport = ScreenManager.Container.GetService<IViewport>();
-            var size = _font.MeasureString(_version);
+            var size = _h4.MeasureString(_version);
             _versionPosition = new Vector2(viewport.Width - size.X, viewport.Height - size.Y);
 
             // Create our menu entries.
-            var playGameMenuEntry = new MenuEntry("Play Game");
-            var leaderboardMenuEntry = new MenuEntry("Leaderboard");
-            var settingsMenuEntry = new MenuEntry("Settings");
-            var exitMenuEntry = new MenuEntry("Exit");
+            var playGameMenuEntry = new MenuEntry("Play Game", _h2);
+            var leaderboardMenuEntry = new MenuEntry("Leaderboard", _h2);
+            var settingsMenuEntry = new MenuEntry("Settings", _h2);
+            var exitMenuEntry = new MenuEntry("Exit", _h2);
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
@@ -69,7 +73,7 @@ namespace KenneyAsteroids.Core.Screens
         {
             base.Draw(gameTime);
 
-            _painter.DrawString(_font, _version, _versionPosition, Colors.White);
+            _painter.DrawString(_h4, _version, _versionPosition, Colors.White);
         }
 
         /// <summary>
@@ -98,7 +102,7 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         protected override void OnCancel(Microsoft.Xna.Framework.PlayerIndex playerIndex)
         {
-            const string message = "Are you sure you want to exit this sample?\nA button, Space, Enter = ok\nB button, Esc = cancel";
+            const string message = "Exit game?\nA button, Space, Enter = ok\nB button, Esc = cancel";
 
             MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message);
 

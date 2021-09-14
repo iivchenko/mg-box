@@ -18,9 +18,9 @@ namespace KenneyAsteroids.Core.Screens
         private IPainter _painter;
         private IViewport _viewport;
 
-        private SpriteFont _titleFont;
-        private SpriteFont _headerFont;
-        private SpriteFont _detailFont;
+        private SpriteFont _h1;
+        private SpriteFont _h2;
+        private SpriteFont _h4;
 
         private LeaderboardsManager _magager;
 
@@ -35,11 +35,9 @@ namespace KenneyAsteroids.Core.Screens
             _magager = ScreenManager.Container.GetService<LeaderboardsManager>();
 
             var content = ScreenManager.Container.GetService<IContentProvider>();
-            var font = content.Load<SpriteFont>("Fonts/simxel.font");
-
-            _titleFont = font;
-            _headerFont = font;
-            _detailFont = font;
+            _h1 = content.Load<SpriteFont>("Fonts/kenney-future.h1.font");
+            _h2 = content.Load<SpriteFont>("Fonts/kenney-future.h2.font");
+            _h4 = content.Load<SpriteFont>("Fonts/kenney-future.h4.font");
 
             _root = new ScrollingPanelControl();
             _root.AddChild(CreateTitleControl());
@@ -79,20 +77,20 @@ namespace KenneyAsteroids.Core.Screens
         private Control CreateTitleControl()
         {
             var text = "Leaderboard";
-            var x = _viewport.Width / 2 - _titleFont.MeasureString(text).X / 2;
-            return new TextControl(text, _titleFont, Colors.Blue, new Vector2(x, 30));
+            var x = _viewport.Width / 2 - _h1.MeasureString(text).X / 2;
+            return new TextControl(text, _h1, Colors.Blue, new Vector2(x, 30));
         }
 
         private Control CreateBoard()
         {
-            const int colWidth = 400;
+            const int colWidth = 800;
             PanelControl newList = new PanelControl();
 
             var header = new PanelControl();
-            header.AddChild(new TextControl("Name", _headerFont, Colors.Turquoise, new Vector2(colWidth * 0, 0)));
-            header.AddChild(new TextControl("Score", _headerFont, Colors.Turquoise, new Vector2(colWidth * 1, 0)));
-            header.AddChild(new TextControl("Time", _headerFont, Colors.Turquoise, new Vector2(colWidth * 2, 0)));
-            header.AddChild(new TextControl("Date", _headerFont, Colors.Turquoise, new Vector2(colWidth * 3, 0)));
+            header.AddChild(new TextControl("Name", _h2, Colors.Turquoise, new Vector2(colWidth * 0, 0)));
+            header.AddChild(new TextControl("Score", _h2, Colors.Turquoise, new Vector2(colWidth * 1, 0)));
+            header.AddChild(new TextControl("Time", _h2, Colors.Turquoise, new Vector2(colWidth * 2, 0)));
+            header.AddChild(new TextControl("Date", _h2, Colors.Turquoise, new Vector2(colWidth * 3, 0)));
             newList.AddChild(header);
 
             _magager
@@ -108,7 +106,7 @@ namespace KenneyAsteroids.Core.Screens
                         new TextControl
                         {
                             Text = x.Name,
-                            Font = _detailFont,
+                            Font = _h4,
                             Color = textColor,
                             Position = new Vector2(colWidth * 0, 0)
                         });
@@ -118,7 +116,7 @@ namespace KenneyAsteroids.Core.Screens
                         new TextControl
                         {
                             Text = x.Score.ToString(),
-                            Font = _detailFont,
+                            Font = _h4,
                             Color = textColor,
                             Position = new Vector2(colWidth * 1, 0)
                         });
@@ -128,7 +126,7 @@ namespace KenneyAsteroids.Core.Screens
                         new TextControl
                         {
                             Text = x.PlayedTime.ToString("hh\\:mm\\:ss"),
-                            Font = _detailFont,
+                            Font = _h4,
                             Color = textColor,
                             Position = new Vector2(colWidth * 2, 0)
                         });
@@ -138,7 +136,7 @@ namespace KenneyAsteroids.Core.Screens
                         new TextControl
                         {
                             Text = x.ScoreDate.ToString("dd-MM-yyyy hh\\:mm", CultureInfo.InvariantCulture),
-                            Font = _detailFont,
+                            Font = _h4,
                             Color = textColor,
                             Position = new Vector2(colWidth * 3, 0)
                         });
@@ -147,7 +145,7 @@ namespace KenneyAsteroids.Core.Screens
                 })
                 .Iter(newList.AddChild);
 
-            newList.LayoutColumn(0, 0, 0);
+            newList.LayoutColumn(0, 100, 0);
 
             newList.Position = new Vector2(_viewport.Width / 2 - newList.Size.X / 2, 120);
 

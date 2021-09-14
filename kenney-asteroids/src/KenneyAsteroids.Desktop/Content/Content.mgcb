@@ -14,6 +14,34 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Fonts/kenney-future.h1.font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/kenney-future.h1.font.spritefont
+
+#begin Fonts/kenney-future.h2.font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/kenney-future.h2.font.spritefont
+
+#begin Fonts/kenney-future.h3.font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/kenney-future.h3.font.spritefont
+
+#begin Fonts/kenney-future.h4.font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/kenney-future.h4.font.spritefont
+
 #begin Fonts/simxel.font.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

@@ -117,7 +117,7 @@ namespace KenneyAsteroids.Engine.Screens
             var content = Container.GetService<IContentProvider>();
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("Fonts/simxel.font");
+            font = content.Load<SpriteFont>("Fonts/kenney-future.h1.font");
             _blankSprite = content.Load<Sprite>("Sprites/blank.sprite");
 
             // Tell each of the screens to load their content.
