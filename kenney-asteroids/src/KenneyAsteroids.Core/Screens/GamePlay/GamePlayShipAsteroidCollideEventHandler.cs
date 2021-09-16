@@ -71,8 +71,8 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             const string message = "GAME OVER?\nA button, Space, Enter = Restart\nB button, Esc = Exit";
             var msg = new MessageBoxScreen(message);
 
-            msg.Accepted += (_, __) => LoadingScreen.Load(GameRoot.ScreenManager, false, null, new GamePlayScreen());
-            msg.Cancelled += (_, __) => LoadingScreen.Load(GameRoot.ScreenManager, false, null, new MainMenuScreen());
+            msg.Accepted += (_, __) => LoadingScreen.Load(GameRoot.ScreenManager, false, null, new StarScreen(), new GamePlayScreen());
+            msg.Cancelled += (_, __) => LoadingScreen.Load(GameRoot.ScreenManager, false, null, new StarScreen(), new MainMenuScreen());
 
             GameRoot.ScreenManager.AddScreen(msg, null);
         }

@@ -72,7 +72,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                 const string message = "Exit game?\nA button, Space, Enter = ok\nB button, Esc = cancel";
                 var confirmExitMessageBox = new MessageBoxScreen(message);
 
-                confirmExitMessageBox.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new MainMenuScreen());
+                confirmExitMessageBox.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new StarScreen(), new MainMenuScreen());
                 confirmExitMessageBox.Cancelled += (_, __) => MediaPlayer.Resume();
 
                 ScreenManager.AddScreen(confirmExitMessageBox, null);

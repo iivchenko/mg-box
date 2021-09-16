@@ -81,12 +81,12 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, false, e.PlayerIndex, new GamePlayScreen());
+            LoadingScreen.Load(ScreenManager, false, e.PlayerIndex, new StarScreen(), new GamePlayScreen());
         }
 
         void LeaderboardMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, false, e.PlayerIndex, new LeaderBoardsScreen());
+            ScreenManager.AddScreen(new LeaderBoardsScreen(), e.PlayerIndex);
         }
 
         /// <summary>

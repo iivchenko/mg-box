@@ -70,7 +70,7 @@ namespace KenneyAsteroids.Core.Screens
                 input.IsNewKeyPress(Keys.Escape, null, out _) || 
                 input.IsNewButtonPress(Buttons.B, null, out _))
             {
-                LoadingScreen.Load(ScreenManager, false, null, new MainMenuScreen());
+                ExitScreen();
             }
         }
 

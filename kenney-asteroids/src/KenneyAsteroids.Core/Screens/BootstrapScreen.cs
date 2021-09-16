@@ -43,7 +43,7 @@ namespace KenneyAsteroids.Core.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            LoadingScreen.Load(ScreenManager, false, null, new TStartScreen());
+            LoadingScreen.Load(ScreenManager, false, null, new StarScreen(), new TStartScreen());
         }
     }
 }
