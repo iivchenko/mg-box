@@ -19,7 +19,7 @@ namespace KenneyAsteroids.Core.Leaderboards
         {
             var items = _repository.Read();
 
-            return items.Count() < 10 || items.Any(x => x.Score < score);
+            return score > 0 && items.Count() < 10 || items.Any(x => x.Score < score);
         }
 
         public void AddLeader(string name, int score, TimeSpan playedTime)
