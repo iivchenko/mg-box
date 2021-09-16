@@ -16,7 +16,6 @@ namespace KenneyAsteroids.Engine.Benchmark.Collisions
         private IBody[] _bodies_10;
         private IBody[] _bodies_100;
         private IBody[] _bodies_1000;
-        private IBody[] _bodies_10000;
 
         public CollisionSystemBenchmark()
         {
@@ -40,12 +39,6 @@ namespace KenneyAsteroids.Engine.Benchmark.Collisions
                     .Range(0, 999)
                     .Select(_ => CreateRandomBody())
                     .ToArray();
-
-            _bodies_10000 =
-                Enumerable
-                    .Range(0, 9999)
-                    .Select(_ => CreateRandomBody())
-                    .ToArray();
         }
 
         [Benchmark]
@@ -64,12 +57,6 @@ namespace KenneyAsteroids.Engine.Benchmark.Collisions
         public void ApplyCollisions_1000bodies()
         {
             _system.EvaluateCollisions(_bodies_1000);
-        }
-
-        [Benchmark]
-        public void ApplyCollisions_10000bodies()
-        {
-            _system.EvaluateCollisions(_bodies_10000);
         }
 
         private IBody CreateRandomBody()
