@@ -1,12 +1,12 @@
 ﻿using KenneyAsteroids.Engine.Entities;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using KenneyAsteroids.Engine.Particles;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
 {
     public static class WhenAnyParticleEmmiterIsFinished
     {
-        public sealed class ThenRemoveEmmiterFromEntities : IMessageHandler<ParticlesEmmisionFinishedEvent>
+        public sealed class ThenRemoveEmmiterFromEntities : IRule<ParticlesEmmisionFinishedEvent>
         {
             private readonly IEntitySystem _entities;
 
@@ -16,9 +16,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                 _entities = entities;
             }
 
-            public void Execute(ParticlesEmmisionFinishedEvent message)
+            public void Execute(ParticlesEmmisionFinishedEvent @event)
             {
-                _entities.Remove(message.Engine);
+                _entities.Remove(@event.Engine);
             }
         }
     }

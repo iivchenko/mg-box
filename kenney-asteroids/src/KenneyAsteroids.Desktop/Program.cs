@@ -1,21 +1,18 @@
 ﻿using Comora;
 using KenneyAsteroids.Core.Entities;
-using KenneyAsteroids.Core.Events;
 using KenneyAsteroids.Core.Leaderboards;
 using KenneyAsteroids.Core.Screens;
 using KenneyAsteroids.Core.Screens.GamePlay;
-using KenneyAsteroids.Core.Screens.GamePlay.Rules;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Messaging;
-using KenneyAsteroids.Engine.Particles;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Reflection;
 
 namespace KenneyAsteroids.Desktop
 {
@@ -49,22 +46,10 @@ namespace KenneyAsteroids.Desktop
                             .AddSingleton<IProjectileFactory, ProjectileFactory>()
                             .AddSingleton<IViewport, Viewport>(_ => new Viewport(0.0f, 0.0f, 3840.0f, 2160.0f))
                             .AddSingleton<ICamera, Camera>()
-                            .AddSingleton<IMessageHandler<EntityCreatedEvent>, GamePlayEntityCreatedEventHandler>()
-                            .AddSingleton<IMessageHandler<EntityDestroyedEvent>, GamePlayEnemyDestroyedEventHandler>()
-                            .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Ship, Asteroid>>, WhenAsteroidCollidesPlayerShip.AndPlayerShipHasEnoughLifes.ThenReduceLifes>()
-                            .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Ship, Asteroid>>, WhenAsteroidCollidesPlayerShip.AndPlayerShipHasEnoughLifes.ThenResetPlayersShip>()
-                            .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Ship, Asteroid>>, WhenAsteroidCollidesPlayerShip.AndPlayerShipDoesntHaveEnoughLifes.ThenRemovePlayersShipFromTheGame>()
-                            .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Ship, Asteroid>>, WhenAsteroidCollidesPlayerShip.AndPlayerShipDoesntHaveEnoughLifes.ThenGameOver>()
-                            .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>, WhenPlayersProjectileCollidesAsteroid.ThenRemoveBoth>()
-                            .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>, WhenPlayersProjectileCollidesAsteroid.ThenScore>()
-                            .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>, WhenPlayersProjectileCollidesAsteroid.ThenMakeAsteroidDeathEffect>()
-                            .AddSingleton<IMessageHandler<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>, WhenPlayersProjectileCollidesAsteroid.AndAsteroidIsBig.TheFallAsteroidAppart>()
-                            .AddSingleton<IMessageHandler<GamePlayCreateAsteroidCommand>, GamePlayCreateAsteroidCommandHandler>()
-                            .AddSingleton<IMessageHandler<ParticlesEmmisionFinishedEvent>, WhenAnyParticleEmmiterIsFinished.ThenRemoveEmmiterFromEntities>()
                             .AddMonoGameContentSystem()
                             .AddMonoGameDrawSystem()
                             .AddMonoGameAudioSystem(configuration.GetSection("Audio"))
-                            .AddMessageBus()
+                            .AddGameRules(new[] { Assembly.GetAssembly(typeof(Core.Version)) })
                             .AddSingleton<LeaderboardsManager>()
                             .AddSingleton<GamePlayHud>();
                     })

@@ -2,7 +2,7 @@
 using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using System;
 using System.Numerics;
 
@@ -33,14 +33,14 @@ namespace KenneyAsteroids.Core.Entities
         private readonly SpriteSheet _spriteSheet;
         private readonly Sound _lazer;
         private readonly IProjectileFactory _projectileFactory;
-        private readonly IPublisher _publisher;
+        private readonly IEventPublisher _publisher;
         private readonly IPainter _draw;
         private readonly IAudioPlayer _player;
 
         public EntityFactory(
             IContentProvider content,
             IProjectileFactory projectileFactory,
-            IPublisher eventService,
+            IEventPublisher eventService,
             IPainter draw,
             IAudioPlayer player)
         {

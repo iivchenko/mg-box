@@ -2,7 +2,7 @@
 using KenneyAsteroids.Core.Leaderboards;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using KenneyAsteroids.Engine.Screens;
 using System;
 using System.Numerics;
@@ -13,7 +13,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
     {
         public static class AndPlayerShipHasEnoughLifes
         {
-            public sealed class ThenReduceLifes : IMessageHandler<GamePlayEntitiesCollideEvent<Ship, Asteroid>>
+            public sealed class ThenReduceLifes : IRule<GamePlayEntitiesCollideEvent<Ship, Asteroid>>
             {
                 private readonly GamePlayHud _hud;
 
@@ -22,13 +22,13 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     _hud = hud;
                 }
 
-                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> message)
+                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event)
                 {
                     if (_hud.Lifes > 0) _hud.Lifes--;
                 }
             }
 
-            public sealed class ThenResetPlayersShip : IMessageHandler<GamePlayEntitiesCollideEvent<Ship, Asteroid>>
+            public sealed class ThenResetPlayersShip : IRule<GamePlayEntitiesCollideEvent<Ship, Asteroid>>
             {
                 private readonly GamePlayHud _hud;
                 private readonly IViewport _viewport;
@@ -41,9 +41,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     _viewport = viewport;
                 }
 
-                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> message)
+                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event)
                 {
-                    var ship = message.Body1;
+                    var ship = @event.Body1;
 
                     if (_hud.Lifes > 0)
                     {
@@ -55,7 +55,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
 
         public static class AndPlayerShipDoesntHaveEnoughLifes
         {
-            public sealed class ThenRemovePlayersShipFromTheGame : IMessageHandler<GamePlayEntitiesCollideEvent<Ship, Asteroid>>
+            public sealed class ThenRemovePlayersShipFromTheGame : IRule<GamePlayEntitiesCollideEvent<Ship, Asteroid>>
             {
                 private readonly GamePlayHud _hud;
                 private readonly IEntitySystem _entities;
@@ -68,15 +68,15 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     _entities = entities;
                 }
 
-                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> message)
+                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event)
                 {
-                    var ship = message.Body1;
+                    var ship = @event.Body1;
 
                     if (_hud.Lifes <= 0) _entities.Remove(ship);
                 }
             }
 
-            public sealed class ThenGameOver : IMessageHandler<GamePlayEntitiesCollideEvent<Ship, Asteroid>>
+            public sealed class ThenGameOver : IRule<GamePlayEntitiesCollideEvent<Ship, Asteroid>>
             {
                 private readonly GamePlayHud _hud;
                 private readonly LeaderboardsManager _leaderBoard;
@@ -89,9 +89,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     _leaderBoard = leaderBoard;
                 }
 
-                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> message)
+                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event)
                 {
-                    var ship = message.Body1;
+                    var ship = @event.Body1;
 
                     if (_hud.Lifes <= 0)
                     {

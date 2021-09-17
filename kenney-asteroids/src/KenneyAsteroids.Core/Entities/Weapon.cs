@@ -2,7 +2,7 @@
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Entities;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using System;
 using System.Numerics;
 
@@ -16,7 +16,7 @@ namespace KenneyAsteroids.Core.Entities
         private readonly Vector2 _offset;
         private readonly TimeSpan _reload;
         private readonly IProjectileFactory _factory;
-        private readonly IPublisher _eventService;
+        private readonly IEventPublisher _eventService;
         private readonly IAudioPlayer _player;
 
         private readonly Sound _lazer;
@@ -28,7 +28,7 @@ namespace KenneyAsteroids.Core.Entities
             Vector2 offset,
             TimeSpan reload,
             IProjectileFactory factory,
-            IPublisher eventService,
+            IEventPublisher eventService,
             IAudioPlayer player,
             Sound lazer)
         {

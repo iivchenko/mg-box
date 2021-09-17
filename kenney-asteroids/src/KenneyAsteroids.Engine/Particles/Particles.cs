@@ -1,5 +1,5 @@
 ﻿using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +36,7 @@ namespace KenneyAsteroids.Engine.Particles
             return this;
         }
 
-        public ParticleEngine Build(int seed, IPainter painter, IPublisher publisher)
+        public ParticleEngine Build(int seed, IPainter painter, IEventPublisher publisher)
         {
             return new ParticleEngine(_init(new Random(seed)), _update, seed, painter, publisher);
         }

@@ -2,7 +2,7 @@
 using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Entities;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using Microsoft.Extensions.Options;
 using System;
 
@@ -14,7 +14,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 {
     public sealed class GamePlayDirector : IUpdatable
     {
-        private readonly IPublisher _publisher;
+        private readonly IEventPublisher _publisher;
         private readonly IOptionsMonitor<AudioSettings> _settings;
 
         private IContentProvider _content;
@@ -22,7 +22,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private Chapter _current;
 
         public GamePlayDirector(
-            IPublisher publisher,
+            IEventPublisher publisher,
             IOptionsMonitor<AudioSettings> settings,
             IContentProvider content)
         {

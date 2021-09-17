@@ -4,7 +4,7 @@ using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using KenneyAsteroids.Engine.Particles;
 using System;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
 {
     public static class WhenPlayersProjectileCollidesAsteroid
     {
-        public sealed class ThenScore : IMessageHandler<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>
+        public sealed class ThenScore : IRule<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>
         {
             private readonly GamePlayHud _hud;
             private readonly GamePlayScoreManager _scores;
@@ -26,29 +26,29 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                 _scores = new GamePlayScoreManager();
             }
 
-            public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> message)
+            public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
             {
-                _hud.Scores += _scores.GetScore(message.Body2);
+                _hud.Scores += _scores.GetScore(@event.Body2);
             }
         }
 
-        public sealed class ThenRemoveBoth : IMessageHandler<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>
+        public sealed class ThenRemoveBoth : IRule<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>
         {
             private readonly IEntitySystem _entities;
-            private readonly IPublisher _publisher;
+            private readonly IEventPublisher _publisher;
 
             public ThenRemoveBoth(
                IEntitySystem entities,
-               IPublisher publisher)
+               IEventPublisher publisher)
             {
                 _entities = entities;
                 _publisher = publisher;
             }
 
-            public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> message)
+            public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
             {
-                var projectile = message.Body1;
-                var asteroid = message.Body2;
+                var projectile = @event.Body1;
+                var asteroid = @event.Body2;
 
                 _entities.Remove(projectile, asteroid);
 
@@ -57,16 +57,16 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
             }
         }
 
-        public sealed class ThenMakeAsteroidDeathEffect : IMessageHandler<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>
+        public sealed class ThenMakeAsteroidDeathEffect : IRule<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>
         {
             private readonly IEntitySystem _entities;
-            private readonly IPublisher _publisher;
+            private readonly IEventPublisher _publisher;
             private readonly IPainter _painter;
             private readonly IContentProvider _content;
 
             public ThenMakeAsteroidDeathEffect(
                IEntitySystem entities,
-               IPublisher publisher,
+               IEventPublisher publisher,
                IPainter painter,
                IContentProvider content)
             {
@@ -76,9 +76,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                 _content = content;
             }
 
-            public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> message)
+            public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
             {
-                var asteroid = message.Body2;
+                var asteroid = @event.Body2;
 
                 var asteroids = _content.Load<SpriteSheet>("SpriteSheets/Asteroids.sheet");
                 var particles =
@@ -123,7 +123,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
         }
         public static class AndAsteroidIsBig
         {
-            public sealed class TheFallAsteroidAppart : IMessageHandler<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>
+            public sealed class TheFallAsteroidAppart : IRule<GamePlayEntitiesCollideEvent<Projectile, Asteroid>>
             {
                 private readonly IEntitySystem _entities;
                 private readonly IEntityFactory _entityFactory;
@@ -136,9 +136,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     _entityFactory = entityFactory;
                 }
 
-                public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> message)
+                public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
                 {
-                    var asteroid = message.Body2;
+                    var asteroid = @event.Body2;
 
                     switch (asteroid.Type)
                     {

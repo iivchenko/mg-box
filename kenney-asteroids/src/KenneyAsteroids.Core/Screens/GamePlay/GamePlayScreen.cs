@@ -5,7 +5,7 @@ using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -20,11 +20,11 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 {
     public sealed class GamePlayScreen : GameScreen
     {
-        private IMessageSystem _bus;
+        private IGameRuleSystem _rules;
         private IEntitySystem _entities;
         private ICollisionSystem _collisions;
         private IViewport _viewport;
-        private IPublisher _publisher;
+        private IEventPublisher _publisher;
 
         private GamePlayHud _hud;
         private GamePlayDirector _director;
@@ -35,10 +35,10 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             base.Initialize();
 
             _entities = ScreenManager.Container.GetService<IEntitySystem>();
-            _bus = ScreenManager.Container.GetService<IMessageSystem>();
+            _rules = ScreenManager.Container.GetService<IGameRuleSystem>();
             _viewport = ScreenManager.Container.GetService<IViewport>();
             _hud = ScreenManager.Container.GetService<GamePlayHud>();
-            _publisher = ScreenManager.Container.GetService<IPublisher>();
+            _publisher = ScreenManager.Container.GetService<IEventPublisher>();
 
             var factory = ScreenManager.Container.GetService<IEntityFactory>();
             var ship = factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
@@ -126,7 +126,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     .Iter(HandleOutOfScreenBodies);
 
                 _director.Update(time);
-                _bus.Update(time);
+                _rules.Update(time);
 
                 _entities.Commit();
             }

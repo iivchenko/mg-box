@@ -2,13 +2,13 @@
 using KenneyAsteroids.Core.Events;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using System;
 using System.Numerics;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
-    public sealed class GamePlayCreateAsteroidCommand : IMessage
+    public sealed class GamePlayCreateAsteroidCommand : IEvent
     {
         public GamePlayCreateAsteroidCommand()
         {
@@ -18,14 +18,14 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         public Guid Id { get; }
     }
 
-    public sealed class GamePlayCreateAsteroidCommandHandler : IMessageHandler<GamePlayCreateAsteroidCommand>
+    public sealed class GamePlayCreateAsteroidCommandHandler : IRule<GamePlayCreateAsteroidCommand>
     {
         private readonly Random _random;
         private readonly IViewport _viewport;
         private readonly IEntityFactory _factory;
-        private readonly IPublisher _publisher;
+        private readonly IEventPublisher _publisher;
 
-        public GamePlayCreateAsteroidCommandHandler(IViewport viewport, IEntityFactory factory, IPublisher eventService)
+        public GamePlayCreateAsteroidCommandHandler(IViewport viewport, IEntityFactory factory, IEventPublisher eventService)
         {
             _viewport = viewport;
             _factory = factory;
@@ -34,7 +34,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _random = new Random();
         }
 
-        public void Execute(GamePlayCreateAsteroidCommand message)
+        public void Execute(GamePlayCreateAsteroidCommand @event)
         {
             var x = 0;
             var y = 0;

@@ -1,10 +1,10 @@
 ﻿using KenneyAsteroids.Engine.Entities;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using System;
 
 namespace KenneyAsteroids.Core.Events
 {
-    public sealed class EntityDestroyedEvent : IMessage
+    public sealed class EntityDestroyedEvent : IEvent
     {
         public EntityDestroyedEvent(IEntity entity)
         {

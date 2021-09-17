@@ -2,33 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace KenneyAsteroids.Engine.Messaging
+namespace KenneyAsteroids.Engine.Rules
 {
     public delegate IEnumerable<object> ServiceFactory(Type serviceType);
 
-    public sealed class MessageSystem : IMessageSystem, IPublisher
+    public sealed class GameRuleSystem : IGameRuleSystem, IEventPublisher
     {
         private readonly ServiceFactory _serviceFactory;
-        private readonly IList<IMessage> _messages;
+        private readonly IList<IEvent> _events;
         private readonly Type _handlerType;
 
-        public MessageSystem(ServiceFactory serviceFactory)
+        public GameRuleSystem(ServiceFactory serviceFactory)
         {
             _serviceFactory = serviceFactory;
 
-            _handlerType = typeof(IMessageHandler<>);
-            _messages = new List<IMessage>();
+            _handlerType = typeof(IRule<>);
+            _events = new List<IEvent>();
         }
 
-        public void Publish<TMessage>(TMessage message) where TMessage : IMessage
+        public void Publish<TEvent>(TEvent @event) where TEvent : IEvent
         {
-            _messages.Add(message);
+            _events.Add(@event);
         }
 
         public void Update(float time)
         {
-            var toProcess = _messages.ToList();
-            _messages.Clear();
+            var toProcess = _events.ToList();
+            _events.Clear();
 
             toProcess
                 .Select(x => new { MessageType = x.GetType(), Message = x })

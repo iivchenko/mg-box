@@ -1,9 +1,9 @@
-﻿using KenneyAsteroids.Engine.Messaging;
+﻿using KenneyAsteroids.Engine.Rules;
 using System;
 
 namespace KenneyAsteroids.Engine.Particles
 {
-    public sealed class ParticlesEmmisionFinishedEvent : IMessage
+    public sealed class ParticlesEmmisionFinishedEvent : IEvent
     {
         public ParticlesEmmisionFinishedEvent(ParticleEngine engine)
         {

@@ -1,6 +1,6 @@
 ﻿using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace KenneyAsteroids.Engine.Particles
         private readonly IList<Particle> _particles;
         private readonly Action<Random, float, Particle> _update;
         private readonly IPainter _painter;
-        private readonly IPublisher _publisher;
+        private readonly IEventPublisher _publisher;
         private readonly Random _random;
 
         private bool _isFinished = false;
@@ -23,7 +23,7 @@ namespace KenneyAsteroids.Engine.Particles
             Action<Random, float, Particle> update,
             int seed,
             IPainter painter,
-            IPublisher publisher)
+            IEventPublisher publisher)
         {
             _particles = particles.ToList();
             _update = update;

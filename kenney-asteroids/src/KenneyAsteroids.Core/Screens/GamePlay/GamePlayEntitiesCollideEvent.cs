@@ -1,9 +1,9 @@
-﻿using KenneyAsteroids.Engine.Messaging;
+﻿using KenneyAsteroids.Engine.Rules;
 using System;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
-    public sealed class GamePlayEntitiesCollideEvent<TBody1, TBody2> : IMessage
+    public sealed class GamePlayEntitiesCollideEvent<TBody1, TBody2> : IEvent
     {
         public GamePlayEntitiesCollideEvent(TBody1 body1, TBody2 body2)
         {

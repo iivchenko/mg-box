@@ -1,14 +1,14 @@
 ﻿using KenneyAsteroids.Core.Entities;
 using KenneyAsteroids.Core.Events;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
-    public sealed class GamePlayEnemyDestroyedEventHandler : IMessageHandler<EntityDestroyedEvent>
+    public sealed class GamePlayEnemyDestroyedEventHandler : IRule<EntityDestroyedEvent>
     {
-        public IPublisher _publisher;
+        public IEventPublisher _publisher;
 
-        public GamePlayEnemyDestroyedEventHandler(IPublisher publisher)
+        public GamePlayEnemyDestroyedEventHandler(IEventPublisher publisher)
         {
             _publisher = publisher;
         }
