@@ -16,7 +16,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                 _entities = entities;
             }
 
-            public void Execute(ParticlesEmmisionFinishedEvent @event)
+            public bool ExecuteCondition(ParticlesEmmisionFinishedEvent @event) => true;
+
+            public void ExecuteAction(ParticlesEmmisionFinishedEvent @event)
             {
                 _entities.Remove(@event.Engine);
             }

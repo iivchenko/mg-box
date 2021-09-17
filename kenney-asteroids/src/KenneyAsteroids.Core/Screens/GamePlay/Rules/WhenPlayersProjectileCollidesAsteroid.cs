@@ -26,7 +26,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                 _scores = new GamePlayScoreManager();
             }
 
-            public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
+            public bool ExecuteCondition(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event) => true;
+
+            public void ExecuteAction(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
             {
                 _hud.Scores += _scores.GetScore(@event.Body2);
             }
@@ -45,7 +47,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                 _publisher = publisher;
             }
 
-            public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
+            public bool ExecuteCondition(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event) => true;
+
+            public void ExecuteAction(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
             {
                 var projectile = @event.Body1;
                 var asteroid = @event.Body2;
@@ -76,7 +80,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                 _content = content;
             }
 
-            public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
+            public bool ExecuteCondition(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event) => true;
+
+            public void ExecuteAction(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
             {
                 var asteroid = @event.Body2;
 
@@ -136,26 +142,19 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     _entityFactory = entityFactory;
                 }
 
-                public void Execute(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
+                public bool ExecuteCondition(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event) => @event.Body2.Type == AsteroidType.Big;
+
+                public void ExecuteAction(GamePlayEntitiesCollideEvent<Projectile, Asteroid> @event)
                 {
                     var asteroid = @event.Body2;
+                    var direction1 = asteroid.Velocity.ToRotation() - 20.AsRadians();
+                    var direction2 = asteroid.Velocity.ToRotation() + 20.AsRadians();
+                    var position1 = asteroid.Position;
+                    var position2 = asteroid.Position;
+                    var med1 = _entityFactory.CreateAsteroid(AsteroidType.Medium, position1, direction1);
+                    var med2 = _entityFactory.CreateAsteroid(AsteroidType.Medium, position2, direction2);
 
-                    switch (asteroid.Type)
-                    {
-                        case AsteroidType.Big:
-
-                            var direction1 = asteroid.Velocity.ToRotation() - 20.AsRadians();
-                            var direction2 = asteroid.Velocity.ToRotation() + 20.AsRadians();
-                            var position1 = asteroid.Position;
-                            var position2 = asteroid.Position;
-
-                            var med1 = _entityFactory.CreateAsteroid(AsteroidType.Medium, position1, direction1);
-                            var med2 = _entityFactory.CreateAsteroid(AsteroidType.Medium, position2, direction2);
-
-                            _entities.Add(med1, med2);
-
-                            break;
-                    }
+                    _entities.Add(med1, med2);
                 }
             }
         }        

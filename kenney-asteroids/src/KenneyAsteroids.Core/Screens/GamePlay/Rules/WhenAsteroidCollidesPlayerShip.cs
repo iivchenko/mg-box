@@ -22,10 +22,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     _hud = hud;
                 }
 
-                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event)
-                {
-                    if (_hud.Lifes > 0) _hud.Lifes--;
-                }
+                public bool ExecuteCondition(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event) => _hud.Lifes > 0;
+
+                public void ExecuteAction(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event) =>  _hud.Lifes--;
             }
 
             public sealed class ThenResetPlayersShip : IRule<GamePlayEntitiesCollideEvent<Ship, Asteroid>>
@@ -41,15 +40,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     _viewport = viewport;
                 }
 
-                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event)
-                {
-                    var ship = @event.Body1;
+                public bool ExecuteCondition(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event) => _hud.Lifes > 0;
 
-                    if (_hud.Lifes > 0)
-                    {
-                        ship.Position = new Vector2(_viewport.Width / 2, _viewport.Height / 2);
-                    }
-                }
+                public void ExecuteAction(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event) => @event.Body1.Position = new Vector2(_viewport.Width / 2, _viewport.Height / 2);
             }
         }
 
@@ -68,12 +61,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     _entities = entities;
                 }
 
-                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event)
-                {
-                    var ship = @event.Body1;
+                public bool ExecuteCondition(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event) => _hud.Lifes <= 0;
 
-                    if (_hud.Lifes <= 0) _entities.Remove(ship);
-                }
+                public void ExecuteAction(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event) => _entities.Remove(@event.Body1);
             }
 
             public sealed class ThenGameOver : IRule<GamePlayEntitiesCollideEvent<Ship, Asteroid>>
@@ -89,31 +79,30 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     _leaderBoard = leaderBoard;
                 }
 
-                public void Execute(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event)
+                public bool ExecuteCondition(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event) => _hud.Lifes <= 0;
+
+                public void ExecuteAction(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event)
                 {
                     var ship = @event.Body1;
 
-                    if (_hud.Lifes <= 0)
+                    var playedTime = DateTime.Now - _hud.StartTime;
+
+                    if (_leaderBoard.CanAddLeader(_hud.Scores))
                     {
-                        var playedTime = DateTime.Now - _hud.StartTime;
+                        var newHigthScorePrompt = new PromptScreen("Congratulations, you made new high score!\nEnter you name:");
 
-                        if (_leaderBoard.CanAddLeader(_hud.Scores))
+                        newHigthScorePrompt.Accepted += (_, __) =>
                         {
-                            var newHigthScorePrompt = new PromptScreen("Congratulations, you made new high score!\nEnter you name:");
-
-                            newHigthScorePrompt.Accepted += (_, __) =>
-                            {
-                                _leaderBoard.AddLeader(newHigthScorePrompt.Text, _hud.Scores, playedTime);
-                                GameOverMessage();
-                            };
-                            newHigthScorePrompt.Cancelled += (_, __) => GameOverMessage();
-
-                            GameRoot.ScreenManager.AddScreen(newHigthScorePrompt, null);
-                        }
-                        else
-                        {
+                            _leaderBoard.AddLeader(newHigthScorePrompt.Text, _hud.Scores, playedTime);
                             GameOverMessage();
-                        }
+                        };
+                        newHigthScorePrompt.Cancelled += (_, __) => GameOverMessage();
+
+                        GameRoot.ScreenManager.AddScreen(newHigthScorePrompt, null);
+                    }
+                    else
+                    {
+                        GameOverMessage();
                     }
                 }
 

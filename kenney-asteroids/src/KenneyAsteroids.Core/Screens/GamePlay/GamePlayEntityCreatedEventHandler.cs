@@ -13,7 +13,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _entities = entities;
         }
 
-        public void Execute(EntityCreatedEvent @event)
+        public bool ExecuteCondition(EntityCreatedEvent @event) => true;
+
+        public void ExecuteAction(EntityCreatedEvent @event)
         {
             _entities.Add(@event.Entity);
         }

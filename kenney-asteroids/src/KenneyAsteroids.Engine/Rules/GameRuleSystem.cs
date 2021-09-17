@@ -34,7 +34,7 @@ namespace KenneyAsteroids.Engine.Rules
                 .Select(x => new { MessageType = x.GetType(), Message = x })
                 .Select(x => new { HandlerType = _handlerType.MakeGenericType(x.MessageType), Message = x.Message })
                 .Select(x => new { Handers = (IEnumerable<dynamic>)_serviceFactory(x.HandlerType), Message = x.Message })
-                .Iter(x => x.Handers.Iter(handler => handler.Execute((dynamic)x.Message)));
+                .Iter(x => x.Handers.Where(handler => handler.ExecuteCondition((dynamic)x.Message)).Iter(handler => handler.ExecuteAction((dynamic)x.Message)));
         }
     }
 }

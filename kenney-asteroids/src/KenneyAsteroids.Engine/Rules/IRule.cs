@@ -3,6 +3,8 @@
     public interface IRule<TEvent>
         where TEvent : IEvent
     {
-        void Execute(TEvent @event);
+        bool ExecuteCondition(TEvent @event);
+
+        void ExecuteAction(TEvent @event);
     }
 }

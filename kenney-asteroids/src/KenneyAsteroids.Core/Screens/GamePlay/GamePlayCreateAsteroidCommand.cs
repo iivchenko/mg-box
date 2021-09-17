@@ -34,7 +34,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _random = new Random();
         }
 
-        public void Execute(GamePlayCreateAsteroidCommand @event)
+        public bool ExecuteCondition(GamePlayCreateAsteroidCommand @event) => true;
+
+        public void ExecuteAction(GamePlayCreateAsteroidCommand @event)
         {
             var x = 0;
             var y = 0;

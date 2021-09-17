@@ -13,12 +13,11 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _publisher = publisher;
         }
 
-        public void Execute(EntityDestroyedEvent @event)
+        public bool ExecuteCondition(EntityDestroyedEvent @event) => @event.Entity is Asteroid;
+
+        public void ExecuteAction(EntityDestroyedEvent @event)
         {
-            if (@event.Entity is Asteroid)
-            {
-                _publisher.Publish(new GamePlayCreateAsteroidCommand());
-            }
+            _publisher.Publish(new GamePlayCreateAsteroidCommand());
         }
     }
 }
