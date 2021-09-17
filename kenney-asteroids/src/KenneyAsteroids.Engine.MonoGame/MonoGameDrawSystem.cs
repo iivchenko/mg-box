@@ -3,19 +3,22 @@ using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using System.Numerics;
 
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
-
 namespace KenneyAsteroids.Engine.MonoGame
 {
-    public sealed class MonoGameDrawSystem : IPainter, IDrawSystemBatcher
+    public sealed class MonoGameDrawSystem : IPainter, IDrawSystemBatcher, IFontService
     {
         private readonly SpriteBatch _batch;
         private readonly ICamera _camera;
+        private readonly MonoGameContentProvider _content;
 
-        public MonoGameDrawSystem(SpriteBatch batch, ICamera camera)
+        public MonoGameDrawSystem(
+            SpriteBatch batch, 
+            ICamera camera,
+            MonoGameContentProvider content)
         {
             _batch = batch;
             _camera = camera;
+            _content = content;
         }
 
         public void Begin()
@@ -52,19 +55,29 @@ namespace KenneyAsteroids.Engine.MonoGame
                     color.ToXna());
         }
 
-        public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color)
+        public void DrawString(Font font, string text, Vector2 position, Color color)
         {
+            var spriteFont = _content.Load<SpriteFont>(font.Id);
             _batch.DrawString(spriteFont, text, position.ToXnaVector(), color.ToXna());
         }
         
-        public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
+        public void DrawString(Font font, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale)
         {
-            _batch.DrawString(spriteFont, text, position.ToXnaVector(), color.ToXna(), rotation, origin.ToXnaVector(), scale, effects, layerDepth);
+            var spriteFont = _content.Load<SpriteFont>(font.Id);
+            _batch.DrawString(spriteFont, text, position.ToXnaVector(), color.ToXna(), rotation, origin.ToXnaVector(), scale, SpriteEffects.None, 0);
         }
 
         public void Draw(Sprite sprite, Rectangle destination, Rectangle source, Color color)
         {
             _batch.Draw(sprite.Texture, destination.ToXna(), source.ToXna(), color.ToXna());
+        }
+
+        public Size MeasureText(string text, Font font)
+        {
+            var spriteFont = _content.Load<SpriteFont>(font.Id);
+            var size = spriteFont.MeasureString(text);
+
+            return new Size { Width = size.X, Height = size.Y };
         }
     }
 }

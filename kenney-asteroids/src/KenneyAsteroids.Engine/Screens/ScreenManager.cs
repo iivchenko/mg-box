@@ -12,7 +12,6 @@ using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
@@ -38,8 +37,7 @@ namespace KenneyAsteroids.Engine.Screens
 
         InputState input = new InputState();
 
-        SpriteBatch spriteBatch;
-        SpriteFont font;
+        Font font;
         private Sprite _blankSprite;
 
         bool isInitialized;
@@ -57,7 +55,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// A default font shared by all the screens. This saves
         /// each screen having to bother loading their own local copy.
         /// </summary>
-        public SpriteFont Font
+        public Font Font
         {
             get { return font; }
         }
@@ -116,8 +114,7 @@ namespace KenneyAsteroids.Engine.Screens
             // Load content belonging to the screen manager.
             var content = Container.GetService<IContentProvider>();
 
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("Fonts/kenney-future.h1.font");
+            font = content.Load<Font>("Fonts/kenney-future.h1.font");
             _blankSprite = content.Load<Sprite>("Sprites/blank.sprite");
 
             // Tell each of the screens to load their content.

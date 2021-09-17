@@ -50,9 +50,14 @@ namespace KenneyAsteroids.Engine.MonoGame
 
                 return sound as TContent;
             }
-            else if (type == typeof(SpriteFont))
+            else if (type == typeof(Font))
             {
-                return _content.Load<SpriteFont>(path) as TContent;
+                var spriteFont = _content.Load<SpriteFont>(path);
+                var font = new Font(spriteFont.LineSpacing);
+
+                _map.Add(font.Id, path);
+
+                return font as TContent;
             }
             else if (type == typeof(Song))
             {

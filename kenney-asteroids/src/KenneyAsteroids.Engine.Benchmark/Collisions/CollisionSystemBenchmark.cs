@@ -4,8 +4,6 @@ using System;
 using System.Linq;
 using System.Numerics;
 
-using Color = Microsoft.Xna.Framework.Color;
-
 namespace KenneyAsteroids.Engine.Benchmark.Collisions
 {
     public class CollisionSystemBenchmark

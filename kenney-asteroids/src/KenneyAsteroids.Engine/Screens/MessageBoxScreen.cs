@@ -11,7 +11,6 @@
 using System;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 using KenneyAsteroids.Engine.Content;
 #endregion
@@ -115,7 +114,8 @@ namespace KenneyAsteroids.Engine.Screens
         {
             var painter = ScreenManager.Painter;
             var content = ScreenManager.Container.GetService<IContentProvider>();
-            var font = content.Load<SpriteFont>("Fonts/kenney-future.h3.font");
+            var fontService = ScreenManager.Container.GetService<IFontService>();
+            var font = content.Load<Font>("Fonts/kenney-future.h3.font");
 
             // Darken down any other screens that were drawn beneath the popup.
             ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
@@ -123,7 +123,8 @@ namespace KenneyAsteroids.Engine.Screens
             // Center the message text in the viewport.
             var viewport = ScreenManager.Container.GetService<IViewport>();
             Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-            Vector2 textSize = font.MeasureString(_message);
+            var size = fontService.MeasureText(_message, font);
+            Vector2 textSize = new Vector2(size.Width, size.Height);
             Vector2 textPosition = (viewportSize - textSize) / 2;
 
             // The background includes a border somewhat larger than the text itself.

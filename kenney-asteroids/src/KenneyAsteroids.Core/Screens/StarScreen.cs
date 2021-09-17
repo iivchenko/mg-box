@@ -3,11 +3,11 @@ using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using Color = KenneyAsteroids.Engine.Color;
-using Vector2 = System.Numerics.Vector2;
+using System.Numerics;
+
+using XGameTime = Microsoft.Xna.Framework.GameTime;
 
 namespace KenneyAsteroids.Core.Screens
 {
@@ -63,13 +63,13 @@ namespace KenneyAsteroids.Core.Screens
                 }
         }
 
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
+        public override void Update(XGameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(XGameTime gameTime)
         {
             _stars.Iter(star =>
                 {

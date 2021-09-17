@@ -9,8 +9,8 @@
 
 #region Using Statements
 using System;
+using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -23,7 +23,8 @@ namespace KenneyAsteroids.Engine.Screens
     /// </summary>
     public class MenuEntry
     {
-        private readonly SpriteFont _font;
+        private readonly Font _font;
+        private readonly IFontService _fontService;
 
         #region Fields
 
@@ -100,10 +101,12 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
-        public MenuEntry(string text, SpriteFont font)
+        public MenuEntry(string text, Font font, IFontService fontService)
         {
             this.text = text;
             _font = font;
+
+            _fontService = fontService;
         }
 
 
@@ -166,7 +169,7 @@ namespace KenneyAsteroids.Engine.Screens
             System.Numerics.Vector2 origin = new System.Numerics.Vector2(0, _font.LineSpacing / 2);
 
             painter.DrawString(_font, text, position.ToVector(), color, 0,
-                                   origin, scale, SpriteEffects.None, 0);
+                                   origin, scale);
         }
 
 
@@ -184,7 +187,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public virtual int GetWidth(MenuScreen screen)
         {
-            return (int)_font.MeasureString(Text).X;
+            return (int)_fontService.MeasureText(Text, _font).Width;
         }
 
 

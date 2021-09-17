@@ -5,7 +5,7 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 
-using Microsoft.Xna.Framework;
+using System.Numerics;
 
 namespace KenneyAsteroids.Engine.UI
 {

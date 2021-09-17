@@ -7,8 +7,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using KenneyAsteroids.Engine.Screens;
-using Microsoft.Xna.Framework;
+
+using XGameTime = Microsoft.Xna.Framework.GameTime;
 
 namespace KenneyAsteroids.Engine.UI
 {
@@ -221,7 +223,7 @@ namespace KenneyAsteroids.Engine.UI
         /// Called once per frame to update the control; override this method if your control requires custom updates.
         /// Call base.Update() to update any child controls.
         /// </summary>
-        public virtual void Update(GameTime gametime)
+        public virtual void Update(XGameTime gametime)
         {
             for (int i = 0; i < ChildCount; i++)
             {

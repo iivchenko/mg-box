@@ -6,7 +6,8 @@
 //-----------------------------------------------------------------------------
 
 using KenneyAsteroids.Engine.Screens;
-using Microsoft.Xna.Framework;
+using System.Numerics;
+using XGameTime = Microsoft.Xna.Framework.GameTime;
 
 
 namespace KenneyAsteroids.Engine.UI
@@ -34,7 +35,7 @@ namespace KenneyAsteroids.Engine.UI
             tracker.PageWidthList.RemoveAt(index);
         }
 
-        public override void Update(GameTime gametime)
+        public override void Update(XGameTime gametime)
         {
             tracker.Update();
             base.Update(gametime);
@@ -62,7 +63,7 @@ namespace KenneyAsteroids.Engine.UI
                 base.Draw(context);
                 return;
             }
-            Vector2 origin = context.DrawOffset;
+            var origin = context.DrawOffset;
             int iCurrent = tracker.CurrentPage;
 
             float horizontalOffset = tracker.CurrentPageOffset;

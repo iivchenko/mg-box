@@ -6,9 +6,8 @@
 //-----------------------------------------------------------------------------
 
 using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
+using System.Numerics;
+using KenneyAsteroids.Engine.Graphics;
 
 namespace KenneyAsteroids.Engine.UI
 {
@@ -20,20 +19,23 @@ namespace KenneyAsteroids.Engine.UI
     {
         Control resultListControl = null;
 
-        private readonly SpriteFont _titleFont;
-        private readonly SpriteFont _headerFont;
-        private readonly SpriteFont _detailFont;
+        private readonly Font _titleFont;
+        private readonly Font _headerFont;
+        private readonly Font _detailFont;
+        private readonly IFontService _fontService;
 
         public HighScorePanel(
-            SpriteFont titleFont,
-            SpriteFont headerFont,
-            SpriteFont detailFont)
+            Font titleFont,
+            Font headerFont,
+            Font detailFont,
+            IFontService fontService)
         {
             _titleFont = titleFont;
             _headerFont = headerFont;
             _detailFont = detailFont;
+            _fontService = fontService;
 
-            AddChild(new TextControl("High score", _titleFont));
+            AddChild(new TextControl("High score", _titleFont, fontService));
             AddChild(CreateHeaderControl());
             PopulateWithFakeData();
         }
@@ -63,8 +65,8 @@ namespace KenneyAsteroids.Engine.UI
         {
             PanelControl panel = new PanelControl();
 
-            panel.AddChild(new TextControl("Player", _headerFont, Colors.Turquoise, new Vector2(0, 0)));
-            panel.AddChild(new TextControl("Score", _headerFont, Colors.Turquoise, new Vector2(200, 0)));
+            panel.AddChild(new TextControl("Player", _headerFont, _fontService, Colors.Turquoise, new Vector2(0, 0)));
+            panel.AddChild(new TextControl("Score", _headerFont, _fontService, Colors.Turquoise, new Vector2(200, 0)));
 
             return panel;
         }

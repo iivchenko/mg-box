@@ -5,7 +5,7 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
+using System.Numerics;
 
 namespace KenneyAsteroids.Engine.UI
 {
@@ -18,12 +18,6 @@ namespace KenneyAsteroids.Engine.UI
     public struct DrawContext
     {
         public IViewport Viewport { get; set; }
-
-        /// <summary>
-        /// GameTime passed into Game.Draw()
-        /// </summary>
-        public GameTime GameTime { get; set; }
-
 
         public IPainter Painter { get; set; }
 

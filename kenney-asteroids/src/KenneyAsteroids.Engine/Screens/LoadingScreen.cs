@@ -11,7 +11,6 @@
 using System;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 #endregion
 
@@ -141,14 +140,16 @@ namespace KenneyAsteroids.Engine.Screens
             if (loadingIsSlow)
             {
                 var painter = ScreenManager.Painter;
-                SpriteFont font = ScreenManager.Font;
+                var fontService = ScreenManager.Container.GetService<IFontService>();
+                var font = ScreenManager.Font;
 
                 const string message = "Loading...";
 
                 // Center the text in the viewport.
                 var viewport = ScreenManager.Container.GetService<IViewport>();
                 System.Numerics.Vector2 viewportSize = new System.Numerics.Vector2(viewport.Width, viewport.Height);
-                System.Numerics.Vector2 textSize = font.MeasureString(message).ToVector();
+                var size = fontService.MeasureText(message, font);
+                System.Numerics.Vector2 textSize = new System.Numerics.Vector2(size.Width, size.Height);
                 System.Numerics.Vector2 textPosition = (viewportSize - textSize) / 2;
 
                 Color color = Colors.White * TransitionAlpha;

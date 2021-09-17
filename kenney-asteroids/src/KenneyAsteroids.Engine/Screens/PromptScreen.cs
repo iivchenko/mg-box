@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Numerics;
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 using KenneyAsteroids.Engine.UI;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
 using KenneyAsteroids.Engine.Content;
+
+using XGameTime = Microsoft.Xna.Framework.GameTime;
+using XPlayerIndex = Microsoft.Xna.Framework.PlayerIndex;
+
 
 namespace KenneyAsteroids.Engine.Screens
 {
@@ -34,14 +37,15 @@ namespace KenneyAsteroids.Engine.Screens
         public override void Initialize()
         {
             var content = ScreenManager.Container.GetService<IContentProvider>();
+            var fontService = ScreenManager.Container.GetService<IFontService>();
 
             _gradientSprite = content.Load<Sprite>("Sprites/gradient.sprite");
-            _text = new TextControl(string.Empty, ScreenManager.Font, Colors.Yellow);
+            _text = new TextControl(string.Empty, ScreenManager.Font, fontService, Colors.Yellow);
         }
 
         public override void HandleInput(InputState input)
         {
-            PlayerIndex playerIndex;
+            XPlayerIndex playerIndex;
 
             if (input.IsNewKeyPress(Keys.Space, null, out _))
             {
@@ -85,20 +89,22 @@ namespace KenneyAsteroids.Engine.Screens
             }
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(XGameTime gameTime)
         {
             var painter = ScreenManager.Painter;
             var content = ScreenManager.Container.GetService<IContentProvider>();
-            var font = content.Load<SpriteFont>("Fonts/kenney-future.h3.font");
+            var fontService = ScreenManager.Container.GetService<IFontService>();
+            var font = content.Load<Font>("Fonts/kenney-future.h3.font");
 
             // Darken down any other screens that were drawn beneath the popup.
             ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
 
             // Center the message text in the viewport.
             var viewport = ScreenManager.Container.GetService<IViewport>();
-            Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-            Vector2 textSize = font.MeasureString(_message);
-            Vector2 textPosition = (viewportSize - textSize) / 2;
+            var viewportSize = new Vector2(viewport.Width, viewport.Height);
+            var size = fontService.MeasureText(_message, font);
+            var textSize = new Vector2(size.Width, size.Height);
+            var textPosition = (viewportSize - textSize) / 2;
 
             // The background includes a border somewhat larger than the text itself.
             const int hPad = 32;
@@ -115,13 +121,12 @@ namespace KenneyAsteroids.Engine.Screens
             painter.Draw(_gradientSprite, backgroundRectangle, color);
 
             // Draw the message box text.
-            painter.DrawString(font, _message, textPosition.ToVector(), color);
+            painter.DrawString(font, _message, textPosition, color);
 
             _text.Draw(new DrawContext
             {
                 Painter = painter,
                 Viewport = viewport,
-                GameTime = gameTime,
                 DrawOffset = (viewportSize - textSize) / 2 + new Vector2(0, textSize.Y)
             });
         }

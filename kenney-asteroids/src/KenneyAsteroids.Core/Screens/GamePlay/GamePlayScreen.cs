@@ -10,10 +10,11 @@ using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using System.Linq;
 using System.Numerics;
+
 using XTime = Microsoft.Xna.Framework.GameTime;
+using XMediaPlayer = Microsoft.Xna.Framework.Media.MediaPlayer;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
@@ -57,7 +58,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _entities.Remove(_entities.ToArray());
             _entities.Commit();
 
-            MediaPlayer.Stop();
+            XMediaPlayer.Stop();
 
             base.Free();
         }
@@ -68,12 +69,12 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             if (input.IsNewKeyPress(Keys.Escape, null, out _) || input.IsNewButtonPress(Buttons.Start, null, out _))
             {
-                MediaPlayer.Pause();
+                XMediaPlayer.Pause();
                 const string message = "Exit game?\nA button, Space, Enter = ok\nB button, Esc = cancel";
                 var confirmExitMessageBox = new MessageBoxScreen(message);
 
                 confirmExitMessageBox.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new StarScreen(), new MainMenuScreen());
-                confirmExitMessageBox.Cancelled += (_, __) => MediaPlayer.Resume();
+                confirmExitMessageBox.Cancelled += (_, __) => XMediaPlayer.Resume();
 
                 ScreenManager.AddScreen(confirmExitMessageBox, null);
             }

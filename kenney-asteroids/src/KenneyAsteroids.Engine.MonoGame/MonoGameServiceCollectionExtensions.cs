@@ -14,6 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddSingleton<MonoGameDrawSystem>();
             services.TryAdd(new ServiceDescriptor(typeof(IPainter), x => x.GetService<MonoGameDrawSystem>(), ServiceLifetime.Singleton));
             services.TryAdd(new ServiceDescriptor(typeof(IDrawSystemBatcher), x => x.GetService<MonoGameDrawSystem>(), ServiceLifetime.Singleton));
+            services.TryAdd(new ServiceDescriptor(typeof(IFontService), x => x.GetService<MonoGameDrawSystem>(), ServiceLifetime.Singleton));
 
             return services;
         }
