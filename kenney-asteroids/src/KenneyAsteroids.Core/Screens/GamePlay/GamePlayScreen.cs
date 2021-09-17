@@ -97,6 +97,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
                 var bodies = _entities.Where(x => x is IBody).Cast<IBody>();
 
+                // Move Collision eventing into collision system
                 foreach(var collision in _collisions.EvaluateCollisions(bodies))
                 {
                     switch((collision.Body1, collision.Body2))
@@ -119,6 +120,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
                     }
                 }
 
+                // TODO: Make this rules
                 bodies
                     .Where(IsOutOfScreen)
                     .Iter(HandleOutOfScreenBodies);

@@ -34,7 +34,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _random = new Random();
         }
 
-        public void Handle(GamePlayCreateAsteroidCommand message)
+        public void Execute(GamePlayCreateAsteroidCommand message)
         {
             var x = 0;
             var y = 0;

@@ -13,7 +13,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _publisher = publisher;
         }
 
-        public void Handle(EntityDestroyedEvent @event)
+        public void Execute(EntityDestroyedEvent @event)
         {
             if (@event.Entity is Asteroid)
             {
