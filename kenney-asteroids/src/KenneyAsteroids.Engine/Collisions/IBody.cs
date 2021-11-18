@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
 
+using Color = Microsoft.Xna.Framework.Color;
+
 namespace KenneyAsteroids.Engine.Collisions
 {
     public interface IBody
