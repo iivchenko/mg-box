@@ -4,8 +4,6 @@ using System;
 using System.Linq;
 using System.Numerics;
 
-using Color = Microsoft.Xna.Framework.Color;
-
 namespace KenneyAsteroids.Engine.Benchmark.Collisions
 {
     public class CollisionSystemBenchmark
@@ -16,12 +14,11 @@ namespace KenneyAsteroids.Engine.Benchmark.Collisions
         private IBody[] _bodies_10;
         private IBody[] _bodies_100;
         private IBody[] _bodies_1000;
-        private IBody[] _bodies_10000;
 
         public CollisionSystemBenchmark()
         {
             _random = new Random();
-            _system = new CollisionSystem(Enumerable.Empty<IRule>());
+            _system = new CollisionSystem();
 
             _bodies_10 =
                 Enumerable
@@ -40,36 +37,24 @@ namespace KenneyAsteroids.Engine.Benchmark.Collisions
                     .Range(0, 999)
                     .Select(_ => CreateRandomBody())
                     .ToArray();
-
-            _bodies_10000 =
-                Enumerable
-                    .Range(0, 9999)
-                    .Select(_ => CreateRandomBody())
-                    .ToArray();
         }
 
         [Benchmark]
         public void ApplyCollisions_10bodies()
         {
-            _system.ApplyCollisions(_bodies_10);
+            _system.EvaluateCollisions(_bodies_10);
         }
 
         [Benchmark]
         public void ApplyCollisions_100bodies()
         {
-            _system.ApplyCollisions(_bodies_100);
+            _system.EvaluateCollisions(_bodies_100);
         }
 
         [Benchmark]
         public void ApplyCollisions_1000bodies()
         {
-            _system.ApplyCollisions(_bodies_1000);
-        }
-
-        [Benchmark]
-        public void ApplyCollisions_10000bodies()
-        {
-            _system.ApplyCollisions(_bodies_10000);
+            _system.EvaluateCollisions(_bodies_1000);
         }
 
         private IBody CreateRandomBody()

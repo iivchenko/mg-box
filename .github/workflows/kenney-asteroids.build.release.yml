@@ -11,28 +11,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-    - name: 'Copy song2'
-      shell: pwsh
-      run: |
-        $url = "https://api.github.com/repos/iivchenko/asset-storage/git/blobs/fc61d02f069f5d98b189a9ec0d903752b0ab21e5"
-        $headers = @{ Authorization = "token ${{ secrets.ASSET_STORAGE }}"; Accept = "application/vnd.github.v3.raw" }
-        $file = "kenney-asteroids/src/KenneyAsteroids.Desktop/Content/Music/game2.song.mp3"
-        Invoke-WebRequest -Uri $url -Headers $headers -OutFile $file
-    - name: 'Copy song3'
-      shell: pwsh
-      run: |
-        $url = "https://api.github.com/repos/iivchenko/asset-storage/git/blobs/3d6f295a2176ea85399e744ea253cc9ee71f7c15"
-        $headers = @{ Authorization = "token ${{ secrets.ASSET_STORAGE }}"; Accept = "application/vnd.github.v3.raw" }
-        $file = "kenney-asteroids/src/KenneyAsteroids.Desktop/Content/Music/game3.song.mp3"
-        Invoke-WebRequest -Uri $url -Headers $headers -OutFile $file
-    - name: 'Copy song4'
-      shell: pwsh
-      run: |
-        $url = "https://api.github.com/repos/iivchenko/asset-storage/git/blobs/bab333a67f4df2dc02f6fd6a99c0560d395df607"
-        $headers = @{ Authorization = "token ${{ secrets.ASSET_STORAGE }}"; Accept = "application/vnd.github.v3.raw" }
-        $file = "kenney-asteroids/src/KenneyAsteroids.Desktop/Content/Music/game4.song.mp3"
-        Invoke-WebRequest -Uri $url -Headers $headers -OutFile $file
+      uses: actions/checkout@v2   
     - name: Read version
       id: version
       uses: juliangruber/read-file-action@v1

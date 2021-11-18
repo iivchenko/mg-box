@@ -1,8 +1,11 @@
 ﻿using KenneyAsteroids.Engine.Audio;
+using KenneyAsteroids.Engine.Content;
+using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Xna.Framework.Media;
+
+using XMediaPlayer = Microsoft.Xna.Framework.Media.MediaPlayer;
 
 namespace KenneyAsteroids.Core.Screens
 {
@@ -47,10 +50,14 @@ namespace KenneyAsteroids.Core.Screens
         {
             base.Initialize();
             _settingsRepository = ScreenManager.Container.GetService<IRepository<GameSettings>>();
+            var fontService = ScreenManager.Container.GetService<IFontService>();
 
             var settings = _settingsRepository.Read();
 
-            _toggleFramerate = new MenuEntry($"Frame Rate: {Toggle(settings.ToggleFramerate.Toggle)}");
+            var content = ScreenManager.Container.GetService<IContentProvider>();
+            var font = content.Load<Font>("Fonts/kenney-future.h2.font");
+
+            _toggleFramerate = new MenuEntry($"Frame Rate: {Toggle(settings.ToggleFramerate.Toggle)}", font, fontService);
             _toggleFramerate.Selected += (_, __) =>
             {
                 var settings = _settingsRepository.Read();
@@ -61,7 +68,7 @@ namespace KenneyAsteroids.Core.Screens
                 _settingsRepository.Update(settings);
             };
 
-            _sfxVolume = new MenuEntry($"Sound Effect Volume: {(int)(settings.Audio.SfxVolume * 100)}%");
+            _sfxVolume = new MenuEntry($"Sound Effect Volume: {(int)(settings.Audio.SfxVolume * 100)}%", font, fontService);
             _sfxVolume.Selected += (_, __) =>
             {
                 var settings = _settingsRepository.Read();
@@ -74,10 +81,10 @@ namespace KenneyAsteroids.Core.Screens
 
                 _settingsRepository.Update(settings);
 
-                MediaPlayer.Volume = settings.Audio.MusicVolume;
+                XMediaPlayer.Volume = settings.Audio.MusicVolume;
             };
 
-            _musicVolume = new MenuEntry($"Music Volume: {(int)(settings.Audio.MusicVolume * 100)}%");
+            _musicVolume = new MenuEntry($"Music Volume: {(int)(settings.Audio.MusicVolume * 100)}%", font, fontService);
             _musicVolume.Selected += (_, __) =>
             {
                 var settings = _settingsRepository.Read();
@@ -91,7 +98,7 @@ namespace KenneyAsteroids.Core.Screens
                 _settingsRepository.Update(settings);
             };
 
-            _back = new MenuEntry("Back");
+            _back = new MenuEntry("Back", font, fontService);
             _back.Selected += (_, e) => OnCancel(e.PlayerIndex);
 
             MenuEntries.Add(_toggleFramerate);

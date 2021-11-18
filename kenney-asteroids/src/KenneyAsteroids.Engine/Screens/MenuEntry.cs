@@ -9,8 +9,8 @@
 
 #region Using Statements
 using System;
+using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -23,6 +23,9 @@ namespace KenneyAsteroids.Engine.Screens
     /// </summary>
     public class MenuEntry
     {
+        private readonly Font _font;
+        private readonly IFontService _fontService;
+
         #region Fields
 
         /// <summary>
@@ -98,9 +101,12 @@ namespace KenneyAsteroids.Engine.Screens
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
-        public MenuEntry(string text)
+        public MenuEntry(string text, Font font, IFontService fontService)
         {
             this.text = text;
+            _font = font;
+
+            _fontService = fontService;
         }
 
 
@@ -149,7 +155,7 @@ namespace KenneyAsteroids.Engine.Screens
             // Pulsate the size of the selected menu entry.
             double time = gameTime.TotalGameTime.TotalSeconds;
             
-            float pulsate = (float)Math.Sin(time * 6) + 1;
+            float pulsate = (float)Math.Sin(time * 3) + 1;
 
             float scale = 1 + pulsate * 0.05f * selectionFade;
 
@@ -159,12 +165,11 @@ namespace KenneyAsteroids.Engine.Screens
             // Draw text, centered on the middle of each line.
             ScreenManager screenManager = screen.ScreenManager;
             var painter = screenManager.Painter;
-            SpriteFont font = screenManager.Font;
+   
+            System.Numerics.Vector2 origin = new System.Numerics.Vector2(0, _font.LineSpacing / 2);
 
-            System.Numerics.Vector2 origin = new System.Numerics.Vector2(0, font.LineSpacing / 2);
-
-            painter.DrawString(font, text, position.ToVector(), color, 0,
-                                   origin, scale, SpriteEffects.None, 0);
+            painter.DrawString(_font, text, position.ToVector(), color, 0,
+                                   origin, scale);
         }
 
 
@@ -173,7 +178,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public virtual int GetHeight(MenuScreen screen)
         {
-            return screen.ScreenManager.Font.LineSpacing;
+            return _font.LineSpacing;
         }
 
 
@@ -182,7 +187,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public virtual int GetWidth(MenuScreen screen)
         {
-            return (int)screen.ScreenManager.Font.MeasureString(Text).X;
+            return (int)_fontService.MeasureText(Text, _font).Width;
         }
 
 

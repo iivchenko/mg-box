@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace KenneyAsteroids.Engine
+﻿namespace KenneyAsteroids.Engine
 {
     public sealed class GameConfiguration
     {

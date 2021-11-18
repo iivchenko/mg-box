@@ -1,7 +1,7 @@
-﻿using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Graphics;
 using System.Collections.Generic;
 
 namespace KenneyAsteroids.PipelineExtension.SpriteSheet

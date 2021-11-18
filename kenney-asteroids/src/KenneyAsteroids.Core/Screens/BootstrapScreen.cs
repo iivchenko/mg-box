@@ -15,6 +15,8 @@ namespace KenneyAsteroids.Core.Screens
         public override void Initialize()
         {
             base.Initialize();
+            
+            GameRoot.ScreenManager = ScreenManager;
 
             var camera = ScreenManager.Container.GetService<ICamera>();
             var view = ScreenManager.Container.GetService<IViewport>();
@@ -41,7 +43,7 @@ namespace KenneyAsteroids.Core.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            LoadingScreen.Load(ScreenManager, false, null, new TStartScreen());
+            LoadingScreen.Load(ScreenManager, false, null, new StarScreen(), new TStartScreen());
         }
     }
 }

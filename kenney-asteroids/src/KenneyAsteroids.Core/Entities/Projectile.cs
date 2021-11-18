@@ -3,11 +3,13 @@ using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace KenneyAsteroids.Core.Entities
 {
-    public sealed class Projectile : IEntity<Guid>, IBody, IUpdatable, Engine.IDrawable
+    public sealed class Projectile : IEntity<Guid>, IBody, IUpdatable, IDrawable
     {
         private readonly IPainter _draw;
 
@@ -36,6 +38,7 @@ namespace KenneyAsteroids.Core.Entities
         }
 
         public Guid Id { get; }
+        public IEnumerable<string> Tags => Enumerable.Empty<string>();
         public Vector2 Position { get; set; }
         public Vector2 Origin { get; set; }
         public Vector2 Scale { get; set; }
@@ -43,7 +46,6 @@ namespace KenneyAsteroids.Core.Entities
         public float Width { get; set; }
         public float Height { get; set; }
         public Color[] Data { get; set; }
-
 
         void IUpdatable.Update(float time)
         {

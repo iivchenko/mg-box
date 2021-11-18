@@ -11,9 +11,8 @@
 using System;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Extensions.DependencyInjection;
+using KenneyAsteroids.Engine.Content;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -27,8 +26,7 @@ namespace KenneyAsteroids.Engine.Screens
     {
         #region Fields
 
-        ContentManager content;
-        Texture2D backgroundTexture;
+        private Sprite _backgroundSprite;
 
         #endregion
 
@@ -55,10 +53,9 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public override void Initialize()
         {
-            if (content == null)
-                content = new ContentManager(ScreenManager.Game.Services, "Content");
+            var content = ScreenManager.Container.GetService<IContentProvider>();
 
-            backgroundTexture = content.Load<Texture2D>("background");
+            _backgroundSprite = content.Load<Sprite>("background");
         }
 
         #endregion
@@ -89,7 +86,7 @@ namespace KenneyAsteroids.Engine.Screens
             var viewport = ScreenManager.Container.GetService<IViewport>();
             Rectangle fullscreen = new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height);
 
-            painter.Draw(backgroundTexture, fullscreen, new Color((byte)TransitionAlpha, (byte)TransitionAlpha, (byte)TransitionAlpha, 255));
+            painter.Draw(_backgroundSprite, fullscreen, new Color((byte)TransitionAlpha, (byte)TransitionAlpha, (byte)TransitionAlpha, 255));
         }
 
 

@@ -11,7 +11,6 @@
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 #endregion
@@ -26,7 +25,7 @@ namespace KenneyAsteroids.Engine.Screens
     {
         #region Fields
 
-        private IPainter _painter;
+        private IFontService _fontService;
 
         List<MenuEntry> menuEntries = new List<MenuEntry>();
         int selectedEntry = 0;
@@ -50,7 +49,8 @@ namespace KenneyAsteroids.Engine.Screens
         {
             base.Initialize();
 
-            _painter = ScreenManager.Container.GetService<IPainter>();
+            _fontService = ScreenManager.Container.GetService<IFontService>();
+
         }
 
         #endregion
@@ -159,7 +159,7 @@ namespace KenneyAsteroids.Engine.Screens
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // start at Y = 175; each X value is generated per entry
-            Vector2 position = new Vector2(0f, 175f);
+            Vector2 position = new Vector2(0f, 700f);
 
             // update each menu entry's location in turn
             for (int i = 0; i < menuEntries.Count; i++)
@@ -211,9 +211,8 @@ namespace KenneyAsteroids.Engine.Screens
             UpdateMenuEntryLocations();
 
             var viewport = ScreenManager.Container.GetService<IViewport>();
-            GraphicsDevice graphics = ScreenManager.GraphicsDevice;
             var painter = ScreenManager.Painter;
-            SpriteFont font = ScreenManager.Font;
+            var font = ScreenManager.Font;
 
             // Draw each menu entry in turn.
             for (int i = 0; i < menuEntries.Count; i++)
@@ -232,14 +231,15 @@ namespace KenneyAsteroids.Engine.Screens
 
             // Draw the menu title centered on the screen
             System.Numerics.Vector2 titlePosition = new System.Numerics.Vector2(viewport.Width / 2, 80);
-            System.Numerics.Vector2 titleOrigin = (font.MeasureString(menuTitle) / 2).ToVector();
+            var size = _fontService.MeasureText(menuTitle, font);
+            System.Numerics.Vector2 titleOrigin = new System.Numerics.Vector2(size.Width / 2, size.Height / 2);
             Color titleColor = new Color(192, 192, 192, 255) * TransitionAlpha;
             float titleScale = 1.25f;
 
             titlePosition.Y -= transitionOffset * 100;
 
             painter.DrawString(font, menuTitle, titlePosition, titleColor, 0,
-                                   titleOrigin, titleScale, SpriteEffects.None, 0);
+                                   titleOrigin, titleScale);
         }
 
 

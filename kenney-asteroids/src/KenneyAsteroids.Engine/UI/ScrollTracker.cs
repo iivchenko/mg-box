@@ -10,7 +10,6 @@ using KenneyAsteroids.Engine.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
 
-
 namespace KenneyAsteroids.Engine.UI
 {
     /// <remarks>
@@ -89,7 +88,7 @@ namespace KenneyAsteroids.Engine.UI
 
         public bool IsMoving
         {
-            get { return IsTracking || Velocity.X != 0 || Velocity.Y != 0 || !FullCanvasRect.Contains(ViewRect); }
+            get { return IsTracking || Velocity.X != 0 || Velocity.Y != 0 || !Contains(FullCanvasRect, ViewRect); }
         }
 
         public ScrollTracker()
@@ -208,6 +207,11 @@ namespace KenneyAsteroids.Engine.UI
                 x = Math.Max(x - (x - max) * SpringReturnRate - SpringReturnMin, max);
                 v = 0;
             }
+        }
+
+        public bool Contains(Rectangle rec1, Rectangle rec2)
+        {
+            return ((((rec1.X <= rec2.X) && ((rec2.X + rec2.Width) <= (rec1.X + rec1.Width))) && (rec1.Y <= rec2.Y)) && ((rec2.Y + rec2.Height) <= (rec1.Y + rec1.Height)));
         }
     }
 }

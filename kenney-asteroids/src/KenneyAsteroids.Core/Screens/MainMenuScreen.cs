@@ -1,21 +1,24 @@
 ﻿using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Media;
 using System.Numerics;
 
 using XTime = Microsoft.Xna.Framework.GameTime;
+using XMediaPlayer = Microsoft.Xna.Framework.Media.MediaPlayer;
+using XSong = Microsoft.Xna.Framework.Media.Song;
+using XMediaState = Microsoft.Xna.Framework.Media.MediaState;
 
 namespace KenneyAsteroids.Core.Screens
 {
     public sealed class MainMenuScreen : MenuScreen
     {
         private IPainter _painter;
-        private SpriteFont _font;
+        private Font _h1;
+        private Font _h2;
+        private Font _h4;
         private string _version;
         private Vector2 _versionPosition;
 
@@ -31,19 +34,23 @@ namespace KenneyAsteroids.Core.Screens
         {
             base.Initialize();
 
+            var content = ScreenManager.Container.GetService<IContentProvider>();
+            var fontService = ScreenManager.Container.GetService<IFontService>();
             _painter = ScreenManager.Container.GetService<IPainter>();
-            _font = ScreenManager.Game.Content.Load<SpriteFont>("Fonts/simxel.font");
+            _h1 = content.Load<Font>("Fonts/kenney-future.h1.font");
+            _h2 = content.Load<Font>("Fonts/kenney-future.h2.font");
+            _h4 = content.Load<Font>("Fonts/kenney-future.h4.font");
             _version = Version.Current;
 
             var viewport = ScreenManager.Container.GetService<IViewport>();
-            var size = _font.MeasureString(_version);
-            _versionPosition = new Vector2(viewport.Width - size.X, viewport.Height - size.Y);
+            var size = fontService.MeasureText(_version, _h4);
+            _versionPosition = new Vector2(viewport.Width - size.Width, viewport.Height - size.Height);
 
             // Create our menu entries.
-            var playGameMenuEntry = new MenuEntry("Play Game");
-            var leaderboardMenuEntry = new MenuEntry("Leaderboard");
-            var settingsMenuEntry = new MenuEntry("Settings");
-            var exitMenuEntry = new MenuEntry("Exit");
+            var playGameMenuEntry = new MenuEntry("Play Game", _h2, fontService);
+            var leaderboardMenuEntry = new MenuEntry("Leaderboard", _h2, fontService);
+            var settingsMenuEntry = new MenuEntry("Settings", _h2, fontService);
+            var exitMenuEntry = new MenuEntry("Exit", _h2, fontService);
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
@@ -57,11 +64,11 @@ namespace KenneyAsteroids.Core.Screens
             MenuEntries.Add(settingsMenuEntry);
             MenuEntries.Add(exitMenuEntry);
 
-            if (MediaPlayer.State == MediaState.Stopped)
+            if (XMediaPlayer.State == XMediaState.Stopped)
             {
-                var song = ScreenManager.Container.GetService<ContentManager>().Load<Song>("Music/menu.song");
-                
-                MediaPlayer.Play(song);
+                var song = content.Load<XSong>("Music/menu.song");
+
+                XMediaPlayer.Play(song);
             }
         }
 
@@ -69,9 +76,7 @@ namespace KenneyAsteroids.Core.Screens
         {
             base.Draw(gameTime);
 
-            var time = gameTime.ToDelta();
-
-            _painter.DrawString(_font, _version, _versionPosition, Colors.White);
+            _painter.DrawString(_h4, _version, _versionPosition, Colors.White);
         }
 
         /// <summary>
@@ -79,12 +84,12 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, false, e.PlayerIndex, new GamePlayScreen());
+            LoadingScreen.Load(ScreenManager, false, e.PlayerIndex, new StarScreen(), new GamePlayScreen());
         }
 
         void LeaderboardMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, false, e.PlayerIndex, new LeaderBoardsScreen());
+            ScreenManager.AddScreen(new LeaderBoardsScreen(), e.PlayerIndex);
         }
 
         /// <summary>
@@ -100,7 +105,7 @@ namespace KenneyAsteroids.Core.Screens
         /// </summary>
         protected override void OnCancel(Microsoft.Xna.Framework.PlayerIndex playerIndex)
         {
-            const string message = "Are you sure you want to exit this sample?\nA button, Space, Enter = ok\nB button, Esc = cancel";
+            const string message = "Exit game?\nA button, Space, Enter = ok\nB button, Esc = cancel";
 
             MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message);
 

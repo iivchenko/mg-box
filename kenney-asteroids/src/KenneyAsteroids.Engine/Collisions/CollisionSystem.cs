@@ -5,23 +5,16 @@ using System.Linq;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
-using Color = Microsoft.Xna.Framework.Color;
 
 namespace KenneyAsteroids.Engine.Collisions
 {
+    // TODO: Improve with body type registration.
     public sealed class CollisionSystem : ICollisionSystem
     {
-        private readonly IReadOnlyList<IRule> _rules;
-
-        public CollisionSystem(IEnumerable<IRule> rules)
-        {
-            _rules = rules.ToList();
-        }
-
-        public void ApplyCollisions(IEnumerable<IBody> bodies)
+        public IEnumerable<Collision> EvaluateCollisions(IEnumerable<IBody> bodies)
         {
             var array = bodies.ToArray();
-            var collisions = new List<(IBody, IBody)>();
+            var collisions = new List<Collision>();
 
             for (var i = 0; i < array.Length; i++)
                 for (var j = i + 1; j < array.Length; j++)
@@ -29,31 +22,26 @@ namespace KenneyAsteroids.Engine.Collisions
                     var body1 = array[i];
                     var body2 = array[j];
 
-                    var left1 = body1.Position.X - body1.Origin.X;
-                    var right1 = body1.Position.X - body1.Origin.X + body1.Width;
-                    var top1 = body1.Position.Y - body1.Origin.Y;
-                    var bottom1 = body1.Position.Y - body1.Origin.Y + body1.Height;
+                    var left1 = body1.Position.X - body1.Origin.X * body1.Scale.X;
+                    var right1 = body1.Position.X - body1.Origin.X * body1.Scale.X + body1.Width * body1.Scale.X;
+                    var top1 = body1.Position.Y - body1.Origin.Y * body1.Scale.X;
+                    var bottom1 = body1.Position.Y - body1.Origin.Y * body1.Scale.X + body1.Height * body1.Scale.X;
 
-                    var left2 = body2.Position.X - body2.Origin.X;
-                    var right2 = body2.Position.X - body2.Origin.X + body2.Width;
-                    var top2 = body2.Position.Y - body2.Origin.Y;
-                    var bottom2 = body2.Position.Y - body2.Origin.Y + body2.Height;
+                    var left2 = body2.Position.X - body2.Origin.X * body2.Scale.X;
+                    var right2 = body2.Position.X - body2.Origin.X * body2.Scale.X + body2.Width * body2.Scale.X;
+                    var top2 = body2.Position.Y - body2.Origin.Y * body2.Scale.X;
+                    var bottom2 = body2.Position.Y - body2.Origin.Y * body2.Scale.X + body2.Height * body2.Scale.X;
 
                     if (
                         left1 < right2 && left2 < right1 && 
                         top1 < bottom2 && top2 < bottom1 &&
                         IntersectPixels(body1, body2))
                     {
-                        collisions.Add((body1, body2));
+                        collisions.Add(new Collision(body1, body2));
                     }
                 }
 
-            foreach (var (body1, body2) in collisions)
-            {
-                _rules
-                    .Where(x => x.Match(body1, body2))
-                    .Iter(x => x.Action(body1, body2));
-            }
+            return collisions;
         }
 
         private static bool IntersectPixels(IBody body1, IBody body2)

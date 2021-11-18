@@ -6,8 +6,8 @@
 //-----------------------------------------------------------------------------
 
 using KenneyAsteroids.Engine.Screens;
-using Microsoft.Xna.Framework;
 
+using XGameTime = Microsoft.Xna.Framework.GameTime;
 
 namespace KenneyAsteroids.Engine.UI
 {
@@ -15,11 +15,10 @@ namespace KenneyAsteroids.Engine.UI
     {
         private ScrollTracker scrollTracker = new ScrollTracker();
 
-        public override void Update(GameTime gametime)
+        public override void Update(XGameTime gametime)
         {
-            Vector2 size = ComputeSize();
-            scrollTracker.CanvasRect.Width = (int)size.X;
-            scrollTracker.CanvasRect.Height = (int)size.Y;
+            var size = ComputeSize();
+            scrollTracker.CanvasRect = new Rectangle(scrollTracker.CanvasRect.X, scrollTracker.CanvasRect.Y, (int)size.X, (int)size.Y);
             scrollTracker.Update(gametime);
 
             base.Update(gametime);

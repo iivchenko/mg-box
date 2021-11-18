@@ -1,5 +1,4 @@
-﻿using KenneyAsteroids.Engine.Screens;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace KenneyAsteroids.Engine
@@ -34,10 +33,9 @@ namespace KenneyAsteroids.Engine
             return this;
         }
 
-        public Game Build<TScreen>()
-            where TScreen : GameScreen, new()
+        public IGame Build(Func<ServiceCollection, GameConfiguration, IGame> build)
         {
-            return new Game(_container, _configuration, new TScreen());
+            return build(_container, _configuration);
         }
     }
 }

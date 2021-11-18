@@ -1,21 +1,17 @@
 ﻿using Comora;
 using KenneyAsteroids.Core.Entities;
-using KenneyAsteroids.Core.Events;
 using KenneyAsteroids.Core.Leaderboards;
 using KenneyAsteroids.Core.Screens;
-using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Messaging;
 using KenneyAsteroids.Engine.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Reflection;
 
 namespace KenneyAsteroids.Desktop
 {
@@ -49,12 +45,10 @@ namespace KenneyAsteroids.Desktop
                             .AddSingleton<IProjectileFactory, ProjectileFactory>()
                             .AddSingleton<IViewport, Viewport>(_ => new Viewport(0.0f, 0.0f, 3840.0f, 2160.0f))
                             .AddSingleton<ICamera, Camera>()
-                            .AddSingleton<IMessageHandler<EntityCreatedEvent>, GamePlayEntityCreatedEventHandler>()
-                            .AddSingleton<IMessageHandler<EntityDestroyedEvent>, GamePlayEnemyDestroyedEventHandler>()
-                            .AddSingleton<IMessageHandler<CreateAsteroidCommand>, CreateAsteroidCommandHandler>()
-                            .AddDrawSystem()
-                            .AddAudio(configuration.GetSection("Audio"))
-                            .AddMessageBus()
+                            .AddMonoGameContentSystem()
+                            .AddMonoGameDrawSystem()
+                            .AddMonoGameAudioSystem(configuration.GetSection("Audio"))
+                            .AddGameRules(new[] { Assembly.GetAssembly(typeof(Core.Version)) })
                             .AddSingleton<LeaderboardsManager>();
                     })
                 .WithConfiguration(config => // TODO: This beast seems become redundant
@@ -64,8 +58,8 @@ namespace KenneyAsteroids.Desktop
                         config.ContentPath = "Content"; // TODO: Make as a part of content settings?
                         config.ScreenColor = Colors.Black; // TODO: Make as a part of graphics settings?
                     })
-                .Build<BootstrapScreen<MainMenuScreen>>()
-                .RunSafe();
+                .Build((services, config) => new MonoGameGame(services, config, new BootstrapScreen<MainMenuScreen>()))
+                .Run();
         }
     }
 }

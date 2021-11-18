@@ -1,10 +1,10 @@
 ﻿using KenneyAsteroids.Core.Events;
 using KenneyAsteroids.Engine.Entities;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
-    public sealed class GamePlayEntityCreatedEventHandler : IMessageHandler<EntityCreatedEvent>
+    public sealed class GamePlayEntityCreatedEventHandler : IRule<EntityCreatedEvent>
     {
         private readonly IEntitySystem _entities;
 
@@ -13,7 +13,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _entities = entities;
         }
 
-        public void Handle(EntityCreatedEvent @event)
+        public bool ExecuteCondition(EntityCreatedEvent @event) => true;
+
+        public void ExecuteAction(EntityCreatedEvent @event)
         {
             _entities.Add(@event.Entity);
         }

@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
-    <Configurations>Debug;Release;Alpha</Configurations>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -34,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KenneyAsteroids.Core\KenneyAsteroids.Core.csproj" />
+    <ProjectReference Include="..\KenneyAsteroids.Engine.MonoGame\KenneyAsteroids.Engine.MonoGame.csproj" />
     <ProjectReference Include="..\KenneyAsteroids.Engine\KenneyAsteroids.Engine.csproj" />
     <ProjectReference Include="..\KenneyAsteroids.PipelineExtension\KenneyAsteroids.PipelineExtension.csproj" />
   </ItemGroup>

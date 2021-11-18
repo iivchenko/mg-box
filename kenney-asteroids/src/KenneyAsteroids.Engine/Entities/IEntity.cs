@@ -1,4 +1,6 @@
-﻿namespace KenneyAsteroids.Engine.Entities
+﻿using System.Collections.Generic;
+
+namespace KenneyAsteroids.Engine.Entities
 {
     public interface IEntity<TId> : IEntity
     {
@@ -7,5 +9,6 @@
 
     public interface IEntity
     {
+        IEnumerable<string> Tags { get; }
     }
 }

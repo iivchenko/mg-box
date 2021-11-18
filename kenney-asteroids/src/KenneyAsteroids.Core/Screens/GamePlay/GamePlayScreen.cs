@@ -1,92 +1,71 @@
 ﻿using KenneyAsteroids.Core.Entities;
-using KenneyAsteroids.Core.Events;
-using KenneyAsteroids.Core.Leaderboards;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Collisions;
+using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Rules;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using QuakeConsole;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+
 using XTime = Microsoft.Xna.Framework.GameTime;
+using XMediaPlayer = Microsoft.Xna.Framework.Media.MediaPlayer;
+using System;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
     public sealed class GamePlayScreen : GameScreen
     {
-        private IMessageSystem _bus;
+        private IGameRuleSystem _rules;
         private IEntitySystem _entities;
         private ICollisionSystem _collisions;
         private IViewport _viewport;
+        private IEventPublisher _publisher;
 
-        private GamePlayHud _hud;
-        private GamePlayScoreManager _scores;
-        private LeaderboardsManager _leaderBoard;
         private GamePlayDirector _director;
         private ShipPlayerController _controller;
-        private ConsoleComponent _console;
-
-        private bool _pause = false;
-        private DateTime _startTime;
 
         public override void Initialize()
         {
             base.Initialize();
+            var container = ScreenManager.Container;
 
-            RegisterConsole();
+            _entities = container.GetService<IEntitySystem>();
+            _rules = container.GetService<IGameRuleSystem>();
+            _viewport = container.GetService<IViewport>();
+            _publisher = container.GetService<IEventPublisher>();
 
-            _entities = ScreenManager.Container.GetService<IEntitySystem>();
-            _bus = ScreenManager.Container.GetService<IMessageSystem>();
-            _viewport = ScreenManager.Container.GetService<IViewport>();
-            _leaderBoard = ScreenManager.Container.GetService<LeaderboardsManager>();
-            var publisher = ScreenManager.Container.GetService<IPublisher>();
-            var factory = ScreenManager.Container.GetService<IEntityFactory>();
-
-            var rules = new List<IRule>
-            {
-                new LazyRule<Ship, Asteroid>
-                (
-                    (_, __) => _hud.Lifes > 0,
-                    (ship, _) => RestartShip(ship)
-                ),
-                new LazyRule<Ship, Asteroid>
-                (
-                    (_, __) => _hud.Lifes <= 0,
-                    (ship, _) => GameOver(ship)
-                ),
-                new LazyRule<Projectile, Asteroid>
-                (
-                    (_, __) => true,
-                    (projectile, asteroid) =>
-                    {
-                        _entities.Remove(projectile, asteroid);
-                        _hud.Scores += _scores.GetScore(asteroid);
-                        publisher.Publish(new EntityDestroyedEvent(asteroid));
-                    }
-                )
-            };
-
+            var factory = container.GetService<IEntityFactory>();
             var ship = factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
 
-            _collisions = new CollisionSystem(rules);
-            _director = new GamePlayDirector(publisher, ScreenManager.Container.GetService<IOptionsMonitor<AudioSettings>>(), ScreenManager.Container.GetService<ContentManager>());
+            _collisions = new CollisionSystem();
+            _director = new GamePlayDirector(
+                container.GetService<IOptionsMonitor<AudioSettings>>(),
+                container.GetService<IContentProvider>());
+
             _controller = new ShipPlayerController(ship);
-            _hud = new GamePlayHud(ScreenManager.Container);
-            _scores = new GamePlayScoreManager();
 
-            _entities.Add(ship, _hud);
+            var timer1 = new Timer(TimeSpan.FromSeconds(3), GameTags.NextAsteroid, _publisher);
+            var timer2 = new Timer(TimeSpan.FromSeconds(60), GameTags.NextAsteroidLimitChange, _publisher);
+            var timer3 = new Timer(TimeSpan.FromSeconds(45), GameTags.NextHasardSituation, _publisher);
+            var hud = new GamePlayHud(
+                container.GetService<IOptionsMonitor<GameSettings>>(),
+                container.GetService<IViewport>(),
+                container.GetService<IPainter>(),
+                container.GetService<IContentProvider>(),
+                container.GetService<IFontService>());
 
-            _startTime = DateTime.Now;
+            _entities.Add(
+                ship, 
+                hud,
+                timer1,
+                timer2,
+                timer3);
         }
 
         public override void Free()
@@ -94,43 +73,24 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _director.Free();
             _entities.Remove(_entities.ToArray());
             _entities.Commit();
-            
-            MediaPlayer.Stop();
+
+            XMediaPlayer.Stop();
 
             base.Free();
         }
 
         public override void HandleInput(InputState input)
         {
-            if (_console != null)
-            {
-                if (input.IsNewKeyPress(Keys.OemTilde, null, out _))
-                {
-                    _console.ToggleOpenClose();
-                }
-                else if (!_console.IsVisible)
-                {
-                    HandleGameInput(input);
-                }
-            }
-            else
-            {
-                HandleGameInput(input);
-            }
-        }
-
-        private void HandleGameInput(InputState input)
-        {
             base.HandleInput(input);
 
             if (input.IsNewKeyPress(Keys.Escape, null, out _) || input.IsNewButtonPress(Buttons.Start, null, out _))
             {
-                MediaPlayer.Pause();
+                XMediaPlayer.Pause();
                 const string message = "Exit game?\nA button, Space, Enter = ok\nB button, Esc = cancel";
                 var confirmExitMessageBox = new MessageBoxScreen(message);
 
-                confirmExitMessageBox.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new MainMenuScreen());
-                confirmExitMessageBox.Cancelled += (_, __) => MediaPlayer.Resume();
+                confirmExitMessageBox.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new StarScreen(), new MainMenuScreen());
+                confirmExitMessageBox.Cancelled += (_, __) => XMediaPlayer.Resume();
 
                 ScreenManager.AddScreen(confirmExitMessageBox, null);
             }
@@ -142,9 +102,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            var time = gameTime.ToDelta();
+            var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (!otherScreenHasFocus && !_pause)
+            if (!otherScreenHasFocus)
             {
                 _entities
                     .Where(x => x is IUpdatable)
@@ -153,14 +113,36 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
                 var bodies = _entities.Where(x => x is IBody).Cast<IBody>();
 
-                _collisions.ApplyCollisions(bodies);
+                // Move Collision eventing into collision system
+                foreach(var collision in _collisions.EvaluateCollisions(bodies))
+                {
+                    switch((collision.Body1, collision.Body2))
+                    {
+                        case (Ship ship, Asteroid asteroid):
+                            _publisher.Publish(new GamePlayEntitiesCollideEvent<Ship, Asteroid>(ship, asteroid));
+                            break;
 
+                        case (Asteroid asteroid, Ship ship):
+                            _publisher.Publish(new GamePlayEntitiesCollideEvent<Ship, Asteroid>(ship, asteroid));
+                            break;
+
+                        case (Projectile projectile, Asteroid asteroid):
+                            _publisher.Publish(new GamePlayEntitiesCollideEvent<Projectile, Asteroid>(projectile, asteroid));
+                            break;
+
+                        case (Asteroid asteroid, Projectile projectile):
+                            _publisher.Publish(new GamePlayEntitiesCollideEvent<Projectile, Asteroid>(projectile, asteroid));
+                            break;
+                    }
+                }
+
+                // TODO: Make this rules
                 bodies
                     .Where(IsOutOfScreen)
                     .Iter(HandleOutOfScreenBodies);
 
                 _director.Update(time);
-                _bus.Update(time);
+                _rules.Update(time);
 
                 _entities.Commit();
             }
@@ -170,7 +152,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         {
             base.Draw(gameTime);
 
-            var time = gameTime.ToDelta();
+            var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _entities.Where(x => x is IDrawable).Cast<IDrawable>().Iter(x => x.Draw(time));
         }
@@ -215,73 +197,6 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
                     body.Position = new Vector2(x, y);
                     break;
-            }
-        }
-
-        private void RestartShip(Ship ship)
-        {
-            _hud.Lifes--;
-            ship.Position = new Vector2(_viewport.Width / 2, _viewport.Height / 2);
-        }
-
-        private void GameOver(Ship ship)
-        {
-            _entities.Remove(ship);
-
-            var playedTime = DateTime.Now - _startTime;
-
-            if (_leaderBoard.CanAddLeader(_hud.Scores))
-            {
-                var newHigthScorePrompt = new PromptScreen("Congratulations, you made new high score!\nEnter you name:");
-
-                newHigthScorePrompt.Accepted += (_, __) =>
-                {
-                    _leaderBoard.AddLeader(newHigthScorePrompt.Text, _hud.Scores, playedTime);
-                    GameOverMessage();
-                };
-                newHigthScorePrompt.Cancelled += (_, __) => GameOverMessage();
-
-                ScreenManager.AddScreen(newHigthScorePrompt, null);
-            }
-            else
-            {
-                GameOverMessage();
-            }
-        }
-
-        private void GameOverMessage()
-        {
-            const string message = "GAME OVER?\nA button, Space, Enter = Restart\nB button, Esc = Exit";
-            var msg = new MessageBoxScreen(message);
-
-            msg.Accepted += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new GamePlayScreen());
-            msg.Cancelled += (_, __) => LoadingScreen.Load(ScreenManager, false, null, new MainMenuScreen());
-
-            ScreenManager.AddScreen(msg, null);
-        }
-
-        private void RegisterConsole()
-        {
-            _console = ScreenManager.Container.GetService<ConsoleComponent>();
-
-            if (_console != null)
-            {
-                var interpreter = new ManualInterpreter();
-                interpreter.RegisterCommand("pause", args => _pause = !_pause);
-                interpreter.RegisterCommand("about", _ =>
-                {
-                    var message = $"Kenney Asteroids v{Version.Current}-{Version.Configuration}";
-                    _console.Output.Append(message);
-                });
-                interpreter.RegisterCommand("scores", _ =>
-                {
-                    _console.Output.Append("Name\tScores\tTime played\tDate");
-                    _leaderBoard
-                        .GetLeaders()
-                        .Select(leader => $"{leader.Name}\t{leader.Score}\t{leader.PlayedTime}\t{leader.ScoreDate}")
-                        .Iter(x => _console.Output.Append(x));
-                });
-                _console.Interpreter = interpreter;
             }
         }
     }

@@ -1,33 +1,33 @@
 ﻿using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Audio;
-using KenneyAsteroids.Engine.Entities;
-using KenneyAsteroids.Engine.Messaging;
+using KenneyAsteroids.Engine.Content;
 using Microsoft.Extensions.Options;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Media;
 using System;
+using XMediaPlayer = Microsoft.Xna.Framework.Media.MediaPlayer;
+using XMediaState = Microsoft.Xna.Framework.Media.MediaState;
+using XSong = Microsoft.Xna.Framework.Media.Song;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
     public sealed class GamePlayDirector : IUpdatable
     {
-        private readonly IPublisher _publisher;
         private readonly IOptionsMonitor<AudioSettings> _settings;
+        private readonly Random _random;
 
-        private ContentManager _content;
+        private IContentProvider _content;
 
         private Chapter _current;
 
         public GamePlayDirector(
-            IPublisher publisher,
             IOptionsMonitor<AudioSettings> settings,
-            ContentManager content)
+            IContentProvider content)
         {
-            _publisher = publisher;
             _settings = settings;
             _content = content;
 
-            _current = new ChapterBegining(this);
+            _random = new Random();
+
+            _current = new SimpleChapter(this);
         }
 
         public void Update(float time)
@@ -42,6 +42,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
         private abstract class Chapter
         {
+
             public Chapter(GamePlayDirector director)
             {
                 Director = director;
@@ -54,121 +55,43 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             public abstract void Free();
         }
 
-        private sealed class ChapterBegining : Chapter
+        private sealed class SimpleChapter : Chapter
         {
-            private readonly Song _song;
-            private IUpdatable _timer;
-            private int _phase;
-            private int _maxAsteroids;
-
-            public ChapterBegining(GamePlayDirector director)
+            public SimpleChapter(GamePlayDirector director)
                 : base(director)
             {
-                _phase = 0;
-                _maxAsteroids = 2;
-
-                var timer = new Timer(TimeSpan.FromSeconds(3), IncreaseDifficulty, true);
-                _song = Director._content.Load<Song>("Music/game1.song");
-
-                MediaPlayer.Volume = Director._settings.CurrentValue.MusicVolume;
-                MediaPlayer.Play(_song);
-                MediaPlayer.MediaStateChanged += ChapterFinished;
-
-                _timer = timer;
-                Director._publisher.Publish(new CreateAsteroidCommand());
-
-                timer.Start();
+                // Move to rules!
+                Director._content.Load<XSong>("Music/game1.song");
+                XMediaPlayer.Volume = Director._settings.CurrentValue.MusicVolume;
+                XMediaPlayer.Play(Director._content.Load<XSong>("Music/game1.song"));
+                XMediaPlayer.MediaStateChanged += NextSong;
             }
 
-            private void ChapterFinished(object sender, EventArgs e)
+            public override void Free()
             {
-                if (MediaPlayer.State == MediaState.Stopped)
-                {
-                    MediaPlayer.MediaStateChanged -= ChapterFinished;
-                    Director._current = new ChapterNext(Director);
-                }
-            }
-
-            private void IncreaseDifficulty(float time)
-            {
-                Director._publisher.Publish(new CreateAsteroidCommand());
-                _maxAsteroids--;
-
-                if (_maxAsteroids <= 0)
-                {
-                    _timer = new Timer(TimeSpan.FromSeconds(60), t => { }, true);
-                }
+                XMediaPlayer.MediaStateChanged -= NextSong;
             }
 
             public override void Update(float time)
-            {
-                _timer.Update(time);
-                
-                if (_phase == 0)
-                {
-                    var delta = (MediaPlayer.PlayPosition - TimeSpan.FromSeconds(14 + 2)).TotalSeconds;
-
-                    if (delta >= 0.5 && delta <= 1)
-                    {
-                        _phase = 1;
-                        for (var i = 0; i < 10; i++) Director._publisher.Publish(new CreateAsteroidCommand());
-                    }
-                }
-                else if (_phase == 1)
-                {
-                    var delta = (MediaPlayer.PlayPosition - TimeSpan.FromSeconds(59 + 1)).TotalSeconds;
-
-                    if (delta >= 0.5 && delta <= 1)
-                    {
-                        _phase = 2;
-                        for (var i = 0; i < 10; i++) Director._publisher.Publish(new CreateAsteroidCommand());
-                    }
-                }
-            }
-
-            public override void Free()
-            {
-                MediaPlayer.MediaStateChanged -= ChapterFinished;
-            }
-        }
-
-        private sealed class ChapterNext : Chapter
-        {
-            private readonly Random _random;
-
-            public ChapterNext(GamePlayDirector director)
-                : base(director)
-            {
-                _random = new Random();
-                NextSong(null, null);
-                MediaPlayer.MediaStateChanged += NextSong;
-            }
-
-            public override void Free()
-            {
-                MediaPlayer.MediaStateChanged -= NextSong;
+            {                
             }
 
             private void NextSong(object sender, EventArgs e)
             {
-                if (MediaPlayer.State == MediaState.Stopped)
+                if (XMediaPlayer.State == XMediaState.Stopped)
                 {
                     var song = Next();
-                    while (song == MediaPlayer.Queue.ActiveSong)
+                    while (song == XMediaPlayer.Queue.ActiveSong)
                         song = Next();
 
-                    MediaPlayer.Play(song);
+                    XMediaPlayer.Play(song);
                 }
             }
 
-            private Song Next()
+            private XSong Next()
             {
-                var next = _random.Next(4) + 1;
-                return Director._content.Load<Song>($"Music/game{next}.song");
-            }
-
-            public override void Update(float time)
-            {
+                var next = Director._random.Next(4) + 1;
+                return Director._content.Load<XSong>($"Music/game{next}.song");
             }
         }
     }

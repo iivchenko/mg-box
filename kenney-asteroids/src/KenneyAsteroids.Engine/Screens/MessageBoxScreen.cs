@@ -11,9 +11,8 @@
 using System;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Extensions.DependencyInjection;
+using KenneyAsteroids.Engine.Content;
 #endregion
 
 namespace KenneyAsteroids.Engine.Screens
@@ -27,7 +26,7 @@ namespace KenneyAsteroids.Engine.Screens
         #region Fields
 
         private string _message;
-        Texture2D gradientTexture;
+        private Sprite _gradientSprite;
 
         #endregion
 
@@ -62,11 +61,10 @@ namespace KenneyAsteroids.Engine.Screens
         /// </summary>
         public override void Initialize()
         {
-            ContentManager content = ScreenManager.Game.Content;
+            var content = ScreenManager.Container.GetService<IContentProvider>();
 
-            gradientTexture = content.Load<Texture2D>("Sprites/gradient.sprite");
+            _gradientSprite = content.Load<Sprite>("Sprites/gradient.sprite");
         }
-
 
         #endregion
 
@@ -115,7 +113,9 @@ namespace KenneyAsteroids.Engine.Screens
         public override void Draw(GameTime gameTime)
         {
             var painter = ScreenManager.Painter;
-            SpriteFont font = ScreenManager.Font;
+            var content = ScreenManager.Container.GetService<IContentProvider>();
+            var fontService = ScreenManager.Container.GetService<IFontService>();
+            var font = content.Load<Font>("Fonts/kenney-future.h3.font");
 
             // Darken down any other screens that were drawn beneath the popup.
             ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
@@ -123,7 +123,8 @@ namespace KenneyAsteroids.Engine.Screens
             // Center the message text in the viewport.
             var viewport = ScreenManager.Container.GetService<IViewport>();
             Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-            Vector2 textSize = font.MeasureString(_message);
+            var size = fontService.MeasureText(_message, font);
+            Vector2 textSize = new Vector2(size.Width, size.Height);
             Vector2 textPosition = (viewportSize - textSize) / 2;
 
             // The background includes a border somewhat larger than the text itself.
@@ -138,7 +139,7 @@ namespace KenneyAsteroids.Engine.Screens
             // Fade the popup alpha during transitions.
             Color color = Colors.White * TransitionAlpha;
             // Draw the background rectangle.
-            painter.Draw(gradientTexture, backgroundRectangle, color);
+            painter.Draw(_gradientSprite, backgroundRectangle, color);
 
             // Draw the message box text.
             painter.DrawString(font, _message, textPosition.ToVector(), color);

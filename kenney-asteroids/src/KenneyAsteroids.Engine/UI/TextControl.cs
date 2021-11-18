@@ -5,9 +5,8 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
+using KenneyAsteroids.Engine.Graphics;
+using System.Numerics;
 
 namespace KenneyAsteroids.Engine.UI
 {
@@ -17,7 +16,8 @@ namespace KenneyAsteroids.Engine.UI
     /// </summary>
     public class TextControl : Control
     {
-        private SpriteFont font;
+        private Font font;
+        private IFontService _fontService;
         private string text;
 
         public Color Color;
@@ -37,7 +37,7 @@ namespace KenneyAsteroids.Engine.UI
         }
 
         // Font to use
-        public SpriteFont Font
+        public Font Font
         {
             get { return Font; }
             set
@@ -50,25 +50,28 @@ namespace KenneyAsteroids.Engine.UI
             }
         }
 
+        public IFontService FontService { get => _fontService; set => _fontService = value; }
+
         public TextControl()
-            : this(string.Empty, null, Colors.White, Vector2.Zero)
+            : this(string.Empty, null, null, Colors.White, Vector2.Zero)
         {
         }
 
-        public TextControl(string text, SpriteFont font)
-            : this(text, font, Colors.White, Vector2.Zero)
+        public TextControl(string text, Font font, IFontService fontService)
+            : this(text, font, fontService, Colors.White, Vector2.Zero)
         {
         }
 
-        public TextControl(string text, SpriteFont font, Color color)
-            : this(text, font, color, Vector2.Zero)
+        public TextControl(string text, Font font, IFontService fontService, Color color)
+            : this(text, font, fontService, color, Vector2.Zero)
         {
         }
 
-        public TextControl(string text, SpriteFont font, Color color, Vector2 position)
+        public TextControl(string text, Font font, IFontService fontService, Color color, Vector2 position)
         {
             this.text = text;
             this.font = font;
+            _fontService = fontService;
             this.Position = position;
             this.Color = color;
         }
@@ -77,12 +80,13 @@ namespace KenneyAsteroids.Engine.UI
         {
             base.Draw(context);
 
-            context.Painter.DrawString(font, Text, context.DrawOffset.ToVector(), Color);
+            context.Painter.DrawString(font, Text, context.DrawOffset, Color);
         }
 
         override public Vector2 ComputeSize()
         {
-            return font.MeasureString(Text);
+            var size = _fontService.MeasureText(Text, this.font);
+            return new Vector2(size.Width, size.Height);
         }
     }
 }

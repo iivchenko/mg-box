@@ -5,9 +5,7 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 using KenneyAsteroids.Engine.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
+using System.Numerics;
 
 namespace KenneyAsteroids.Engine.UI
 {
@@ -21,18 +19,12 @@ namespace KenneyAsteroids.Engine.UI
     {
         public IViewport Viewport { get; set; }
 
-        /// <summary>
-        /// GameTime passed into Game.Draw()
-        /// </summary>
-        public GameTime GameTime { get; set; }
-
-
         public IPainter Painter { get; set; }
 
         /// <summary>
         /// A single-pixel white texture, useful for drawing boxes and lines within a SpriteBatch.
         /// </summary>
-        public Texture2D BlankTexture;
+        public Sprite BlankSprite;
 
         /// <summary>
         /// Positional offset to draw at. Note that this is a simple positional offset rather

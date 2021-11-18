@@ -8,11 +8,10 @@
 #endregion
 
 #region Using Statements
+using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
@@ -38,9 +37,8 @@ namespace KenneyAsteroids.Engine.Screens
 
         InputState input = new InputState();
 
-        SpriteBatch spriteBatch;
-        SpriteFont font;
-        Texture2D blankTexture;
+        Font font;
+        private Sprite _blankSprite;
 
         bool isInitialized;
 
@@ -57,7 +55,7 @@ namespace KenneyAsteroids.Engine.Screens
         /// A default font shared by all the screens. This saves
         /// each screen having to bother loading their own local copy.
         /// </summary>
-        public SpriteFont Font
+        public Font Font
         {
             get { return font; }
         }
@@ -114,11 +112,10 @@ namespace KenneyAsteroids.Engine.Screens
         protected override void LoadContent()
         {
             // Load content belonging to the screen manager.
-            ContentManager content = Game.Content;
+            var content = Container.GetService<IContentProvider>();
 
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = content.Load<SpriteFont>("Fonts/simxel.font");
-            blankTexture = content.Load<Texture2D>("Sprites/blank.sprite");
+            font = content.Load<Font>("Fonts/kenney-future.h1.font");
+            _blankSprite = content.Load<Sprite>("Sprites/blank.sprite");
 
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in screens)
@@ -305,13 +302,10 @@ namespace KenneyAsteroids.Engine.Screens
         {
             var viewport = Container.GetService<IViewport>();
 
-            spriteBatch.Begin();
-
-            spriteBatch.Draw(blankTexture,
-                             new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height),
-                             Colors.Black.ToXna() * alpha);
-
-            spriteBatch.End();
+            Painter.Draw(
+                _blankSprite,
+                new Rectangle(0, 0, (int)viewport.Width, (int)viewport.Height),
+                Colors.Black * alpha);
         }
 
 

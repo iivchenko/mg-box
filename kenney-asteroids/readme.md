@@ -10,6 +10,7 @@ Classical implementation or the [Asteroids Game](https://en.wikipedia.org/wiki/A
 
 
 ## Releases
+* [v0.4.0](doc/release-notes/v0.4.0.md)
 * [v0.3.0](doc/release-notes/v0.3.0.md)
 * [v0.2.0](doc/release-notes/v0.2.0.md)
 * [v0.1.0](doc/release-notes/v0.1.0.md)
@@ -21,7 +22,6 @@ Classical implementation or the [Asteroids Game](https://en.wikipedia.org/wiki/A
 * [Comora](https://github.com/dotnet-ad/Comora)
 * [Newton.Json](https://www.newtonsoft.com/json)
 * [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet)
-* [Quake Console](https://github.com/discosultan/quake-console)
 
 [Roadmap](https://github.com/iivchenko/mg-box/milestones)
 
@@ -32,13 +32,19 @@ Classical implementation or the [Asteroids Game](https://en.wikipedia.org/wiki/A
 * Graphics
   * [Space Shooter Redux](https://kenney.nl/assets/space-shooter-redux) 
     * Thank you Kenney for the great assets!
-    * [Repo Asset](src/KenneyAsteroids.Desktop/Content/SpriteSheets/asteroids.sprite.png)
+    * [Repo Asset](src/KenneyAsteroids.Desktop/Content/SpriteSheets/Asteroids.sprite.png)
+    * [CC0 1.0 License](https://creativecommons.org/publicdomain/zero/1.0/)
+* Fonts
+  * [Kenney Fonts](https://kenney.nl/assets/kenney-fonts)
+    * Thank you Kenney for the great assets!
+    * [Repo Asset](src/KenneyAsteroids.Desktop/Content/Fonts/kenney-future.font.ttf)
     * [CC0 1.0 License](https://creativecommons.org/publicdomain/zero/1.0/)
 * Sfx
   * [Space Shooter Redux](https://kenney.nl/assets/space-shooter-redux)
     * Thank you Kenney for the great assets!
     * [Repo Asset](src/KenneyAsteroids.Desktop/Content/Sounds/laser.sound.ogg)
     * [CC0 1.0 License](https://creativecommons.org/publicdomain/zero/1.0/)
+  * Thank you [jsfxr](https://sfxr.me/) for soundtracks 
 * Music
     * [Dreamy Space Soundtrack](https://chiphead64.itch.io/dreamy-space-soundtrack)
       * Thank you chiphead64 for the great assets!
