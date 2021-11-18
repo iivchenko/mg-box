@@ -10,6 +10,7 @@ Classical implementation or the [Asteroids Game](https://en.wikipedia.org/wiki/A
 
 
 ## Releases
+* [v0.4.0](doc/release-notes/v0.4.0.md)
 * [v0.3.0](doc/release-notes/v0.3.0.md)
 * [v0.2.0](doc/release-notes/v0.2.0.md)
 * [v0.1.0](doc/release-notes/v0.1.0.md)
