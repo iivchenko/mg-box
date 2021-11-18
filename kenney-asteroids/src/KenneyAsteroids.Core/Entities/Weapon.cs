@@ -4,6 +4,8 @@ using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Rules;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 using XMatrix = Microsoft.Xna.Framework.Matrix;
@@ -46,6 +48,7 @@ namespace KenneyAsteroids.Core.Entities
         }
 
         public Guid Id { get; }
+        public IEnumerable<string> Tags => Enumerable.Empty<string>();
 
         public void Update(float time)
         {

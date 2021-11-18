@@ -1,6 +1,8 @@
 ﻿using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Screens;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KenneyAsteroids.Core.Entities
 {
@@ -13,6 +15,8 @@ namespace KenneyAsteroids.Core.Entities
         {
             _ship = ship;
         }
+
+        public IEnumerable<string> Tags => Enumerable.Empty<string>();
 
         public void Handle(InputState input)
         {

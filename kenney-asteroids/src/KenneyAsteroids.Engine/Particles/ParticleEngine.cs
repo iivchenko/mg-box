@@ -33,6 +33,8 @@ namespace KenneyAsteroids.Engine.Particles
             _random = new Random(seed);
         }
 
+        public IEnumerable<string> Tags => Enumerable.Empty<string>();
+
         public void Update(float time)
         {
             if (!_isFinished)

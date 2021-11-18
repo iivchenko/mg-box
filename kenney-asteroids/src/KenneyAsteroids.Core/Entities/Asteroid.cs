@@ -1,8 +1,11 @@
-﻿using KenneyAsteroids.Engine;
+﻿using KenneyAsteroids.Core.Screens.GamePlay;
+using KenneyAsteroids.Engine;
+using KenneyAsteroids.Engine.Audio;
 using KenneyAsteroids.Engine.Collisions;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace KenneyAsteroids.Core.Entities
@@ -12,6 +15,7 @@ namespace KenneyAsteroids.Core.Entities
         private readonly IPainter _draw;
 
         private readonly Sprite _sprite;
+        
         private readonly float _rotationSpeed;
 
         private Vector2 _velocity;
@@ -41,6 +45,7 @@ namespace KenneyAsteroids.Core.Entities
         }
 
         public Guid Id { get; }
+        public IEnumerable<string> Tags => new[] { GameTags.Enemy };
         public Vector2 Position { get; set; }
         public Vector2 Origin { get; set; }
         public Vector2 Scale { get; set; }

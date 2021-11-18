@@ -5,6 +5,7 @@ using KenneyAsteroids.Engine.Graphics;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
@@ -34,17 +35,7 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
             _fontService = fontService;
 
             _font = content.Load<Font>("Fonts/kenney-future.h4.font");
-        }
 
-        public int Scores { get; set; }
-
-        public int Lifes { get; set; }
-
-        public DateTime StartTime { get; private set; }
-
-        public void Initialize()
-        {
-            _draws.Clear();
             _draws.Add(DrawLifes);
 
             if (_settings.CurrentValue.ToggleFramerate.Toggle)
@@ -56,6 +47,14 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
 
             StartTime = DateTime.Now;
         }
+
+        public IEnumerable<string> Tags => Enumerable.Empty<string>();
+
+        public int Scores { get; set; }
+
+        public int Lifes { get; set; }
+
+        public DateTime StartTime { get; private set; }
 
         public void Draw(float time)
         {
