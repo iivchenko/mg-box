@@ -79,6 +79,12 @@
 /processorParam:Quality=Best
 /build:Music/menu.song.mp3
 
+#begin Sounds/asteroid-explosion.sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/asteroid-explosion.sound.wav
+
 #begin Sounds/laser.sound.ogg
 /importer:OggImporter
 /processor:SoundEffectProcessor
