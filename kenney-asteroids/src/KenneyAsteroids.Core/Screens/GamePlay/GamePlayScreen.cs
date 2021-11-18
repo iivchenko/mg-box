@@ -15,6 +15,7 @@ using System.Numerics;
 
 using XTime = Microsoft.Xna.Framework.GameTime;
 using XMediaPlayer = Microsoft.Xna.Framework.Media.MediaPlayer;
+using System;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay
 {
@@ -26,30 +27,45 @@ namespace KenneyAsteroids.Core.Screens.GamePlay
         private IViewport _viewport;
         private IEventPublisher _publisher;
 
-        private GamePlayHud _hud;
         private GamePlayDirector _director;
         private ShipPlayerController _controller;
 
         public override void Initialize()
         {
             base.Initialize();
+            var container = ScreenManager.Container;
 
-            _entities = ScreenManager.Container.GetService<IEntitySystem>();
-            _rules = ScreenManager.Container.GetService<IGameRuleSystem>();
-            _viewport = ScreenManager.Container.GetService<IViewport>();
-            _hud = ScreenManager.Container.GetService<GamePlayHud>();
-            _publisher = ScreenManager.Container.GetService<IEventPublisher>();
+            _entities = container.GetService<IEntitySystem>();
+            _rules = container.GetService<IGameRuleSystem>();
+            _viewport = container.GetService<IViewport>();
+            _publisher = container.GetService<IEventPublisher>();
 
-            var factory = ScreenManager.Container.GetService<IEntityFactory>();
+            var factory = container.GetService<IEntityFactory>();
             var ship = factory.CreateShip(new Vector2(_viewport.Width / 2.0f, _viewport.Height / 2.0f));
 
             _collisions = new CollisionSystem();
-            _director = new GamePlayDirector(_publisher, ScreenManager.Container.GetService<IOptionsMonitor<AudioSettings>>(), ScreenManager.Container.GetService<IContentProvider>());
+            _director = new GamePlayDirector(
+                container.GetService<IOptionsMonitor<AudioSettings>>(),
+                container.GetService<IContentProvider>());
+
             _controller = new ShipPlayerController(ship);
 
-            _entities.Add(ship, _hud);
+            var timer1 = new Timer(TimeSpan.FromSeconds(3), GameTags.NextAsteroid, _publisher);
+            var timer2 = new Timer(TimeSpan.FromSeconds(60), GameTags.NextAsteroidLimitChange, _publisher);
+            var timer3 = new Timer(TimeSpan.FromSeconds(45), GameTags.NextHasardSituation, _publisher);
+            var hud = new GamePlayHud(
+                container.GetService<IOptionsMonitor<GameSettings>>(),
+                container.GetService<IViewport>(),
+                container.GetService<IPainter>(),
+                container.GetService<IContentProvider>(),
+                container.GetService<IFontService>());
 
-            _hud.Initialize();
+            _entities.Add(
+                ship, 
+                hud,
+                timer1,
+                timer2,
+                timer3);
         }
 
         public override void Free()
