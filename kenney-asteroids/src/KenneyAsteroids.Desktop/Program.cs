@@ -2,7 +2,6 @@
 using KenneyAsteroids.Core.Entities;
 using KenneyAsteroids.Core.Leaderboards;
 using KenneyAsteroids.Core.Screens;
-using KenneyAsteroids.Core.Screens.GamePlay;
 using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Entities;
 using KenneyAsteroids.Engine.Graphics;
@@ -50,8 +49,7 @@ namespace KenneyAsteroids.Desktop
                             .AddMonoGameDrawSystem()
                             .AddMonoGameAudioSystem(configuration.GetSection("Audio"))
                             .AddGameRules(new[] { Assembly.GetAssembly(typeof(Core.Version)) })
-                            .AddSingleton<LeaderboardsManager>()
-                            .AddSingleton<GamePlayHud>();
+                            .AddSingleton<LeaderboardsManager>();
                     })
                 .WithConfiguration(config => // TODO: This beast seems become redundant
                     {

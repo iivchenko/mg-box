@@ -10,6 +10,7 @@ using KenneyAsteroids.Engine;
 using KenneyAsteroids.Engine.Content;
 using KenneyAsteroids.Engine.Particles;
 using System.Linq;
+using KenneyAsteroids.Engine.Audio;
 
 namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
 {
@@ -23,9 +24,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                 {
                     private readonly GamePlayHud _hud;
 
-                    public ThenReduceLifes(GamePlayHud hud)
+                    public ThenReduceLifes(IEntitySystem entities)
                     {
-                        _hud = hud;
+                        _hud = entities.First(x => x is GamePlayHud) as GamePlayHud;
                     }
 
                     public bool ExecuteCondition(GamePlayEntitiesCollideEvent<Ship, Asteroid> @event) => _hud.Lifes > 0;
@@ -39,10 +40,10 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     private readonly IViewport _viewport;
 
                     public ThenResetPlayersShip(
-                        GamePlayHud hud,
+                        IEntitySystem entities,
                         IViewport viewport)
                     {
-                        _hud = hud;
+                        _hud = entities.First(x => x is GamePlayHud) as GamePlayHud;
                         _viewport = viewport;
                     }
 
@@ -59,11 +60,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     private readonly GamePlayHud _hud;
                     private readonly IEntitySystem _entities;
 
-                    public ThenRemovePlayersShipFromTheGame(
-                        GamePlayHud hud,
-                        IEntitySystem entities)
+                    public ThenRemovePlayersShipFromTheGame(IEntitySystem entities)
                     {
-                        _hud = hud;
+                        _hud = entities.First(x => x is GamePlayHud) as GamePlayHud;
                         _entities = entities;
                     }
 
@@ -78,10 +77,10 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                     private readonly LeaderboardsManager _leaderBoard;
 
                     public ThenGameOver(
-                        GamePlayHud hud,
+                        IEntitySystem entities,
                         LeaderboardsManager leaderBoard)
                     {
-                        _hud = hud;
+                        _hud = entities.First(x => x is GamePlayHud) as GamePlayHud;
                         _leaderBoard = leaderBoard;
                     }
 
@@ -133,9 +132,9 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                 private readonly GamePlayHud _hud;
                 private readonly GamePlayScoreManager _scores;
 
-                public ThenScore(GamePlayHud hud)
+                public ThenScore(IEntitySystem entities)
                 {
-                    _hud = hud;
+                    _hud = entities.First(x => x is GamePlayHud) as GamePlayHud;
 
                     _scores = new GamePlayScoreManager();
                 }
@@ -180,17 +179,20 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                 private readonly IEntitySystem _entities;
                 private readonly IEventPublisher _publisher;
                 private readonly IPainter _painter;
+                private readonly IAudioPlayer _player;
                 private readonly IContentProvider _content;
 
                 public ThenMakeAsteroidDeathEffect(
                    IEntitySystem entities,
                    IEventPublisher publisher,
                    IPainter painter,
+                   IAudioPlayer player,
                    IContentProvider content)
                 {
                     _entities = entities;
                     _publisher = publisher;
                     _painter = painter;
+                    _player = player;
                     _content = content;
                 }
 
@@ -234,9 +236,13 @@ namespace KenneyAsteroids.Core.Screens.GamePlay.Rules
                                 .Build((int)DateTime.Now.Ticks, _painter, _publisher);
 
                     _entities.Add(particles);
+
+                    var explosion = _content.Load<Sound>("Sounds/asteroid-explosion.sound");
+
+                    _player.Play(explosion);
                 }
 
-                private static byte ClampColor(byte color, float time)
+            private static byte ClampColor(byte color, float time)
                 {
                     return Math.Clamp((byte)(color - color * 1.5 * time), (byte)0, (byte)255);
                 }
